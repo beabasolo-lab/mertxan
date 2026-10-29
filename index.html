@@ -70,7 +70,18 @@ tr.son>td:first-child b{color:var(--on)}tr.soff>td:first-child b{color:var(--off
 #pr{display:none}
 @page{size:A4;margin:10mm}
 @media print{html,body{background:#fff!important}#app,nav{display:none!important}#pr{display:block!important}}
-</style></head><body><div id="app"></div><div id="pr"></div>
+</style><style id="shell">
+:root{padding-top:0!important;padding-bottom:0!important}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:100%}
+body{display:flex;flex-direction:column;height:100vh;height:100dvh;padding-top:env(safe-area-inset-top,0px)}
+#app{flex:1 1 auto;min-height:0;width:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-bottom:28px}
+nav{position:static!important;flex:none;width:100%;padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+nav button{min-height:56px;padding:8px 2px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;transition:background .12s,color .12s}
+nav button:active{background:var(--ac2)}
+button,.chip,label.btn,select{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+@media print{html,body{height:auto!important;overflow:visible!important;display:block!important;padding:0!important}#app,nav{display:none!important}}
+</style>
+</head><body><div id="app"></div><div id="pr"></div>
 <nav><button data-t="res">Laburpena</button><button data-t="con">Kontzertua</button><button data-t="stk">Stocka</button><button data-t="out">Añube</button></nav>
 <script>
 const SZ=["XS","S","M","L","XL","XXL","XXXL"],SH=['Kami "Zu zeu zarela erdigune"','Kami "Erakuslehioak"','Kami Txurixa "Izan zarenaren ispilu"','Kami larrosa beltza'];
@@ -289,11 +300,12 @@ document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)r
  if(t.dataset.inst&&instP){instP.prompt();instP.userChoice.then(()=>{instP=null;render()}).catch(()=>{})}
  else if(t.dataset.instx){instX=true;try{localStorage.setItem("anube.instx","1")}catch(_){}render()}});
 var rd0={},rq=0;function rsoft(){if(rq)return;rq=requestAnimationFrame(()=>{rq=0;render()})}
+var scp={};
 var dragging=false;function render(){if(dragging){pend=true;return}build();const nv=document.querySelector("nav");if(nv)nv.style.display=code?"":"none";if(!code){if(document.activeElement&&document.activeElement.id==="gc"){pend=true;return}pend=false;app.innerHTML=instBanner()+gateHTML();return}if(document.activeElement&&document.activeElement.matches("input")){pend=true;return}pend=false;
  app.innerHTML=instBanner()+(tab=="res"?resumen():tab=="con"?concierto():tab=="out"?outTab():stk());
  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t==tab))}
 document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;
- if(t.dataset.t){tab=t.dataset.t;hidAsk=null;addAsk=null;lastHid=null;render()}else if(t.dataset.f){flt=t.dataset.f;render()}else if(t.dataset.c){cur=t.dataset.c;dcf=false;hidAsk=null;addAsk=null;lastHid=null;showH=false;render()}
+ if(t.dataset.t){if(t.dataset.t===tab){app.scrollTo({top:0,behavior:"smooth"});return}scp[tab]=app.scrollTop;tab=t.dataset.t;hidAsk=null;addAsk=null;lastHid=null;render();app.scrollTop=scp[tab]||0}else if(t.dataset.f){flt=t.dataset.f;render()}else if(t.dataset.c){cur=t.dataset.c;dcf=false;hidAsk=null;addAsk=null;lastHid=null;showH=false;render()}
  else if(t.dataset.m){mode=t.dataset.m;giftP=null;render()}else if(t.dataset.d)setLine(cur,t.dataset.p,t.dataset.ff||mode,+t.dataset.d);else if(t.id=="mk")newConc();else if(t.dataset.t2!==undefined){nt=t.dataset.t2=="1";document.querySelectorAll("[data-t2]").forEach(b=>b.classList.toggle("on",(b.dataset.t2=="1")==nt))}else if(t.id=="ai")addItem();else if(t.dataset.g){giftP=t.dataset.g;render()}else if(t.dataset.gno){giftP=null;render()}else if(t.dataset.gyes){const id=t.dataset.gyes;giftP=null;setLine(cur,id,"r",1)}else if(t.dataset.gu){setLine(cur,t.dataset.gu,"r",-1)}else if(t.dataset.ot){O.t=t.dataset.ot;render()}else if(t.dataset.oq){O.q=Math.max(1,O.q+ +t.dataset.oq);render()}else if(t.id=="oadd")addOut();else if(t.dataset.odel){const id=t.dataset.odel;if(armO==id){delete S.o[id];db&&db.collection("outs").doc(id).delete().catch(()=>{});armO=null}else armO=id;render()}else if(t.dataset.edit){editId=t.dataset.edit;render()}else if(t.dataset.eno){editId=null;render()}else if(t.dataset.esave)saveEdit(t.dataset.esave);else if(t.dataset.hshow){showH=t.dataset.hshow=="1";render()}else if(t.dataset.psk)saveStockPDF();else if(t.dataset.prd)saveSheet();else if(t.dataset.prs)saveSummary();else if(t.dataset.dc){dcf=true;render()}else if(t.dataset.dcancel){dcf=false;render()}else if(t.dataset.dok){const i=$("#dcn");if(i&&i.value.trim().toUpperCase()==="EZABATU")delConc()}else if(t.dataset.sa)stockAdd(t.dataset.sa,+t.dataset.sd);else if(t.id=="gok"){const v=normCode(($("#gc")||{}).value);if(v.length<8){connErr="Kodeak gutxienez 8 karaktere izan behar ditu.";render();return}connErr="";code=v;remember(v);start()}else if(t.id=="gnew"){window.__gcv=genCode();connErr="";render()}else if(t.dataset.set){const a=t.dataset.set;
  if(a=="link"){const u=location.origin+location.pathname+"#"+code;const ok=()=>{copied=true;linkTxt="";render();setTimeout(()=>{copied=false;render()},2500)};
   const fb=()=>{try{const ta=document.createElement("textarea");ta.value=u;ta.style.cssText="position:fixed;top:0;left:0;opacity:0";document.body.appendChild(ta);ta.focus();ta.select();ta.setSelectionRange(0,9999);const r=document.execCommand("copy");ta.remove();if(r)return ok()}catch(_){}
@@ -345,13 +357,13 @@ if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.ser
  navigator.serviceWorker.addEventListener("message",e=>{if(e.data==="upd"){const go=()=>{if(document.activeElement&&document.activeElement.matches("input,textarea")||dragging)return setTimeout(go,4000);location.reload()};setTimeout(go,600)}})}
 
 (function(){let st=null;
-const py=e=>e.clientY+window.scrollY;
+const py=e=>e.clientY+app.scrollTop;
 function upd(){if(!st)return;const dy=st.y-st.y0;st.el.style.transform=`translateY(${dy}px)`;
  const c=st.r0[st.i].mid+dy;let ni=st.i;st.r0.forEach((r,j)=>{if(j<st.i&&c<r.mid)ni=Math.min(ni,j);if(j>st.i&&c>r.mid)ni=Math.max(ni,j)});st.ni=ni;
  const h=st.r0[st.i].h;st.els.forEach((el,j)=>{if(j==st.i)return;let sh=0;if(st.i<ni&&j>st.i&&j<=ni)sh=-h;if(st.i>ni&&j<st.i&&j>=ni)sh=h;el.style.transform=sh?`translateY(${sh}px)`:""})}
-function tick(){if(!st)return;const m=70,vy=st.cy;if(vy<m)window.scrollBy(0,-12);else if(vy>innerHeight-m)window.scrollBy(0,12);st.y=st.cy+window.scrollY;upd();st.raf=requestAnimationFrame(tick)}
+function tick(){if(!st)return;const m=70,vy=st.cy;const ar=app.getBoundingClientRect();if(vy<ar.top+m)app.scrollBy(0,-12);else if(vy>ar.bottom-m)app.scrollBy(0,12);st.y=st.cy+app.scrollTop;upd();st.raf=requestAnimationFrame(tick)}
 document.addEventListener("pointerdown",e=>{const h=e.target.closest(".dh");if(!h)return;e.preventDefault();const el=h.closest(".card");const els=[...document.querySelectorAll(".card[data-aid]")];const i=els.indexOf(el);if(i<0)return;
- const r0=els.map(x=>{const r=x.getBoundingClientRect();return{h:r.height+(parseFloat(getComputedStyle(x).marginBottom)||0),mid:r.top+window.scrollY+r.height/2}});
+ const r0=els.map(x=>{const r=x.getBoundingClientRect();return{h:r.height+(parseFloat(getComputedStyle(x).marginBottom)||0),mid:r.top+app.scrollTop+r.height/2}});
  st={el,els,i,ni:i,r0,y0:py(e),y:py(e),cy:e.clientY,id:el.dataset.aid,pid:e.pointerId};dragging=true;els.forEach(x=>x.style.transition="transform .15s");el.style.transition="none";el.classList.add("drg");try{h.setPointerCapture(e.pointerId)}catch(_){}st.h=h;st.raf=requestAnimationFrame(tick)});
 document.addEventListener("pointermove",e=>{if(!st)return;e.preventDefault();st.cy=e.clientY;st.y=py(e);upd()},{passive:false});
 function end(save){if(!st)return;const s0=st;st=null;cancelAnimationFrame(s0.raf);dragging=false;
