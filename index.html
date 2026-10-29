@@ -273,8 +273,21 @@ function stk(){
   P.filter(p=>p.mi==mi).forEach(p=>{const k=S.k[p.id]||{},s=stock(p.id),out=sold(p.id,"all")+gift(p.id);
    h+=`<tr class="${s>0?"son":"soff"}"><td><b>${E(p.z)}</b></td><td>${out}</td><td><div class="st" style="justify-content:center"><button data-sa="${p.id}" data-sd="-1">−</button><input type="number" inputmode="numeric" class="${s<0?"neg":base(p.id)>0&&s<=3?"low":""}" value="${s}" data-hay="${p.id}"><button class="p" data-sa="${p.id}" data-sd="1">+</button></div></td></tr>`});
   h+=`</table></div>`});return h}
-var dragging=false;function render(){if(dragging){pend=true;return}build();const nv=document.querySelector("nav");if(nv)nv.style.display=code?"":"none";if(!code){if(document.activeElement&&document.activeElement.id==="gc"){pend=true;return}pend=false;app.innerHTML=gateHTML();return}if(document.activeElement&&document.activeElement.matches("input")){pend=true;return}pend=false;
- app.innerHTML=tab=="res"?resumen():tab=="con"?concierto():tab=="out"?outTab():stk();
+var instP=null,instX=false;try{instX=localStorage.getItem("anube.instx")=="1"}catch(e){}
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();instP=e;render()});
+window.addEventListener("appinstalled",()=>{instP=null;instX=true;render()});
+function instBanner(){try{const sa=matchMedia("(display-mode: standalone)").matches||navigator.standalone;if(sa||instX)return"";
+ const q=new URLSearchParams(location.search).get("i"),ios=/iPhone|iPad|iPod/.test(navigator.userAgent);
+ if(!instP&&!q)return"";
+ let body;if(instP)body=`<button class="btn" data-inst="1">📲 Aplikazioa instalatu</button>`;
+ else if(ios)body=`<span class="mu">iPhonean: Safari-n sakatu <b>Partekatu</b> (karratua gezi batekin) eta gero <b>«Hasierako pantailara gehitu»</b>. Lanpararen ikonoa agertuko da.</span>`;
+ else body=`<span class="mu">Android-en: Chrome-n sakatu goiko <b>⋮</b> menua eta gero <b>«Instalatu aplikazioa»</b> edo <b>«Gehitu hasierako pantailara»</b>.</span>`;
+ return `<div class="card f" style="margin-bottom:10px"><div class="mh"><b>Aplikazio gisa erabili</b><button class="xs" data-instx="1">Ez erakutsi</button></div>${body}</div>`}catch(e){return""}}
+document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;
+ if(t.dataset.inst&&instP){instP.prompt();instP.userChoice.then(()=>{instP=null;render()}).catch(()=>{})}
+ else if(t.dataset.instx){instX=true;try{localStorage.setItem("anube.instx","1")}catch(_){}render()}});
+var dragging=false;function render(){if(dragging){pend=true;return}build();const nv=document.querySelector("nav");if(nv)nv.style.display=code?"":"none";if(!code){if(document.activeElement&&document.activeElement.id==="gc"){pend=true;return}pend=false;app.innerHTML=instBanner()+gateHTML();return}if(document.activeElement&&document.activeElement.matches("input")){pend=true;return}pend=false;
+ app.innerHTML=instBanner()+(tab=="res"?resumen():tab=="con"?concierto():tab=="out"?outTab():stk());
  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t==tab))}
 document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;
  if(t.dataset.t){tab=t.dataset.t;hidAsk=null;addAsk=null;lastHid=null;render()}else if(t.dataset.f){flt=t.dataset.f;render()}else if(t.dataset.c){cur=t.dataset.c;dcf=false;hidAsk=null;addAsk=null;lastHid=null;showH=false;render()}
