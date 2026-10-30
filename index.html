@@ -216,7 +216,7 @@ function concCard(c){const d=S.c[c],i=money(c),l=tot("l",x=>x.c==c),v=tot("v",x=
 function resumen(){
  const cs=Object.keys(S.c).sort((a,b)=>(S.c[b].d||"").localeCompare(S.c[a].d||"")),csA=cs.filter(c=>!isAr(c)),ys=[...new Set(cs.map(yOf))].sort().reverse();
  const ing=P.reduce((a,p)=>a+sold(p.id,"all")*p.p,0),st=P.reduce((a,p)=>a+stock(p.id),0),val=P.reduce((a,p)=>a+stock(p.id)*p.p,0);
- const cv=P.reduce((a,p)=>a+sold(p.id,"all")*p.c,0),cg=P.reduce((a,p)=>a+gift(p.id)*p.c,0),inv=P.reduce((a,p)=>a+base(p.id)*p.c,0),cs0=P.reduce((a,p)=>a+Math.max(0,stock(p.id))*p.c,0),nc=M.filter(m=>!(m.c>0)).length;
+ const cv=P.reduce((a,p)=>a+sold(p.id,"all")*p.c,0),cg=P.reduce((a,p)=>a+gift(p.id)*p.c,0),inv=P.reduce((a,p)=>a+base(p.id)*p.c,0),cs0=P.reduce((a,p)=>a+Math.max(0,stock(p.id))*p.c,0),nc=M.filter((m,mi)=>!(m.c>0)&&P.some(p=>p.mi==mi&&(base(p.id)>0||stock(p.id)>0||sold(p.id,"all")>0||gift(p.id)>0))).length;
  let h=`${hdr("Mertxan 2026 · merchandising")}`+(db?"":`<div class="warn">${connErr?E(connErr)+` <button class="xs" data-set="retry">Berriro saiatu</button>`:"Konektatzen…"}</div>`);
  h+=propsHTML();h+=actHTML();
  h+=`<div class="kpis"><div class="kpi big"><span>Sortutako dirua</span><b>${eur(ing)}</b></div><div class="kpi"><span>Saldutakoak</span><b>${P.reduce((a,p)=>a+sold(p.id,"all"),0)}</b></div><div class="kpi"><span>Oparituak</span><b>${P.reduce((a,p)=>a+gift(p.id),0)}</b></div><div class="kpi"><span>Biltegian</span><b>${st}</b></div><div class="kpi"><span>Stockaren balioa</span><b>${eur(val)}</b></div></div>`;
