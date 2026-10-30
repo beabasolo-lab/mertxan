@@ -146,14 +146,14 @@ function sumOps(ops){const so=(k,o)=>o.old!==undefined?o.old:(SRV[k]||{})[o.id],
   else if(o.c=="outs"){t="Añube · "+(o.t=="d"?"mugimendua ezabatu":(d.t=="v"?"salmenta ":"oparia ")+pl(d.p)+" ×"+d.q)}
   else t=o.c+"/"+o.id;
   out.push(t.replace("undefined",""))});return out}
-async function sendDraft(){const el=$("#pn"),nm=((el&&el.value)||dName||"").trim();if(!nm){edErr="Idatzi zure izena";render();return}
+async function sendDraft(){const el=$("#pn"),nm=((el&&el.value)||dName||"").trim();if(el&&nm)nmEdit=false;if(!nm){edErr="Idatzi zure izena";render();return}
  dName=nm;try{localStorage.setItem("anube.name",nm)}catch(e){}
  const ops=Object.values(DR);if(!ops.length)return;const id="p"+Date.now()+Math.random().toString(36).slice(2,5);
  try{await db.collection("props").doc(id).set({ts:Date.now(),by:nm,ops:ops.map(o=>({c:o.c,id:o.id,t:o.t,d:o.d})),sum:sumOps(ops)});DR={};restoreSrv();edErr="";edMsg="Proposamena bidali da ✓ Editoreek onartzean agertuko da."}catch(e){edErr="Ezin izan da bidali: "+((e&&e.message)||e)}render()}
 async function propAct(id,ok){const p=(S.pr||{})[id];if(!p)return;edErr="";try{if(ok){noLog=true;let ps;try{ps=(p.ops||[]).map(o=>o.t=="d"?db.collection(o.c).doc(o.id).delete():db.collection(o.c).doc(o.id).set(o.d))}finally{noLog=false}await Promise.all(ps);await putAct({ts:Date.now(),by:(p.by||"?")+" ✓",dv:devId,sum:(p.sum||[]).slice(0,30)})}await db.collection("props").doc(id).delete()}catch(e){edErr="Errorea: "+((e&&e.message)||e)}render()}
 /* ===== Jarduera (aldaketen erregistroa + irakurri gabeak) ===== */
 var devId="d0";try{devId=localStorage.getItem("anube.dev")||"";if(!devId){devId="d"+Math.random().toString(36).slice(2,9);localStorage.setItem("anube.dev",devId)}}catch(e){}
-var seenTs=null,noLog=false,LB={},LBt=null,actMore=false,actHide=false;
+var nmEdit=false,seenTs=null,noLog=false,LB={},LBt=null,actMore=false,actHide=false;
 const seenKey=()=>"anube.seen."+code,SK={concerts:"c",lines:"l",stock:"k",items:"i",outs:"o"};
 function loadSeen(){try{const v=localStorage.getItem(seenKey());seenTs=v?parseInt(v):null}catch(e){seenTs=null}}
 function saveSeen(t){seenTs=t;try{localStorage.setItem(seenKey(),String(t))}catch(e){}}
@@ -170,16 +170,16 @@ function actBanner(){const u=unread();if(!u.length||actHide)return"";const L=[];
  return `<div class="card f" style="border-color:var(--ac);margin-bottom:10px"><b>🔔 ${u.length} aldaketa berri</b><div class="mu" style="line-height:1.55">${u.slice(0,3).map(a=>`<b>${E(a.by||"?")}</b>: ${E((a.sum||[])[0]||"")}${(a.sum||[]).length>1?` (+${a.sum.length-1})`:""}`).join("<br>")}${u.length>3?`<br>… +${u.length-3}`:""}</div><div style="display:flex;gap:8px;align-items:center"><button class="xs" data-ahide="1">Geroago</button><button class="xs" data-aview="1">Ikusi</button><button class="btn" style="flex:1" data-aread="1">Dena irakurrita ✓</button></div></div>`}
 function actHTML(){const l=acts();if(!l.length)return"";const u=unread(),uid=new Set(u.map(a=>a.id)),n=actMore?40:6;
  return `<h2>Jarduera${u.length?` <span class="bdg">${u.length}</span>`:""}</h2><div class="card f" id="actsec">${u.length?`<button class="btn" data-aread="1">Dena irakurrita markatu ✓</button>`:`<span class="mu ok">Dena irakurrita ✓</span>`}`+l.slice(0,n).map(a=>`<div style="border-top:1px solid var(--bd);padding-top:8px"><div class="mh"><b>${uid.has(a.id)?"🔵 ":""}${E(a.by||"?")}</b><span class="mu">${E(fdt(a.ts))}</span></div><div class="mu" style="line-height:1.55">${(a.sum||[]).slice(0,8).map(x=>"• "+E(x)).join("<br>")}${(a.sum||[]).length>8?`<br>… +${a.sum.length-8}`:""}</div></div>`).join("")+(l.length>6?`<button class="xs" data-amore="1">${actMore?"Gutxiago ▲":"Gehiago ▼ ("+Math.min(l.length,40)+")"}</button>`:"")+`</div>`}
-function draftBar(){const n=Object.keys(DR).length;if(!n||isEd())return"";return `<div class="card f" style="border-color:var(--warn);margin-bottom:10px"><b>✏️ Aldaketak proposatzen ari zara (${n})</b><span class="mu">Ikuslea zara: zure aldaketak ez dira gordeko editoreek onartu arte.</span><input id="pn" placeholder="Zure izena" value="${E(dName)}" autocomplete="off"><div style="display:flex;gap:8px;align-items:center"><button class="btn" style="flex:1" data-dsend="1">Bidali onartzeko</button><button class="xs" data-ddisc="1">Baztertu</button></div>${edErr?`<div class="warn">${E(edErr)}</div>`:""}</div>`}
+function nameHTML(id){if(dName&&!nmEdit)return `<div class="mu">Zure izena: <b>${E(dName)}</b> <button class="xs" data-nmedit="1">Aldatu</button></div>`;return `<div style="display:flex;gap:8px"><input id="${id}" placeholder="Zure izena" value="${E(dName)}" autocomplete="off" style="flex:1"><button class="btn" data-nmsave="${id}">Gorde</button></div>`}
+function draftBar(){const n=Object.keys(DR).length;if(!n||isEd())return"";return `<div class="card f" style="border-color:var(--warn);margin-bottom:10px"><b>✏️ Aldaketak proposatzen ari zara (${n})</b><span class="mu">Ikuslea zara: zure aldaketak ez dira gordeko editoreek onartu arte.</span>${nameHTML("pn")}<div style="display:flex;gap:8px;align-items:center"><button class="btn" style="flex:1" data-dsend="1">Bidali onartzeko</button><button class="xs" data-ddisc="1">Baztertu</button></div>${edErr?`<div class="warn">${E(edErr)}</div>`:""}</div>`}
 function propsHTML(){const ids=Object.keys(S.pr||{}).sort((a,b)=>(S.pr[a].ts||0)-(S.pr[b].ts||0));if(!isEd())return edMsg?`<div class="mu ok" style="margin-bottom:8px">${E(edMsg)}</div>`:"";if(!ids.length)return"";
  return `<h2>Onartzeko proposamenak (${ids.length})</h2>`+ids.map(id=>{const p=S.pr[id],sm=p.sum||[];return `<div class="card f" style="border-color:var(--warn)"><div class="mh"><b>${E(p.by||"?")}</b><span class="mu">${E(new Date(p.ts||0).toLocaleString("es-ES",{dateStyle:"short",timeStyle:"short"}))}</span></div><div class="mu" style="line-height:1.6">${sm.slice(0,14).map(x=>"• "+E(x)).join("<br>")}${sm.length>14?`<br>… +${sm.length-14}`:""}</div><div style="display:flex;gap:8px;align-items:center"><button class="xs" data-px="${id}">Baztertu</button><button class="btn" style="flex:1" data-pa="${id}">Onartu eta aplikatu</button></div></div>`}).join("")+(edErr?`<div class="warn">${E(edErr)}</div>`:"")}
 function roleHTML(){const ed=isEd();let h=`<div class="mu">Rola: <b>${!mLoaded?"…":ed?(hasCfg()?"Editorea ✓":"Editorea (kode librea)"):"Ikuslea"}</b></div>`;if(!mLoaded)return h;
  const inp=ph=>`<input id="ec2" placeholder="${ph}" autocapitalize="off" autocomplete="off">`;
  if(!hasCfg())h+=`<span class="mu">Orain talde osoak editatu dezake. Sortu editore-kode bat: gero kode normalarekin ikusi bakarrik egingo dute (aldaketak proposatu ditzakete eta zuk onartuko dituzu).</span>${inp("Editore-kodea (adib. nire-kodea-2026)")}<button class="btn" data-ed="create">Editore-kodea sortu</button>`;
- else if(ed)h+=`<input id="nm" placeholder="Zure izena (aldaketetan agertzeko)" value="${E(dName)}" autocomplete="off">${inp("Editore-kode berria (aldatzeko)")}<button class="xs" data-ed="change">Editore-kodea aldatu</button><button class="xs" data-ed="leave">Editore modutik irten (gailu honetan)</button>`;
+ else if(ed)h+=nameHTML("nm")+`${inp("Editore-kode berria (aldatzeko)")}<button class="xs" data-ed="change">Editore-kodea aldatu</button><button class="xs" data-ed="leave">Editore modutik irten (gailu honetan)</button>`;
  else h+=`${inp("Editore-kodea")}<button class="btn" data-ed="join">Editore izan</button>`;
  if(edErr)h+=`<div class="warn">${E(edErr)}</div>`;if(edMsg)h+=`<div class="mu ok">${E(edMsg)}</div>`;return h}
-document.addEventListener("change",e=>{if(e.target&&e.target.id==="nm"){dName=e.target.value.trim();try{localStorage.setItem("anube.name",dName)}catch(_){}}});
 document.addEventListener("click",async e=>{const t=e.target.closest("button");if(!t)return;const D=t.dataset;
  if(D.ed){const a=D.ed,v=((($("#ec2")||{}).value)||"").trim();edErr="";edMsg="";
   if(a=="create"||a=="change"){if(v.length<4){edErr="Kodeak gutxienez 4 karaktere izan behar ditu.";render();return}if(a=="change"&&!isEd())return;const h=await sha(v+"|"+code),prev=edTok;saveTok(h);try{await db.collection("meta").doc("cfg").set({eh:h});edMsg="Editore-kodea gordeta. Gorde ezazu leku seguruan eta partekatu soilik editore izango direnekin."}catch(er){saveTok(prev);edErr="Ezin izan da gorde: "+((er&&er.message)||er)}render()}
@@ -193,6 +193,8 @@ document.addEventListener("click",async e=>{const t=e.target.closest("button");i
  else if(D.unlno){unlArm=null;render()}
  else if(D.unl){if(isEd()){unl[D.unl]=true;unlArm=null;render()}}
  else if(D.lockb){unl[D.lockb]=false;render()}
+ else if(D.nmedit){nmEdit=true;render()}
+ else if(D.nmsave){const v=((($("#"+D.nmsave)||{}).value)||"").trim();if(v){dName=v;try{localStorage.setItem("anube.name",v)}catch(_){}nmEdit=false}render()}
  else if(D.aread)markRead();
  else if(D.ahide){actHide=true;render()}
  else if(D.amore){actMore=!actMore;render()}
