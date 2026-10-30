@@ -450,6 +450,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(!c)try{c=localStorage.getItem("anube.code")}catch(e){}
  if(!c||c.length<8)c=ck();
  code=c&&c.length>=8?c:null;
+ if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
 if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
