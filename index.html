@@ -87,7 +87,7 @@ body.lk #app .st button,body.lk #app [data-hid],body.lk #app [data-g],body.lk #a
 body.lk #app input[data-cash]{opacity:.6}
 </style>
 </head><body><div id="app"></div><div id="pr"></div>
-<nav><button data-t="res">Laburpena</button><button data-t="con">Kontzertua</button><button data-t="stk">Stocka</button><button data-t="out">Añube</button></nav>
+<nav><button data-t="res">Laburpena</button><button data-t="con">Kontzertua</button><button data-t="stk">Stocka</button><button data-t="out">Añube</button><button data-t="km">🚗 Km</button></nav>
 <script>
 const SZ=["XS","S","M","L","XL","XXL","XXXL"],SH=['Kami "Zu zeu zarela erdigune"','Kami "Erakuslehioak"','Kami Txurixa "Izan zarenaren ispilu"','Kami larrosa beltza'];
 const D=[];SH.forEach(n=>D.push({n,p:15,s:SZ}));D.push({n:"Sudadera beltza",p:35,s:SZ});
@@ -137,7 +137,7 @@ function loadTok(){try{edTok=localStorage.getItem(edKey())}catch(e){edTok=null}}
 function saveTok(t){edTok=t;try{t?localStorage.setItem(edKey(),t):localStorage.removeItem(edKey())}catch(e){}}
 const clone=o=>o==null?o:JSON.parse(JSON.stringify(o));
 function addDraft(c,id,t,d){DR[c+"/"+id]={c,id,t,d:clone(d)||null};rsoft()}
-function wrapDb(raw){return{collection:name=>{const c=raw.collection(name);return{doc:id=>{const dd=c.doc(id);const free=()=>isEd()||name==="props";return{set:d=>free()?(logOp(name,id,"s",d),dd.set(d)):(addDraft(name,id,"s",d),Promise.resolve()),delete:()=>free()?(logOp(name,id,"d"),dd.delete()):(addDraft(name,id,"d"),Promise.resolve())}},onSnapshot:(a,b)=>c.onSnapshot(a,b)}},__export:()=>raw.__export(),__import:o=>isEd()?raw.__import(o):Promise.reject(new Error("Editoreek bakarrik inporta dezakete"))}}
+function wrapDb(raw){return{collection:name=>{const c=raw.collection(name);return{doc:id=>{const dd=c.doc(id);const free=()=>isEd()||name==="props";return{set:d=>free()?(logOp(name,id,"s",d),dd.set(d)):(addDraft(name,id,"s",d),Promise.resolve()),delete:()=>free()?(logOp(name,id,"d"),dd.delete()):(addDraft(name,id,"d"),Promise.resolve())}},onSnapshot:(a,b)=>c.onSnapshot(a,b)}},__export:()=>raw.__export().then(o=>{o.km={};Object.keys(S.m||{}).filter(k=>kmRe.test(k)).forEach(k=>{o.km[k]=S.m[k]});return o}),__import:o=>isEd()?raw.__import(o).then(()=>Promise.all(Object.entries(o.km||{}).filter(([k])=>kmRe.test(k)).map(([k,d])=>raw.collection("meta").doc(k).set(d)))):Promise.reject(new Error("Editoreek bakarrik inporta dezakete"))}}
 function restoreSrv(){["c","l","k","i","o"].forEach(k=>{if(SRV[k])S[k]=clone(SRV[k])});pendHid={};pendAr={}}
 function sumOps(ops){const so=(k,o)=>o.old!==undefined?o.old:(SRV[k]||{})[o.id],pl=pid=>{const p=P.find(x=>x.id===pid);return p?p.n+(p.z&&p.z!=="Bakarra"?" "+p.z:""):pid},cn=id=>(S.c[id]||{}).n||id,out=[];
  ops.forEach(o=>{let t="";const d=o.d||{};
@@ -154,7 +154,8 @@ async function sendDraft(){const el=$("#pn"),nm=((el&&el.value)||dName||"").trim
  try{await db.collection("props").doc(id).set({ts:Date.now(),by:nm,ops:ops.map(o=>({c:o.c,id:o.id,t:o.t,d:o.d})),sum:sumOps(ops)});DR={};restoreSrv();edErr="";edMsg="Proposamena bidali da ✓ Editoreek onartzean agertuko da."}catch(e){edErr="Ezin izan da bidali: "+((e&&e.message)||e)}render()}
 async function propAct(id,ok){const p=(S.pr||{})[id];if(!p)return;edErr="";try{if(ok){noLog=true;let ps;try{ps=(p.ops||[]).map(o=>o.t=="d"?db.collection(o.c).doc(o.id).delete():db.collection(o.c).doc(o.id).set(o.d))}finally{noLog=false}await Promise.all(ps);await putAct({ts:Date.now(),by:(p.by||"?")+" ✓",dv:devId,sum:(p.sum||[]).slice(0,30)})}await db.collection("props").doc(id).delete()}catch(e){edErr="Errorea: "+((e&&e.message)||e)}render()}
 var SEC={gain:1};try{const v=JSON.parse(localStorage.getItem("anube.sec")||"null");if(v)SEC=v}catch(e){}
-function secS(k,t,b){const o=!!SEC[k];return `<h2 class="shh"><button class="sh" data-sec="${k}" aria-expanded="${o}"><span>${t}${b||""}</span><i>${o?"▾":"▸"}</i></button></h2><div class="sx"${o?"":" hidden"}>`}
+const secOpen=k=>SEC[k]!==undefined?!!SEC[k]:(k==="gain"||k==="ktr");
+function secS(k,t,b){const o=secOpen(k);return `<h2 class="shh"><button class="sh" data-sec="${k}" aria-expanded="${o}"><span>${t}${b||""}</span><i>${o?"▾":"▸"}</i></button></h2><div class="sx"${o?"":" hidden"}>`}
 const secE=()=>`</div>`;
 /* ===== Jarduera (aldaketen erregistroa + irakurri gabeak) ===== */
 var devId="d0";try{devId=localStorage.getItem("anube.dev")||"";if(!devId){devId="d"+Math.random().toString(36).slice(2,9);localStorage.setItem("anube.dev",devId)}}catch(e){}
@@ -200,7 +201,17 @@ document.addEventListener("click",async e=>{const t=e.target.closest("button");i
  else if(D.lockb){unl[D.lockb]=false;render()}
  else if(D.nmedit){nmEdit=true;render()}
  else if(D.nmsave){const v=((($("#"+D.nmsave)||{}).value)||"").trim();if(v){dName=v;try{localStorage.setItem("anube.name",v)}catch(_){}nmEdit=false}render()}
- else if(D.sec){const k=D.sec;SEC[k]=!SEC[k];try{localStorage.setItem("anube.sec",JSON.stringify(SEC))}catch(_){}const sb=t.closest("h2").nextElementSibling;if(sb)sb.hidden=!SEC[k];t.setAttribute("aria-expanded",!!SEC[k]);const ic=t.querySelector("i");if(ic)ic.textContent=SEC[k]?"▾":"▸"}
+ else if(D.sec){const k=D.sec;SEC[k]=!secOpen(k);try{localStorage.setItem("anube.sec",JSON.stringify(SEC))}catch(_){}const sb=t.closest("h2").nextElementSibling;if(sb)sb.hidden=!SEC[k];t.setAttribute("aria-expanded",!!SEC[k]);const ic=t.querySelector("i");if(ic)ic.textContent=SEC[k]?"▾":"▸"}
+ else if(D.kr){if(!isEd())return;const q=D.kr.split("|"),x=(S.m||{})[q[0]];if(x)kmSet(q[0],{...x,r:Math.max(0,(x.r||0)+parseInt(q[1]))})}
+ else if(D.kedit){kmEd=kmEd===D.kedit?null:D.kedit;kmArm=null;render()}
+ else if(D.ksave){if(!isEd())return;const id=D.ksave,x=(S.m||{})[id],n=(($("#kn")||{}).value||"").trim();if(!x||!n)return;kmBlur();kmSet(id,{...x,n,d:num(($("#kd")||{}).value),t:num(($("#kt")||{}).value)});kmEd=null}
+ else if(D.kdel){if(!isEd())return;if(kmArm!==D.kdel){kmArm=D.kdel;render();return}const id=D.kdel;kmArm=null;if(kmData().trips.some(t=>t.m===id)){kmMsg="Kide honek bidaiak ditu; ezabatu lehenengo bidaia horiek.";render();return}kmMsg="";kmEd=null;kmDel(id)}
+ else if(D.ktdel){if(!isEd())return;if(kmArm!==D.ktdel){kmArm=D.ktdel;render();return}kmArm=null;kmDel(D.ktdel)}
+ else if(D.kseed){if(!isEd())return;const L=[["Hans",28.4,0,0],["Uri",25.6,0,0],["Txikixa",2,0,0],["Garmen",2,0,0],["Egoitz",61.4,5.2,1],["Abasolo",29.2,0,0]];L.forEach((a,i)=>kmSet("kmem_"+a[0].toLowerCase(),{n:a[0],d:a[1],t:a[2],r:a[3],o:i}));if(!(S.m||{}).kcfg)kmSet("kcfg",{price:0.19});kmLog("Km · kideak gehitu dira")}
+ else if(D.kmadd){if(!isEd())return;const n=(($("#kn2")||{}).value||"").trim();if(!n)return;kmBlur();const id="kmem_"+Date.now().toString(36);kmSet(id,{n,d:num(($("#kd2")||{}).value),t:num(($("#kt2")||{}).value),r:0,o:kmData().mem.length});kmLog("Km · kide berria: "+n)}
+ else if(D.kadd){if(!isEd())return;const m=(($("#kk_m")||{}).value||""),k=num(($("#kk_k")||{}).value),b=num(($("#kk_b")||{}).value),o=((($("#kk_o")||{}).value)||"").trim(),d=(($("#kk_d")||{}).value)||new Date().toISOString().slice(0,10);if(!m||!(k>0)){kmMsg="Aukeratu kidea eta idatzi kilometroak.";render();return}kmBlur();kmMsg="";const nm=((S.m||{})[m]||{}).n||"?";kmSet("ktrip_"+Date.now()+"_"+Math.random().toString(36).slice(2,5),{d,m,km:k,t:b,o});kmLog("Km · "+nm+": +"+kmf(k)+(b>0?" · bidesaria "+ke(b):"")+(o?" · "+o:""))}
+ else if(D.kprice){if(!isEd())return;const v=num(($("#kp")||{}).value);if(!(v>0)||v>5){kmMsg="Prezio baliogabea.";render();return}kmBlur();kmMsg="";const old=kmData().price;kmSet("kcfg",{price:v});kmLog("Km · prezioa: "+ke(old)+" → "+ke(v)+" / km")}
+ else if(D.kpdf)saveKmPDF();
  else if(D.aread)markRead();
  else if(D.ahide){actHide=true;render()}
  else if(D.amore){actMore=!actMore;render()}
@@ -297,7 +308,7 @@ function buildPDF(d){const k=pdfKit(),{T,R,np}=k,hid=d.hid||[];
 function buildSummary(d){const k=pdfKit(),{T,R,np}=k,hid=d.hid||[];
  let L=0,V=0,G=0,$=0;const blocks=[],allB=[];
  M.forEach((m,mi)=>{if(hid.includes(m.id))return;const rows=[];let l=0,v=0,r=0;
-  P.filter(p=>p.mi==mi).forEach(p=>{const x=ln(cur,p.id);l+=x.l||0;v+=x.v||0;r+=x.r||0;if((x.v||0)>0)rows.push([p.z,x.v||0,x.r||0,(x.v||0)*p.p])});
+  P.filter(p=>p.mi==mi).forEach(p=>{const x=ln(cur,p.id);l+=x.l||0;v+=x.v||0;r+=x.r||0;if((x.v||0)+(x.r||0)>0)rows.push([p.z,x.l||0,x.v||0,x.r||0,(x.l||0)-(x.v||0)-(x.r||0),(x.v||0)*p.p])});
   if(l+v+r>0){L+=l;V+=v;G+=r;$+=v*m.p;allB.push({m,v,r});if(rows.length)blocks.push({m,rows,l,v,r,$:v*m.p})}});
  T("AÑUBE · MERTXAN · LABURPENA",10,16,18,1);T((d.n||"")+(d.d?" · "+d.d:"")+(d.p?" · "+d.p:""),10,23,12,1);R(10,25,190,.8,0,"0");
  let y=31;const cstC=allB.reduce((a,b)=>a+(b.v+b.r)*(b.m.c||0),0),hasC=cstC>0,bh=(d.cash==null?19:26)+(hasC?7:0);R(10,y,190,bh,.5,".95");
@@ -305,14 +316,14 @@ function buildSummary(d){const k=pdfKit(),{T,R,np}=k,hid=d.hid||[];
  T("Salmentetako dirua: "+eur($),13,y+14,12,1);if(hasC)T("Irabazi garbia (kostuak kenduta): "+eur($-cstC),13,y+(d.cash==null?21:28),12,1);
  if(d.cash!=null){const df=d.cash-$;T("Kutxan kontatutako dirua: "+eur(d.cash)+"    "+(df==0?"Kutxa zuzen dago":"Aldea: "+eur(df)),13,y+21,12,1)}
  y+=bh+6;
- if(!blocks.length)T("Kontzertu honetan oraindik ez da ezer saldu.",10,y+4,11,0);
- const W=[56,44,44,46],H=["Neurria","Saldutakoak","Oparituak","Zenbatekoa"];
+ if(!blocks.length)T("Kontzertu honetan oraindik ez da ezer saldu edo oparitu.",10,y+4,11,0);
+ const W=[24,30,30,30,30,46],H=["Neurria","Ekarriak","Saldutakoak","Oparituak","Bueltan","Zenbatekoa"];
  const nr=blocks.reduce((q,b)=>q+b.rows.length,0),rh0=nr?Math.min(8,(283-y-6-blocks.length*8)/nr):7,rh=rh0>=4.5?rh0:6.5,fs=rh<5.5?9:10;
  const hd=()=>{let x=10;H.forEach((t,i)=>{R(x,y,W[i],6,.5,".9");T(t,x+W[i]/2,y+4.1,8,1,"c");x+=W[i]});y+=6};
  if(nr)hd();
  blocks.forEach(b=>{if(y+6.5+rh*b.rows.length>283){np();y=14;hd()}
   R(10,y,190,6.5,1,"1");T(b.m.n,12,y+4.7,10,1);const tx=`saldu ${b.v} · opari ${b.r} · ${eur(b.$)}`;T(tx,198-tx.length*9*.5*.3528,y+4.7,9,0);y+=6.5;
-  b.rows.forEach(r=>{let x=10;r.forEach((t,i)=>{R(x,y,W[i],rh,.5);T(i==3?eur(t):String(t),x+W[i]/2,y+rh/2+1.4,fs,i==0||i==1?1:0,"c");x+=W[i]});y+=rh});y+=1.5});
+  b.rows.forEach(r=>{let x=10;r.forEach((t,i)=>{R(x,y,W[i],rh,.5);T(i==5?eur(t):String(t),x+W[i]/2,y+rh/2+1.4,fs,i==0||i==2?1:0,"c");x+=W[i]});y+=rh});y+=1.5});
  np();return k.file()}
 function buildStock(){const k=pdfKit(),{T,R,np}=k;const td=new Date().toLocaleDateString("es-ES");
  T("AÑUBE · MERTXAN · STOCKA",10,16,18,1);T("Biltegian dagoena · "+td,10,23,12,1);R(10,25,190,.8,0,"0");
@@ -371,6 +382,49 @@ function szForm(m){const all=allSizes(m.id),rm=(S.i[m.id]||{}).rm||[],on=all.fil
  <div style="display:flex;gap:6px"><input id="ens" placeholder="Neurri berria (adib. 3-4 urte)" style="flex:1"><button class="xs" data-szadd="${m.id}|">Gehitu</button></div>`}
 function editForm(m){return `<div class="f" style="margin:8px 0;padding:10px;background:var(--ac2);border-radius:8px"><input id="en" value="${E(m.n)}" placeholder="Izena"><label class="mu">Salmenta prezioa (€)</label><input id="ep" type="number" inputmode="decimal" step="0.01" value="${m.p}" placeholder="Prezioa (€)"><label class="mu">Kostua unitateko (€, BEZik gabe)</label><input id="ec" type="number" inputmode="decimal" step="0.01" value="${m.c||""}" placeholder="Kostua (€) — hutsik = 0"><span class="mu">Izena edo prezioa aldatzen baduzu, leku guztietan eguneratuko da (kontzertuak, laburpena...). Prezioa aldatzen bada, salmenta guztiak prezio berriarekin kalkulatuko dira.</span>${szForm(m)}<div class="seg" style="grid-template-columns:1fr 1fr;margin-top:10px"><button data-eno="1">Itxi</button><button class="on" data-esave="${m.id}">Gorde izena/prezioa</button></div></div>`}
 function saveEdit(id){const n=$("#en").value.trim(),p=parseFloat($("#ep").value),c=parseFloat($("#ec").value);if(!n||isNaN(p)||p<0)return;const o={...(S.i[id]||{}),n,p,c:isNaN(c)||c<0?0:c};S.i[id]=o;db&&db.collection("items").doc(id).set(o).catch(()=>{});editId=null;render()}
+/* ===== Kilometroak ===== */
+const ke=x=>(Math.round(x*100)/100).toLocaleString("es-ES",{minimumFractionDigits:2,maximumFractionDigits:2})+" €";
+const kmRe=/^k(cfg|mem_|trip_)/;
+var kmEd=null,kmArm=null,kmMsg="";
+const num=v=>{const n=parseFloat(String(v==null?"":v).replace(",","."));return isNaN(n)?0:n};
+const kmf=n=>(Math.round(n*10)/10).toLocaleString("es-ES",{minimumFractionDigits:0,maximumFractionDigits:1})+" km";
+function kmData(){const m=S.m||{},price=m.kcfg&&m.kcfg.price!=null?m.kcfg.price:0.19;
+ const mem=Object.keys(m).filter(k=>k.startsWith("kmem_")).map(k=>({id:k,...m[k]})).sort((a,b)=>(a.o||0)-(b.o||0)||(a.n||"").localeCompare(b.n||""));
+ const trips=Object.keys(m).filter(k=>k.startsWith("ktrip_")).map(k=>({id:k,...m[k]})).sort((a,b)=>(b.d||"").localeCompare(a.d||"")||b.id.localeCompare(a.id));
+ const rows=mem.map(x=>{const mt=trips.filter(t=>t.m===x.id),kmM=mt.reduce((a,t)=>a+(t.km||0),0),tollM=mt.reduce((a,t)=>a+(t.t||0),0),kmR=(x.r||0)*(x.d||0),kmT=kmR+kmM,gas=kmT*price,toll=(x.r||0)*(x.t||0)+tollM;return {...x,nt:mt.length,kmR,kmM,kmT,gas,toll,pay:gas+toll}});
+ const T=rows.reduce((a,r)=>({kmT:a.kmT+r.kmT,gas:a.gas+r.gas,toll:a.toll+r.toll,pay:a.pay+r.pay}),{kmT:0,gas:0,toll:0,pay:0});
+ return {price,mem,trips,rows,T}}
+function kmSet(id,o){if(!isEd())return;S.m=S.m||{};S.m[id]=o;db&&db.collection("meta").doc(id).set(o).catch(e=>{kmMsg="Errorea: "+((e&&e.message)||e);render()});render()}
+function kmDel(id){if(!isEd())return;if(S.m)delete S.m[id];db&&db.collection("meta").doc(id).delete().catch(()=>{});render()}
+function kmLog(t){putAct({ts:Date.now(),by:dName||"Editorea",dv:devId,sum:[t]}).catch(()=>{})}
+const kmBlur=()=>{try{document.activeElement&&document.activeElement.blur&&document.activeElement.blur()}catch(e){}};
+function kmTab(){const D=kmData(),ed=isEd();let h=hdr("Kilometroak");
+ h+=`<div class="kpis"><div class="kpi big"><span>Ordaintzeko guztira</span><b>${ke(D.T.pay)}</b></div><div class="kpi"><span>Km guztira</span><b>${kmf(D.T.kmT)}</b></div><div class="kpi"><span>€ / km</span><b>${ke(D.price)}</b></div></div>`;
+ if(dlc)h+=`<button class="btn" style="width:100%;margin-bottom:12px" data-kpdf="1">Kilometroak (PDF)</button>`;
+ if(kmMsg)h+=`<div class="warn">${E(kmMsg)}</div>`;
+ if(!D.rows.length)h+=`<div class="card mu">Oraindik ez dago kiderik.${ed?"":" Editoreek gehituko dituzte."}</div>`;
+ if(ed&&!D.rows.length)h+=`<button class="btn" data-kseed="1">Kideak gehitu (Excelekoak: Hans, Uri, Txikixa, Garmen, Egoitz, Abasolo)</button>`;
+ D.rows.forEach(r=>{const op=kmEd===r.id;
+  h+=`<div class="card"><div class="mh"><b>${E(r.n)}</b><b class="ok">${ke(r.pay)}</b></div><div class="mu" style="line-height:1.6"><b>${kmf(r.kmT)}</b> · gasolina ${ke(r.gas)} · bidesariak ${ke(r.toll)}<br>Entseguak: ${r.r||0} × ${kmf(r.d||0)} = ${kmf(r.kmR)}${r.nt?` · beste bidaiak (${r.nt}): ${kmf(r.kmM)}`:""}</div>`;
+  if(ed)h+=`<div style="display:flex;gap:10px;align-items:center;justify-content:space-between"><div class="st"><span class="mu">Entseguak</span><button data-kr="${r.id}|-1">−</button><span class="n">${r.r||0}</span><button class="p" data-kr="${r.id}|1">+</button></div><button class="xs" data-kedit="${r.id}">${op?"Itxi":"✎ Editatu"}</button></div>`;
+  if(ed&&op)h+=`<div class="f" style="margin-top:8px;padding:10px;background:var(--ac2);border-radius:8px"><input id="kn" value="${E(r.n)}" placeholder="Izena"><label class="mu">Etxea → lokala (km, joan-etorria barne bada, jarri osoa)</label><input id="kd" inputmode="decimal" value="${r.d||0}"><label class="mu">Bidesaria entsegu bakoitzeko (€)</label><input id="kt" inputmode="decimal" value="${r.t||0}"><div style="display:flex;gap:8px"><button class="btn" style="flex:1" data-ksave="${r.id}">Gorde</button><button class="xs ${kmArm===r.id?"arm":""}" data-kdel="${r.id}">${kmArm===r.id?"Ziur? Sakatu berriro":"Kendu kidea"}</button></div></div>`;
+  h+=`</div>`});
+ if(D.rows.length)h+=`<div class="card" style="background:var(--ac2)"><div class="mh"><b>GUZTIRA</b><b class="ok">${ke(D.T.pay)}</b></div><div class="mu">${kmf(D.T.kmT)} · gasolina ${ke(D.T.gas)} · bidesariak ${ke(D.T.toll)}</div></div>`;
+ h+=secS("ktr","Bidaiak ("+D.trips.length+")")+(D.trips.length?D.trips.slice(0,60).map(t=>{const mm=D.mem.find(x=>x.id===t.m);return `<div class="card f"><div class="mh"><b>${E(mm?mm.n:"?")}</b><span class="mu">${E(t.d||"")}</span></div><div class="mu">${kmf(t.km||0)}${t.t>0?` · bidesaria ${ke(t.t)}`:""}${t.o?` · ${E(t.o)}`:""}</div>${ed?`<div><button class="xs ${kmArm===t.id?"arm":""}" data-ktdel="${t.id}">${kmArm===t.id?"Ziur? Sakatu berriro":"Ezabatu"}</button></div>`:""}</div>`}).join(""):`<div class="card mu">Ez dago bidaiarik. Kontzertuetako eta beste bidaietako kilometroak hemen agertuko dira.</div>`)+secE();
+ if(ed){const td=new Date().toISOString().slice(0,10);
+  h+=secS("kadd","Bidaia berria")+`<div class="card f"><input id="kk_d" type="date" value="${td}"><select id="kk_m">${D.mem.map(x=>`<option value="${x.id}">${E(x.n)}</option>`).join("")}</select><input id="kk_k" inputmode="decimal" placeholder="Km (guztira)"><input id="kk_b" inputmode="decimal" placeholder="Bidesaria € (hutsik = 0)"><input id="kk_o" placeholder="Oharra (adib. Kontzertua Bilbon)"><button class="btn" data-kadd="1">Gehitu bidaia</button></div>`+secE();
+  h+=secS("kmem","Kide berria")+`<div class="card f"><input id="kn2" placeholder="Izena"><input id="kd2" inputmode="decimal" placeholder="Etxea → lokala (km)"><input id="kt2" inputmode="decimal" placeholder="Bidesaria entsegu bakoitzeko (€)"><button class="btn" data-kmadd="1">Gehitu kidea</button></div>`+secE();
+  h+=secS("kprc","Prezioa (€ / km)")+`<div class="card f"><span class="mu">Gasolinaren prezioa km bakoitzeko. Aldatzean, kalkulu guztiak berrikusten dira.</span><input id="kp" inputmode="decimal" value="${String(D.price).replace(".",",")}"><button class="btn" data-kprice="1">Gorde prezioa</button></div>`+secE()}
+ return h}
+function buildKm(D){const k=pdfKit(),{T,R,np}=k,td=new Date().toLocaleDateString("es-ES");
+ T("AÑUBE · MERTXAN · KILOMETROAK",10,16,18,1);T("Ordaintzeko · "+td+" · "+ke(D.price)+" / km",10,23,12,1);R(10,25,190,.8,0,"0");
+ let y=31;const W=[50,34,34,34,38],H=["Kidea","Km","Gasolina","Bidesariak","Ordaintzeko"],rh=8;
+ let x=10;H.forEach((t,i)=>{R(x,y,W[i],6,.5,".9");T(t,x+W[i]/2,y+4.1,8,1,"c");x+=W[i]});y+=6;
+ const row=(c,b)=>{let x=10;c.forEach((t,i)=>{R(x,y,W[i],rh,.5,b?".95":undefined);T(String(t),x+W[i]/2,y+rh/2+1.6,10,i==0||i==4||b?1:0,"c");x+=W[i]});y+=rh};
+ D.rows.forEach(r=>{if(y>270){np();y=14}row([r.n,kmf(r.kmT),ke(r.gas),ke(r.toll),ke(r.pay)])});
+ row(["GUZTIRA",kmf(D.T.kmT),ke(D.T.gas),ke(D.T.toll),ke(D.T.pay)],true);
+ np();return k.file()}
+async function saveKmPDF(){if(!dlc)return;try{await dlc.save({filename:"kilometroak-"+new Date().toISOString().slice(0,10)+".pdf",data:buildKm(kmData())})}catch(e){}}
 function stkView(){const tot0=P.reduce((a,p)=>a+Math.max(0,stock(p.id)),0),vt=P.reduce((a,p)=>a+sold(p.id,"all"),0);
  let h=`${hdr("Biltegiko stocka")}${dlc?`<button class="btn" style="width:100%;margin-bottom:12px" data-psk="1">Stocka (PDF)</button>`:""}<div class="kpis"><div class="kpi"><span>Biltegian</span><b>${tot0}</b></div><div class="kpi"><span>Saldutakoak</span><b>${vt}</b></div></div>`;
  let any=false;M.forEach((m,mi)=>{const ps=P.filter(p=>p.mi==mi&&(stock(p.id)>0||sold(p.id,"all")>0));if(!ps.length)return;any=true;const tu=ps.reduce((a,p)=>a+Math.max(0,stock(p.id)),0),ts=ps.reduce((a,p)=>a+sold(p.id,"all"),0);
@@ -403,7 +457,7 @@ function fitNav(){try{const sa=matchMedia("(display-mode: standalone)").matches|
 addEventListener("resize",fitNav);addEventListener("orientationchange",()=>setTimeout(fitNav,300));addEventListener("load",fitNav);fitNav();
 
 var dragging=false;function render(){if(dragging){pend=true;return}build();const nv=document.querySelector("nav");if(nv)nv.style.display=code?"":"none";if(!code){if(document.activeElement&&document.activeElement.id==="gc"){pend=true;return}pend=false;app.innerHTML=instBanner()+gateHTML();return}if(document.activeElement&&document.activeElement.matches("input")){pend=true;return}pend=false;
- if(vw()&&(tab=="con"||tab=="out"))tab="res";initSeen();app.innerHTML=instBanner()+actBanner()+draftBar()+(tab=="res"?resumen():tab=="con"?concierto():tab=="out"?outTab():(vw()?stkView():stk()));
+ if(vw()&&(tab=="con"||tab=="out"))tab="res";initSeen();app.innerHTML=instBanner()+actBanner()+draftBar()+(tab=="res"?resumen():tab=="con"?concierto():tab=="out"?outTab():tab=="km"?kmTab():(vw()?stkView():stk()));
  document.querySelectorAll("nav button").forEach(b=>{b.classList.toggle("on",b.dataset.t==tab);b.style.display=vw()&&(b.dataset.t=="con"||b.dataset.t=="out")?"none":""});
  document.body.classList.toggle("lk",tab=="con"&&!!S.c[cur]&&isLocked(cur));
  const nb=document.querySelector("nav [data-t=res]");if(nb){const n=(isEd()?Object.keys(S.pr||{}).length:0)+unread().length;try{navigator.setAppBadge&&(n?navigator.setAppBadge(n):navigator.clearAppBadge())}catch(_){}const h="Laburpena"+(n?` <span class="bdg">${n}</span>`:"");if(nb.innerHTML!==h)nb.innerHTML=h}}
@@ -421,7 +475,7 @@ document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)r
  else if(a=="out"){if(outArm){try{localStorage.removeItem("anube.code")}catch(e){}try{document.cookie="anube_code=;max-age=0;path="+location.pathname.replace(/[^/]*$/,"")}catch(e){}try{history.replaceState(null,"",location.pathname)}catch(e){}code=null;db=null;S={c:{},l:{},k:{},i:{},o:{},m:{},pr:{}};cur=null;outArm=false;location.reload()}else{outArm=true;render()}}}
  else if(t.dataset.szdel){const [a,b]=t.dataset.szdel.split("|");if(szArm==b)szDel(a,b);else{szArm=b;render()}}else if(t.dataset.szadd!==undefined){const [a,z]=t.dataset.szadd.split("|");szAdd(a,z||($("#ens")||{}).value)}else if(t.dataset.mv){moveArt(t.dataset.mv,+t.dataset.dir)}else if(t.dataset.hid){hidAsk=t.dataset.hid;render()}else if(t.dataset.hno){hidAsk=null;render()}else if(t.dataset.hyes){const id=t.dataset.hyes;hidAsk=null;lastHid=id;toggleHid(id,true)}else if(t.dataset.hundo){const id=lastHid;lastHid=null;if(id)toggleHid(id,false);else render()}else if(t.dataset.ask){addAsk=addAsk==t.dataset.ask?null:t.dataset.ask;render()}else if(t.dataset.ano){addAsk=null;render()}else if(t.dataset.ayes){const id=t.dataset.ayes;addAsk=null;toggleHid(id,false)}else if(t.dataset.del){if(armed==t.dataset.del){const id=armed;if(id[0]=="d"){S.i[id]={hide:true};db&&db.collection("items").doc(id).set({hide:true}).catch(()=>{})}else{delete S.i[id];db&&db.collection("items").doc(id).delete().catch(()=>{})}armed=null}else armed=t.dataset.del;render()}});
 function addItem(){const n=$("#in").value.trim(),p=parseFloat($("#ip").value);if(!n||isNaN(p)){$("#in").focus();return}const c=parseFloat($("#ic").value),id="i"+Date.now(),d={n,p,t:nt,c:isNaN(c)||c<0?0:c};S.i[id]=d;db&&db.collection("items").doc(id).set(d).catch(()=>{});render()}
-document.addEventListener("change",e=>{const t=e.target;if(t.id==="imp"){const f=t.files&&t.files[0];if(!f)return;f.text().then(x=>{try{const o=JSON.parse(x),cols=["concerts","lines","stock","items","outs"];let n=0;const clean={};cols.forEach(c=>{if(o[c]&&typeof o[c]==="object"){clean[c]=o[c];n+=Object.keys(o[c]).length}});if(!n)throw new Error("Hutsik");impData={obj:clean,n};render()}catch(err){connErr="Fitxategi baliogabea";impData=null;render()}})}else if(t.id==="oa"){O.a=+t.value;O.z=0;render()}else if(t.id==="oz"){O.z=+t.value;render()}else if(t.dataset.cash!==undefined)setCash(t.value);else if(t.dataset.hay)setHay(t.dataset.hay,t.value);else if(t.dataset.s)setStock(t.dataset.s,t.dataset.f,t.value)});
+document.addEventListener("change",e=>{const t=e.target;if(t.id==="imp"){const f=t.files&&t.files[0];if(!f)return;f.text().then(x=>{try{const o=JSON.parse(x),cols=["concerts","lines","stock","items","outs","km"];let n=0;const clean={};cols.forEach(c=>{if(o[c]&&typeof o[c]==="object"){clean[c]=o[c];n+=Object.keys(o[c]).length}});if(!n)throw new Error("Hutsik");impData={obj:clean,n};render()}catch(err){connErr="Fitxategi baliogabea";impData=null;render()}})}else if(t.id==="oa"){O.a=+t.value;O.z=0;render()}else if(t.id==="oz"){O.z=+t.value;render()}else if(t.dataset.cash!==undefined)setCash(t.value);else if(t.dataset.hay)setHay(t.dataset.hay,t.value);else if(t.dataset.s)setStock(t.dataset.s,t.dataset.f,t.value)});
 document.addEventListener("input",e=>{if(e.target.id==="on")O.note=e.target.value});
 document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;const D=t.dataset;
  if(D.sar){showAr=!showAr;render()}
