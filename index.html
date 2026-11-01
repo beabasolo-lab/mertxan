@@ -129,6 +129,7 @@ var mLoaded=false,edTok=null,DR={},SRV={},unl={},unlArm=null,edErr="",edMsg="",d
 try{dName=localStorage.getItem("anube.name")||""}catch(e){}
 const hasCfg=()=>!!(S.m&&S.m.cfg&&S.m.cfg.eh);
 const isEd=()=>mLoaded&&(!hasCfg()||(!!edTok&&edTok===S.m.cfg.eh));
+const vw=()=>mLoaded&&!isEd();
 const isLocked=c=>isAr(c)&&!unl[c];
 const sha=s=>crypto.subtle.digest("SHA-256",new TextEncoder().encode(s)).then(b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join(""));
 const edKey=()=>"anube.ed."+code;
@@ -294,24 +295,24 @@ function buildPDF(d){const k=pdfKit(),{T,R,np}=k,hid=d.hid||[];
  if(y==30)T("Oraindik ez da ezer ekarri.",10,y+4,11,0);
  if(y>278){np();y=14}T("Kutxan kontatutako dirua: ____________ €",10,y+4,12,1);np();return k.file()}
 function buildSummary(d){const k=pdfKit(),{T,R,np}=k,hid=d.hid||[];
- let L=0,V=0,G=0,$=0;const blocks=[];
+ let L=0,V=0,G=0,$=0;const blocks=[],allB=[];
  M.forEach((m,mi)=>{if(hid.includes(m.id))return;const rows=[];let l=0,v=0,r=0;
-  P.filter(p=>p.mi==mi).forEach(p=>{const x=ln(cur,p.id);if((x.l||0)+(x.v||0)+(x.r||0)>0){rows.push([p.z,x.l||0,x.v||0,x.r||0,(x.l||0)-(x.v||0)-(x.r||0),(x.v||0)*p.p]);l+=x.l||0;v+=x.v||0;r+=x.r||0}});
-  if(rows.length){blocks.push({m,rows,l,v,r,$:v*m.p});L+=l;V+=v;G+=r;$+=v*m.p}});
+  P.filter(p=>p.mi==mi).forEach(p=>{const x=ln(cur,p.id);l+=x.l||0;v+=x.v||0;r+=x.r||0;if((x.v||0)>0)rows.push([p.z,x.v||0,x.r||0,(x.v||0)*p.p])});
+  if(l+v+r>0){L+=l;V+=v;G+=r;$+=v*m.p;allB.push({m,v,r});if(rows.length)blocks.push({m,rows,l,v,r,$:v*m.p})}});
  T("AÑUBE · MERTXAN · LABURPENA",10,16,18,1);T((d.n||"")+(d.d?" · "+d.d:"")+(d.p?" · "+d.p:""),10,23,12,1);R(10,25,190,.8,0,"0");
- let y=31;const cstC=blocks.reduce((a,b)=>a+(b.v+b.r)*(b.m.c||0),0),hasC=cstC>0,bh=(d.cash==null?19:26)+(hasC?7:0);R(10,y,190,bh,.5,".95");
+ let y=31;const cstC=allB.reduce((a,b)=>a+(b.v+b.r)*(b.m.c||0),0),hasC=cstC>0,bh=(d.cash==null?19:26)+(hasC?7:0);R(10,y,190,bh,.5,".95");
  T(`Ekarriak: ${L}    Saldutakoak: ${V}    Oparituak: ${G}    Bueltan: ${L-V-G}`,13,y+7,12,1);
  T("Salmentetako dirua: "+eur($),13,y+14,12,1);if(hasC)T("Irabazi garbia (kostuak kenduta): "+eur($-cstC),13,y+(d.cash==null?21:28),12,1);
  if(d.cash!=null){const df=d.cash-$;T("Kutxan kontatutako dirua: "+eur(d.cash)+"    "+(df==0?"Kutxa zuzen dago":"Aldea: "+eur(df)),13,y+21,12,1)}
  y+=bh+6;
- if(!blocks.length)T("Kontzertu honetan oraindik ez dago ezer idatzita.",10,y+4,11,0);
- const W=[24,30,30,30,30,46],H=["Neurria","Ekarriak","Saldutakoak","Oparituak","Bueltan","Zenbatekoa"];
+ if(!blocks.length)T("Kontzertu honetan oraindik ez da ezer saldu.",10,y+4,11,0);
+ const W=[56,44,44,46],H=["Neurria","Saldutakoak","Oparituak","Zenbatekoa"];
  const nr=blocks.reduce((q,b)=>q+b.rows.length,0),rh0=nr?Math.min(8,(283-y-6-blocks.length*8)/nr):7,rh=rh0>=4.5?rh0:6.5,fs=rh<5.5?9:10;
  const hd=()=>{let x=10;H.forEach((t,i)=>{R(x,y,W[i],6,.5,".9");T(t,x+W[i]/2,y+4.1,8,1,"c");x+=W[i]});y+=6};
  if(nr)hd();
  blocks.forEach(b=>{if(y+6.5+rh*b.rows.length>283){np();y=14;hd()}
   R(10,y,190,6.5,1,"1");T(b.m.n,12,y+4.7,10,1);const tx=`saldu ${b.v} · opari ${b.r} · ${eur(b.$)}`;T(tx,198-tx.length*9*.5*.3528,y+4.7,9,0);y+=6.5;
-  b.rows.forEach(r=>{let x=10;r.forEach((t,i)=>{R(x,y,W[i],rh,.5);T(i==5?eur(t):String(t),x+W[i]/2,y+rh/2+1.4,fs,i==0||i==2?1:0,"c");x+=W[i]});y+=rh});y+=1.5});
+  b.rows.forEach(r=>{let x=10;r.forEach((t,i)=>{R(x,y,W[i],rh,.5);T(i==3?eur(t):String(t),x+W[i]/2,y+rh/2+1.4,fs,i==0||i==1?1:0,"c");x+=W[i]});y+=rh});y+=1.5});
  np();return k.file()}
 function buildStock(){const k=pdfKit(),{T,R,np}=k;const td=new Date().toLocaleDateString("es-ES");
  T("AÑUBE · MERTXAN · STOCKA",10,16,18,1);T("Biltegian dagoena · "+td,10,23,12,1);R(10,25,190,.8,0,"0");
@@ -370,6 +371,11 @@ function szForm(m){const all=allSizes(m.id),rm=(S.i[m.id]||{}).rm||[],on=all.fil
  <div style="display:flex;gap:6px"><input id="ens" placeholder="Neurri berria (adib. 3-4 urte)" style="flex:1"><button class="xs" data-szadd="${m.id}|">Gehitu</button></div>`}
 function editForm(m){return `<div class="f" style="margin:8px 0;padding:10px;background:var(--ac2);border-radius:8px"><input id="en" value="${E(m.n)}" placeholder="Izena"><label class="mu">Salmenta prezioa (€)</label><input id="ep" type="number" inputmode="decimal" step="0.01" value="${m.p}" placeholder="Prezioa (€)"><label class="mu">Kostua unitateko (€, BEZik gabe)</label><input id="ec" type="number" inputmode="decimal" step="0.01" value="${m.c||""}" placeholder="Kostua (€) — hutsik = 0"><span class="mu">Izena edo prezioa aldatzen baduzu, leku guztietan eguneratuko da (kontzertuak, laburpena...). Prezioa aldatzen bada, salmenta guztiak prezio berriarekin kalkulatuko dira.</span>${szForm(m)}<div class="seg" style="grid-template-columns:1fr 1fr;margin-top:10px"><button data-eno="1">Itxi</button><button class="on" data-esave="${m.id}">Gorde izena/prezioa</button></div></div>`}
 function saveEdit(id){const n=$("#en").value.trim(),p=parseFloat($("#ep").value),c=parseFloat($("#ec").value);if(!n||isNaN(p)||p<0)return;const o={...(S.i[id]||{}),n,p,c:isNaN(c)||c<0?0:c};S.i[id]=o;db&&db.collection("items").doc(id).set(o).catch(()=>{});editId=null;render()}
+function stkView(){const tot0=P.reduce((a,p)=>a+Math.max(0,stock(p.id)),0),vt=P.reduce((a,p)=>a+sold(p.id,"all"),0);
+ let h=`${hdr("Biltegiko stocka")}${dlc?`<button class="btn" style="width:100%;margin-bottom:12px" data-psk="1">Stocka (PDF)</button>`:""}<div class="kpis"><div class="kpi"><span>Biltegian</span><b>${tot0}</b></div><div class="kpi"><span>Saldutakoak</span><b>${vt}</b></div></div>`;
+ let any=false;M.forEach((m,mi)=>{const ps=P.filter(p=>p.mi==mi&&(stock(p.id)>0||sold(p.id,"all")>0));if(!ps.length)return;any=true;const tu=ps.reduce((a,p)=>a+Math.max(0,stock(p.id)),0),ts=ps.reduce((a,p)=>a+sold(p.id,"all"),0);
+  h+=`<div class="card ${tu>0?"on":"off"}"><div class="mh"><b>${E(m.n)}</b><span>${tu} geratzen · ${ts} saldu</span></div><table><tr><th>Neurria</th><th>Saldu</th><th>Geratzen</th></tr>${ps.map(p=>{const s0=stock(p.id);return `<tr class="${s0>0?"son":"soff"}"><td><b>${E(p.z)}</b></td><td>${sold(p.id,"all")}</td><td><b class="${s0>0&&s0<=3?"low":""}">${Math.max(0,s0)}</b></td></tr>`}).join("")}</table></div>`});
+ if(!any)h+=`<div class="card mu">Oraindik ez dago daturik.</div>`;return h}
 function stk(){
  let h=`${hdr("Biltegiko stocka")}${dlc?`<button class="btn" style="width:100%;margin-bottom:12px" data-psk="1">Stocka (PDF)</button>`:""}<div class="card f"><b>Artikulu berria</b><input id="in" placeholder="Izena (adib. Pegatinak, Kamiseta berria…)"><input id="ip" type="number" inputmode="decimal" step="0.01" placeholder="Salmenta prezioa (€)"><input id="ic" type="number" inputmode="decimal" step="0.01" placeholder="Kostua unitateko (€) — hutsik = 0"><div class="seg sw" style="grid-template-columns:1fr 1fr"><button data-t2="1" class="${nt?"on":""}">Neurriekin</button><button data-t2="0" class="${nt?"":"on"}">Neurririk gabe</button></div><button class="btn" id="ai">Gehitu artikulua</button></div><div class="mu" style="margin-bottom:8px">Sakatu + gehiago dituzunean (adibidez, eskaera berri bat iristen denean). Asko batera gehitzeko, idatzi guztizko zenbakia laukian. Kontzertuetan saldutakoa eta oparitutakoa automatikoki kentzen da.</div>`;
  M.forEach((m,mi)=>{const tu=P.filter(p=>p.mi==mi).reduce((a,p)=>a+stock(p.id),0);h+=`<div class="card ${tu>0?"on":"off"}" data-aid="${m.id}"><div class="mh"><span class="dh" data-drag="${m.id}" title="Arrastatu">⠿</span><button class="tt" data-edit="${m.id}">${E(m.n)} ✎</button><span>${m.c>0?`<small class="mu">kostua ${eur(m.c)}</small> `:""}${eur(m.p)} ${m.id?`<button class="xs ${armed==m.id?"arm":""}" data-del="${m.id}">${armed==m.id?"Ziur? Sakatu berriro":"Kendu"}</button>`:""}</span></div>${editId==m.id?editForm(m):""}<table><tr><th>Neurria</th><th>Irten da</th><th>Dago (+ / −)</th></tr>`;
@@ -397,8 +403,8 @@ function fitNav(){try{const sa=matchMedia("(display-mode: standalone)").matches|
 addEventListener("resize",fitNav);addEventListener("orientationchange",()=>setTimeout(fitNav,300));addEventListener("load",fitNav);fitNav();
 
 var dragging=false;function render(){if(dragging){pend=true;return}build();const nv=document.querySelector("nav");if(nv)nv.style.display=code?"":"none";if(!code){if(document.activeElement&&document.activeElement.id==="gc"){pend=true;return}pend=false;app.innerHTML=instBanner()+gateHTML();return}if(document.activeElement&&document.activeElement.matches("input")){pend=true;return}pend=false;
- initSeen();app.innerHTML=instBanner()+actBanner()+draftBar()+(tab=="res"?resumen():tab=="con"?concierto():tab=="out"?outTab():stk());
- document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t==tab));
+ if(vw()&&(tab=="con"||tab=="out"))tab="res";initSeen();app.innerHTML=instBanner()+actBanner()+draftBar()+(tab=="res"?resumen():tab=="con"?concierto():tab=="out"?outTab():(vw()?stkView():stk()));
+ document.querySelectorAll("nav button").forEach(b=>{b.classList.toggle("on",b.dataset.t==tab);b.style.display=vw()&&(b.dataset.t=="con"||b.dataset.t=="out")?"none":""});
  document.body.classList.toggle("lk",tab=="con"&&!!S.c[cur]&&isLocked(cur));
  const nb=document.querySelector("nav [data-t=res]");if(nb){const n=(isEd()?Object.keys(S.pr||{}).length:0)+unread().length;try{navigator.setAppBadge&&(n?navigator.setAppBadge(n):navigator.clearAppBadge())}catch(_){}const h="Laburpena"+(n?` <span class="bdg">${n}</span>`:"");if(nb.innerHTML!==h)nb.innerHTML=h}}
 document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;
