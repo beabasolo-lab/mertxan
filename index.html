@@ -315,7 +315,7 @@ function resumen(){
  h+=secE();
  h+=secS("kont","Kontzertuak")+(csA.length?csA.map(c=>concCard(c)).join(""):`<div class="card mu">${cs.length?"Kontzertu guztiak artxibatuta daude.":"Oraindik ez dago kontzerturik. Sortu lehena Kontzertua fitxan."}</div>`);
  {const ca=cs.filter(isAr);if(ca.length){h+=`<div style="text-align:center;margin:10px 0"><button class="xs" data-sres="1">📦 Artxibatuak (${ca.length}) ${showArR?"▲":"▼"}</button></div>`;if(showArR)h+=ca.map(c=>concCard(c)).join("")}}
- {const ov=P.reduce((a,p)=>a+outq(p.id,"v"),0),og=P.reduce((a,p)=>a+outq(p.id,"r"),0);if(ov+og>0)h+=`<h2>Kontzertuetatik kanpo</h2><div class="card"><div class="mu">Saldutakoak ${ov} · Oparituak ${og}</div><div><b>${eur(P.reduce((a,p)=>a+outq(p.id,"v")*p.p,0))}</b></div></div>`}
+ {const ov=P.reduce((a,p)=>a+outq(p.id,"v"),0),og=P.reduce((a,p)=>a+outq(p.id,"r"),0);if(ov+og>0)h+=`<h2>Kontzertuetatik kanpo</h2><div class="card"><div class="mu">Saldutakoak ${ov} · Oparituak ${og}</div><div><b>${eur(P.reduce((a,p)=>a+outq(p.id,"v")*p.p,0))}</b></div>${outList().map(x=>`<div class="bi" style="border-top:1px solid var(--bd);margin-top:8px;padding-top:8px;display:flex;justify-content:space-between;gap:10px"><div style="min-width:0"><b>${x.q} × ${E(x.nm)}</b><div class="mu">${x.t=="v"?"Salmenta":"Oparia"} · ${E(x.dt)}${x.note?" · "+E(x.note):""}</div></div>${x.t=="v"?`<b>${eur(x.amt)}</b>`:`<span class="mu">🎁</span>`}</div>`).join("")}</div>`}
 
  h+=secE();
  if(ys.length){const T={n:0,u:0,rev:0,net:0};const rows=ys.map(y=>{const q=yStats(y);T.n+=q.n;T.u+=q.u;T.rev+=q.rev;T.net+=q.net;return `<tr><td><b>${y}</b></td><td>${q.n}</td><td>${q.u}</td><td>${eur(q.rev)}</td><td class="${q.net>=0?"ok":"neg"}"><b>${eur(q.net)}</b></td></tr>`}).join("");
@@ -437,6 +437,7 @@ function outTab(){
   return `<div class="row" style="flex-wrap:wrap;align-items:flex-start"><div style="flex:1;min-width:0"><b>${x.q} × ${nm}</b><div class="mu">${x.t=="v"?"Salmenta":"Oparia"} · ${dt}</div><div style="font-size:13px">${E(x.note)}</div></div><div style="text-align:right">${x.t=="v"&&pp?`<b>${eur(x.q*pp.p)}</b><br>`:""}<button class="xs ${armO==id?"arm":""}" data-odel="${id}">${armO==id?"Ziur? Sakatu berriro":"Kendu"}</button></div></div>`}).join("")+`</div>`:`<div class="card mu">Oraindik ez dago mugimendurik.</div>`;
  return h}
 
+function outList(){return Object.keys(S.o||{}).sort().reverse().map(id=>{const x=S.o[id],pp=P.find(q=>q.id===x.p);return {q:x.q,t:x.t,note:x.note||"",dt:(x.d||"").split("-").reverse().slice(0,2).join("/"),nm:pp?pp.n+(pp.z!=="Bakarra"?" ("+pp.z+")":""):"(kendutako artikulua)",amt:x.t=="v"&&pp?x.q*pp.p:0}})}
 function allSizes(id){const di=id[0]=="d"&&/^d\d+$/.test(id)?+id.slice(1):-1,ov=S.i[id]||{},out=[];
  if(di>=0){let k=0;D.forEach((m,i)=>{m.s.forEach(z=>{if(i==di)out.push({pid:"p"+k,z});k++})})}
  else{const it=S.i[id]||{};(it.t?SZ:["Bakarra"]).forEach((z,zi)=>out.push({pid:id+"_"+zi,z}))}
@@ -588,7 +589,7 @@ function buildResumen(){const k=pdfKit(),{T,R,np}=k,td=new Date().toLocaleDateSt
  y+=5;
  // kanpo
  sec("Kontzertuetatik kanpo");
- {const ov=P.reduce((a,p)=>a+outq(p.id,"v"),0),og=P.reduce((a,p)=>a+outq(p.id,"r"),0),oi=P.reduce((a,p)=>a+outq(p.id,"v")*p.p,0);kv("Saldutakoak",String(ov));kv("Oparituak",String(og));kv("Sarrerak",ke(oi),1)}
+ {const ov=P.reduce((a,p)=>a+outq(p.id,"v"),0),og=P.reduce((a,p)=>a+outq(p.id,"r"),0),oi=P.reduce((a,p)=>a+outq(p.id,"v")*p.p,0);kv("Saldutakoak",String(ov));kv("Oparituak",String(og));kv("Sarrerak",ke(oi),1);y+=1;outList().forEach(x=>{ens(6);T(cut(x.q+" x "+x.nm+" - "+(x.t=="v"?"Salmenta":"Oparia")+" - "+x.dt+(x.note?" - "+x.note:""),88),12,y+4,8.5,0);if(x.t=="v")T(ke(x.amt),190,y+4,8.5,1,"c");y+=5.6})}
  y+=4;
  // urteak
  sec("Urteko konparaketa");
