@@ -500,7 +500,8 @@ async function kmCopy(){const tx=kmText(kmData());const ok=()=>{kmCp=true;render
  try{if(navigator.share&&/iPhone|iPad|Android/i.test(navigator.userAgent)){await navigator.share({text:tx});return}}catch(e){if(e&&e.name==="AbortError")return}
  try{await navigator.clipboard.writeText(tx);ok();return}catch(e){}
  try{const ta=document.createElement("textarea");ta.value=tx;ta.style.cssText="position:fixed;top:0;left:0;opacity:0";document.body.appendChild(ta);ta.focus();ta.select();ta.setSelectionRange(0,99999);const r=document.execCommand("copy");ta.remove();if(r)ok()}catch(e){}}
-function vib(){if(RM)return;try{navigator.vibrate&&navigator.vibrate(9)}catch(e){}}
+var hpL=null;function hap(){try{if(!hpL){const l=document.createElement("label");l.setAttribute("aria-hidden","true");l.style.cssText="position:fixed;left:-99px;top:-99px;width:1px;height:1px;opacity:0;pointer-events:none";const i=document.createElement("input");i.type="checkbox";i.setAttribute("switch","");i.tabIndex=-1;l.appendChild(i);document.body.appendChild(l);hpL=l}hpL.click()}catch(e){}}
+function vib(){if(RM)return;try{if(navigator.vibrate)navigator.vibrate(9);else hap()}catch(e){}}
 async function kmSettle(){if(!isEd())return;const D=kmData();if(!(D.T.pay>0||D.T.kmT>0))return;const ts=Date.now(),id="ksettle_"+ts,rs={};D.mem.forEach(m=>{rs[m.id]=m.r||0});
  const doc={ts,by:dName||"Editorea",tot:Math.round(D.T.pay*100)/100,km:Math.round(D.T.kmT*10)/10,price:D.price,rows:D.rows.filter(r=>r.kmT>0||r.pay>0).map(r=>r.n+"|"+Math.round(r.pay*100)/100+"|"+Math.round(r.kmT*10)/10),rs,tids:D.trips.map(t=>t.id)};
  kmMsg="";const jobs=[];
