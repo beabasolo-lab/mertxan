@@ -91,13 +91,21 @@ nav button.on .nl{font-size:12px;margin-left:4px;max-width:100px}
 .btn.alt{background:var(--ac2)!important;color:var(--ac)!important}
 .kroute{display:flex;align-items:center;gap:8px}.kroute input{flex:1;min-width:0}.kroute span{color:var(--mu)}
 label.chk{display:flex;align-items:center;gap:8px;font-size:14px}label.chk input{width:auto}
-.kmap{position:relative;height:200px;border-radius:12px;overflow:hidden;background:var(--ac2);border:1px solid var(--bd)}
+.kmap{position:relative;height:250px;border-radius:18px;overflow:hidden;background:var(--ac2);border:1px solid var(--bd);box-shadow:0 8px 24px rgba(0,0,0,.12)}
 .kmap[hidden]{display:none}
-.kmap img{position:absolute;width:256px;height:256px;max-width:none}
-.kmap svg{position:absolute;left:0;top:0}
-.kmap .kml{position:absolute;bottom:8px;font-size:11px;font-weight:700;background:rgba(255,255,255,.92);color:#222;border-radius:8px;padding:2px 7px;max-width:44%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.kmap .kml.a{left:8px}.kmap .kml.z{right:8px}
-.kmap .kma{position:absolute;right:6px;top:4px;font-size:9px;font-style:normal;color:#333;background:rgba(255,255,255,.75);padding:0 4px;border-radius:4px}
+.kmap img{position:absolute;width:256px;height:256px;max-width:none;user-select:none;-webkit-user-drag:none}
+.kmap.dk img{filter:invert(1) hue-rotate(180deg) brightness(.95) contrast(.9)}
+.kmap svg{position:absolute;left:0;top:0;overflow:visible}
+.kmap .rt{stroke-dasharray:1;stroke-dashoffset:1;animation:kdraw 1.2s cubic-bezier(.32,.72,0,1) .15s forwards}
+.kmap .pin{transform-box:fill-box;transform-origin:50% 100%;animation:kpin .55s cubic-bezier(.34,1.56,.64,1) both;filter:drop-shadow(0 3px 3px rgba(0,0,0,.35))}
+@keyframes kdraw{to{stroke-dashoffset:0}}
+@keyframes kpin{from{transform:scale(0) translateY(-14px);opacity:0}to{transform:none;opacity:1}}
+.kmap .kmb{position:absolute;left:10px;top:10px;background:var(--card);color:var(--tx);font-weight:800;font-size:13px;border-radius:999px;padding:4px 11px;box-shadow:0 3px 10px rgba(0,0,0,.25);border:1px solid var(--bd);white-space:nowrap}
+.kmap .kml{position:absolute;bottom:10px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;background:var(--card);color:var(--tx);border-radius:999px;padding:4px 10px 4px 8px;max-width:46%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.kmap .kml i{width:9px;height:9px;border-radius:50%;flex:none}
+.kmap .kml.a{left:10px}.kmap .kml.z{right:10px}
+.kmap .kma{position:absolute;right:6px;top:4px;font-size:9px;font-style:normal;color:#333;background:rgba(255,255,255,.78);padding:0 5px;border-radius:5px}
+@media(prefers-reduced-motion:reduce){.kmap .rt,.kmap .pin{animation:none;stroke-dashoffset:0}}
 .kswap{flex:none;font-size:16px;padding:6px 10px}
 .kmc .mu{line-height:1.5}
 .kform{gap:10px}
@@ -663,17 +671,21 @@ function kmSgHide(e){const b=e.target.closest&&e.target.closest("[data-sg]");if(
 document.addEventListener("pointerdown",kmSgHide,true);document.addEventListener("mousedown",kmSgHide,true);
 var KSG={a:[],z:[]},ksgT={},ksgC={},kcSeq=0,kcT=null;
 const KRANK={city:0,town:0,village:0,hamlet:0,suburb:1,municipality:0,administrative:0,locality:1,neighbourhood:1,county:1,state:1,island:1};
+function kmCoord(t){t=String(t||"");let m=t.match(/@(-?\d{1,3}\.\d+),(-?\d{1,3}\.\d+)/)||t.match(/!3d(-?\d{1,3}\.\d+)!4d(-?\d{1,3}\.\d+)/)||t.match(/[?&](?:q|ll|query|destination)=(-?\d{1,3}\.\d+)(?:,|%2C)\s*(-?\d{1,3}\.\d+)/);
+ if(!m&&!/^https?:/i.test(t.trim()))m=t.match(/^\s*(-?\d{1,3}(?:\.\d+)?)\s*°?\s*[,;\s]\s*(-?\d{1,3}(?:\.\d+)?)\s*°?\s*$/);
+ if(!m)return null;const la=+m[1],lo=+m[2];if(Math.abs(la)>90||Math.abs(lo)>180)return null;return {lat:la,lon:lo,n:la.toFixed(4)+", "+lo.toFixed(4)}}
 async function kmSug(q){q=q.trim();if(ksgC[q.toLowerCase()])return ksgC[q.toLowerCase()];
  const r=await fetch("https://photon.komoot.io/api/?limit=8&lat=43.1&lon=-2.4&q="+encodeURIComponent(q));if(!r.ok)throw new Error("sug");const j=await r.json(),seen={};
- const L=(j.features||[]).map(f=>{const p=f.properties||{},c=f.geometry&&f.geometry.coordinates;if(!c||!p.name)return null;const sub=[p.city&&p.city!==p.name?p.city:"",p.state,p.country].filter(Boolean).join(", ");return {n:p.name,sub,lat:c[1],lon:c[0],rk:KRANK[p.osm_value]!=null?KRANK[p.osm_value]:2}}).filter(x=>{if(!x)return false;const k=x.n+"|"+x.sub;if(seen[k])return false;seen[k]=1;return true}).sort((a,b)=>a.rk-b.rk).slice(0,6);
+ const L=(j.features||[]).map(f=>{const p=f.properties||{},c=f.geometry&&f.geometry.coordinates,st=p.street?p.street+(p.housenumber?" "+p.housenumber:""):"",nm=p.name||st||p.postcode;if(!c||!nm)return null;const pc=p.osm_value==="postcode",sub=[p.city&&p.city!==nm?p.city:"",(!pc&&p.postcode)?p.postcode:"",p.name&&st?st:"",p.state,p.country].filter(Boolean).join(", ");return {n:nm,sub,lat:c[1],lon:c[0],rk:pc?1:(KRANK[p.osm_value]!=null?KRANK[p.osm_value]:(p.street&&!p.name?2:3))}}).filter(x=>{if(!x)return false;const k=x.n+"|"+x.sub;if(seen[k])return false;seen[k]=1;return true}).sort((a,b)=>a.rk-b.rk).slice(0,6);
  ksgC[q.toLowerCase()]=L;return L}
 function showSg(w,items){KSG[w]=items;const g=$("#kk_sg_"+w);if(!g)return;if(!items.length){g.hidden=true;g.innerHTML="";return}
  g.innerHTML=items.map((x,i)=>`<button type="button" data-sg="${w}|${i}"><span>${x.home?"🏠 ":"📍 "}<b>${E(x.home?x.label:x.n)}</b></span><small>${E(x.sub||"")}</small></button>`).join("");g.hidden=false}
 function kmSugs(w){const inp=$("#kk_"+w);if(!inp)return;const v=inp.value||"",lv=v.trim().toLowerCase();clearTimeout(ksgT[w]);
  const homes=kmData().mem.filter(x=>x.h&&(!lv||(x.n+" etxea").toLowerCase().includes(lv)||x.h.toLowerCase().includes(lv))).map(x=>({home:1,label:x.n+" · etxea",sub:x.h}));
+ const cc=kmCoord(v);if(cc){showSg(w,[{n:cc.n,sub:"Koordenatuak",lat:cc.lat,lon:cc.lon,rk:0,coord:1}]);return}
  showSg(w,homes);if(lv.length<3)return;
  ksgT[w]=setTimeout(async()=>{try{const L=await kmSug(v);if((($("#kk_"+w)||{}).value||"")!==v)return;showSg(w,homes.concat(L))}catch(e){}},300)}
-function kmPick(w,i){const it=KSG[w][i];if(!it)return;const inp=$("#kk_"+w);const lbl=it.home?it.label:(it.sub?it.n+", "+it.sub.split(", ")[0]:it.n);KF["kk_"+w]=lbl;KF["p"+w]=it.home?null:{lat:it.lat,lon:it.lon,n:it.n};if(inp)inp.value=lbl;const g=$("#kk_sg_"+w);if(g)g.hidden=true;
+function kmPick(w,i){const it=KSG[w][i];if(!it)return;const inp=$("#kk_"+w);const lbl=it.home?it.label:(it.sub&&!it.coord?it.n+", "+it.sub.split(", ")[0]:it.n);KF["kk_"+w]=lbl;KF["p"+w]=it.home?null:{lat:it.lat,lon:it.lon,n:it.n};if(inp)inp.value=lbl;const g=$("#kk_sg_"+w);if(g)g.hidden=true;
  if(w==="a"){const z=$("#kk_z");if(z&&!z.value)z.focus();else kmAuto()}else{if(inp)inp.blur();kmAuto()}}
 function kmAuto(){clearTimeout(kcT);kcT=setTimeout(()=>{if((KF.kk_a||"").trim()&&(KF.kk_z||"").trim())kmCalc()},250)}
 function kkInfoHTML(){if(KF.res){const rt=KF.kk_rt!==false,tot=Math.round(KF.res.one*(rt?2:1)*10)/10;return `<div class="kres"><b>${kmf(tot)}</b><span>${E(KF.res.a)} → ${E(KF.res.z)} · ${rt?"joan-etorria":"joan bakarrik"}</span></div>`}
@@ -681,14 +693,17 @@ function kkInfoHTML(){if(KF.res){const rt=KF.kk_rt!==false,tot=Math.round(KF.res
 function kkInfo(){const e=$("#kk_info");if(e)e.innerHTML=kkInfoHTML()}
 function kmRt(){if(!KF.res)return;const rt=KF.kk_rt!==false,tot=Math.round(KF.res.one*(rt?2:1)*10)/10;KF.kk_k=String(tot).replace(".",",");const k=$("#kk_k");if(k)k.value=KF.kk_k;kkInfo()}
 function kmPl(t){t=(t||"").trim();const m=kmData().mem.find(x=>x.h&&t.toLowerCase()===(x.n+" · etxea").toLowerCase());return m?m.h:t}
-function kmMap(el,pts,A,Z){if(!el||!pts||pts.length<2)return;const W=el.clientWidth||340,H=200,mx=lo=>(lo+180)/360,my=la=>{const q=Math.sin(la*Math.PI/180);return .5-Math.log((1+q)/(1-q))/(4*Math.PI)};
+function kmDark(){const t=document.documentElement.getAttribute("data-theme");return t?t==="dark":matchMedia("(prefers-color-scheme: dark)").matches}
+function kmMap(el,pts,A,Z){if(!el||!pts||pts.length<2)return;const W=el.clientWidth||340,H=el.clientHeight||240,mx=lo=>(lo+180)/360,my=la=>{const q=Math.sin(la*Math.PI/180);return .5-Math.log((1+q)/(1-q))/(4*Math.PI)};
  let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;pts.forEach(p=>{const X=mx(p[0]),Y=my(p[1]);x0=Math.min(x0,X);x1=Math.max(x1,X);y0=Math.min(y0,Y);y1=Math.max(y1,Y)});
- let z=16;for(;z>2;z--){const n=256*2**z;if((x1-x0)*n<=W-60&&(y1-y0)*n<=H-60)break}
- const n=256*2**z,ox=(x0+x1)/2*n-W/2,oy=(y0+y1)/2*n-H/2,T=2**z;let im="";
- for(let tx=Math.floor(ox/256);tx<=Math.floor((ox+W)/256);tx++)for(let ty=Math.floor(oy/256);ty<=Math.floor((oy+H)/256);ty++){if(ty<0||ty>=T)continue;const wx=((tx%T)+T)%T;im+=`<img alt="" src="https://tile.openstreetmap.org/${z}/${wx}/${ty}.png" style="left:${Math.round(tx*256-ox)}px;top:${Math.round(ty*256-oy)}px">`}
- const P=pts.map(p=>(mx(p[0])*n-ox).toFixed(1)+","+(my(p[1])*n-oy).toFixed(1)),a=P[0].split(","),b=P[P.length-1].split(",");
- el.innerHTML=im+`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><polyline points="${P.join(" ")}" fill="none" stroke="#fff" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${P.join(" ")}" fill="none" stroke="#c9648f" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${a[0]}" cy="${a[1]}" r="7" fill="#1f8a5b" stroke="#fff" stroke-width="2.5"/><circle cx="${b[0]}" cy="${b[1]}" r="7" fill="#c9648f" stroke="#fff" stroke-width="2.5"/></svg><span class="kml a">${E(A)}</span><span class="kml z">${E(Z)}</span><i class="kma">© OpenStreetMap</i>`;el.hidden=false}
-async function kmResolve(w){const p=KF["p"+w];if(p)return p;const t=kmPl(KF["kk_"+w]);const L=await kmSug(t);return L[0]||null}
+ let z=16;for(;z>2;z--){const n=256*2**z;if((x1-x0)*n<=W-90&&(y1-y0)*n<=H-110)break}
+ const n=256*2**z,ox=(x0+x1)/2*n-W/2,oy=(y0+y1)/2*n-H/2+14,T=2**z;el.classList.toggle("dk",kmDark());let im="";
+ for(let tx=Math.floor(ox/256);tx<=Math.floor((ox+W)/256);tx++)for(let ty=Math.floor(oy/256);ty<=Math.floor((oy+H)/256);ty++){if(ty<0||ty>=T)continue;const wx=((tx%T)+T)%T;im+=`<img alt="" draggable="false" src="https://${"abc"[(tx+ty+9)%3]}.tile.openstreetmap.org/${z}/${wx}/${ty}.png" style="left:${Math.round(tx*256-ox)}px;top:${Math.round(ty*256-oy)}px">`}
+ const XY=pts.map(p=>[mx(p[0])*n-ox,my(p[1])*n-oy]),P=XY.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" "),a=XY[0],b=XY[XY.length-1];
+ let tot=0;const seg=[];for(let i=1;i<XY.length;i++){const d=Math.hypot(XY[i][0]-XY[i-1][0],XY[i][1]-XY[i-1][1]);seg.push(d);tot+=d}let acc=0,mid=XY[0];for(let i=0;i<seg.length;i++){if(acc+seg[i]>=tot/2){const f=(tot/2-acc)/(seg[i]||1);mid=[XY[i][0]+(XY[i+1][0]-XY[i][0])*f,XY[i][1]+(XY[i+1][1]-XY[i][1])*f];break}acc+=seg[i]}
+ const pin=(p,c,l)=>`<g transform="translate(${p[0].toFixed(1)},${p[1].toFixed(1)})"><g class="pin"><path d="M0 0C-9-11-15-17-15-25a15 15 0 1 1 30 0C15-17 9-11 0 0z" fill="${c}" stroke="#fff" stroke-width="2.5"/><text y="-19.5" text-anchor="middle" font-size="14" font-weight="800" fill="#fff" font-family="system-ui,sans-serif">${l}</text></g></g>`;
+ el.innerHTML=im+`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="kgr" gradientUnits="userSpaceOnUse" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"><stop offset="0" stop-color="#1f8a5b"/><stop offset="1" stop-color="#c9648f"/></linearGradient></defs><polyline points="${P}" fill="none" stroke="${kmDark()?"#0b1a22":"#fff"}" stroke-opacity=".9" stroke-width="10" stroke-linejoin="round" stroke-linecap="round"/><polyline class="rt" pathLength="1" points="${P}" fill="none" stroke="url(#kgr)" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round"/>${pin(a,"#1f8a5b","A")}${pin(b,"#c9648f","B")}</svg><span class="kmb">🚗 ${kmf(KF.res?KF.res.one:0)}</span><span class="kml a"><i style="background:#1f8a5b"></i>${E(A)}</span><span class="kml z"><i style="background:#c9648f"></i>${E(Z)}</span><em class="kma">© OpenStreetMap</em>`;el.hidden=false}
+async function kmResolve(w){const p=KF["p"+w];if(p)return p;const t=kmPl(KF["kk_"+w]),cc=kmCoord(t);if(cc)return cc;const L=await kmSug(t);return L[0]||null}
 async function kmCalc(){const my=++kcSeq,set=t=>{KF.st=t;if(!KF.res)kkInfo()};if(!(KF.kk_a||"").trim()||!(KF.kk_z||"").trim()){set("Idatzi nondik eta nora.");return}set("⏳ Kalkulatzen…");
  try{const A=await kmResolve("a"),Z=await kmResolve("z");if(my!==kcSeq)return;if(!A){set("Ez da aurkitu: "+KF.kk_a);return}if(!Z){set("Ez da aurkitu: "+KF.kk_z);return}
   const R=await fetch("https://router.project-osrm.org/route/v1/driving/"+A.lon+","+A.lat+";"+Z.lon+","+Z.lat+"?overview=simplified&geometries=geojson");const J=await R.json();if(my!==kcSeq)return;if(J.code!=="Ok"||!J.routes||!J.routes[0])throw new Error("route");
@@ -707,9 +722,9 @@ function kmTab(){const D=kmData(),ed=isEd();let h=hdr("Kilometroak");
   h+=`<div class="card kmc"><div class="mh"><b>${E(r.n)}</b><b class="ok">${ke(r.pay)}</b></div><div class="mu">${kmf(r.kmT)} · ⛽ ${ke(r.gas)}${r.toll>0?` · 🛣️ ${ke(r.toll)}`:""}${r.nt?` · ${r.nt} bidaia`:""}</div>`;
   if(ed)h+=`<div style="display:flex;gap:10px;align-items:center;justify-content:space-between"><div class="st"><span class="mu">Entseguak</span><button data-kr="${r.id}|-1">−</button><span class="n">${r.r||0}</span><button class="p" data-kr="${r.id}|1">+</button></div><button class="xs" data-kedit="${r.id}">${op?"Itxi":"✎ Editatu"}</button></div>`;
   else if(r.r)h+=`<div class="mu">Entseguak: ${r.r}</div>`;
-  if(ed&&op)h+=`<div class="f" style="margin-top:8px;padding:10px;background:var(--ac2);border-radius:8px"><input id="kn" value="${E(r.n)}" placeholder="Izena"><label class="mu">Etxea (herria edo helbidea, bidaiak kalkulatzeko)</label><input id="kh" value="${E(r.h||"")}" placeholder="adib. Bergara"><label class="mu">Etxea → lokala (km, joan-etorria barne bada, jarri osoa)</label><input id="kd" inputmode="decimal" value="${r.d||0}"><label class="mu">Bidesaria entsegu bakoitzeko (€)</label><input id="kt" inputmode="decimal" value="${r.t||0}"><div style="display:flex;gap:8px"><button class="btn" style="flex:1" data-ksave="${r.id}">Gorde</button><button class="xs ${kmArm===r.id?"arm":""}" data-kdel="${r.id}">${kmArm===r.id?"Ziur? Sakatu berriro":"Kendu kidea"}</button></div></div>`;
+  if(ed&&op)h+=`<div class="f" style="margin-top:8px;padding:10px;background:var(--ac2);border-radius:8px"><input id="kn" value="${E(r.n)}" placeholder="Izena"><label class="mu">Etxea (herria, helbidea, posta-kodea edo koordenatuak)</label><input id="kh" value="${E(r.h||"")}" placeholder="herria, helbidea, posta-kodea edo koordenatuak"><label class="mu">Etxea → lokala (km, joan-etorria barne bada, jarri osoa)</label><input id="kd" inputmode="decimal" value="${r.d||0}"><label class="mu">Bidesaria entsegu bakoitzeko (€)</label><input id="kt" inputmode="decimal" value="${r.t||0}"><div style="display:flex;gap:8px"><button class="btn" style="flex:1" data-ksave="${r.id}">Gorde</button><button class="xs ${kmArm===r.id?"arm":""}" data-kdel="${r.id}">${kmArm===r.id?"Ziur? Sakatu berriro":"Kendu kidea"}</button></div></div>`;
   h+=`</div>`});
-  if(ed&&D.rows.length)h+=kmAddM?`<div class="card f"><b>Kide berria</b><input id="kn2" placeholder="Izena"><input id="kh2" placeholder="Etxea: herria edo helbidea (adib. Bergara)"><input id="kd2" inputmode="decimal" placeholder="Etxea → lokala (km)"><input id="kt2" inputmode="decimal" placeholder="Bidesaria entsegu bakoitzeko (€)"><div style="display:flex;gap:8px"><button class="btn" style="flex:1" data-kmadd="1">Gehitu kidea</button><button class="xs" data-kaddm="1">Utzi</button></div></div>`:`<button class="btn kadd" data-kaddm="1">＋ Kidea</button>`;
+  if(ed&&D.rows.length)h+=kmAddM?`<div class="card f"><b>Kide berria</b><input id="kn2" placeholder="Izena"><input id="kh2" placeholder="Etxea: herria, helbidea, posta-kodea edo koordenatuak"><input id="kd2" inputmode="decimal" placeholder="Etxea → lokala (km)"><input id="kt2" inputmode="decimal" placeholder="Bidesaria entsegu bakoitzeko (€)"><div style="display:flex;gap:8px"><button class="btn" style="flex:1" data-kmadd="1">Gehitu kidea</button><button class="xs" data-kaddm="1">Utzi</button></div></div>`:`<button class="btn kadd" data-kaddm="1">＋ Kidea</button>`;
  if(ed&&D.T.pay>0)h+=`<button class="btn paid${kmArm==="paid"?" arm":""}" style="width:100%;margin:2px 0 12px" data-kpaid="1">${kmArm==="paid"?"Ziur? Dena zerora jarriko da · Sakatu berriro":"✅ Guztia ordainduta"}</button>`;
  else if(D.rows.length&&D.T.pay<=0&&D.paid.length)h+=`<div class="card" style="text-align:center">🎉 <b>Dena ordainduta</b><div class="mu">Orain ez dago ezer zorretan.</div></div>`;
  if(D.rows.length)h+=`<div class="card" style="background:var(--ac2)"><div class="mh"><b>GUZTIRA</b><b class="ok">${ke(D.T.pay)}</b></div><div class="mu">${kmf(D.T.kmT)} · gasolina ${ke(D.T.gas)} · bidesariak ${ke(D.T.toll)}</div></div>`;
@@ -717,7 +732,7 @@ function kmTab(){const D=kmData(),ed=isEd();let h=hdr("Kilometroak");
    if(ed)tb+=kmAddT?(()=>{const dI=KF.kk_d||kToday(),who=KF.kk_m||(D.mem[0]||{}).id,rt=KF.kk_rt!==false;return `<div class="card f kform"><div class="mh"><b>Bidaia berria</b><button class="xs" data-kaddt="1" aria-label="Itxi">✕</button></div>
 <span class="kl">Nork gidatu du?</span><div class="kchips">${D.mem.map(x=>`<button class="chip ${who===x.id?"on":""}" data-kwho="${x.id}">${E(x.n)}</button>`).join("")}</div>
 <span class="kl">Noiz?</span><button class="kdate" data-kdate="1"><span>📅 ${kdLbl(dI)}</span><i>${KF.calOpen?"▴":"▾"}</i></button>${KF.calOpen?kcalHTML():""}
-<span class="kl">Nondik → nora?</span><div class="kroute"><div class="kfld"><input id="kk_a" placeholder="Nondik · adib. Bergara" autocomplete="off" enterkeyhint="next" value="${E(KF.kk_a||"")}"><div class="ksg" id="kk_sg_a" hidden></div></div><button class="xs kswap" data-kswap="1" aria-label="Trukatu">⇅</button><div class="kfld"><input id="kk_z" placeholder="Nora · adib. Madril" autocomplete="off" enterkeyhint="go" value="${E(KF.kk_z||"")}"><div class="ksg" id="kk_sg_z" hidden></div></div></div>
+<span class="kl">Nondik → nora?</span><div class="kroute"><div class="kfld"><input id="kk_a" placeholder="Nondik · herria, helbidea, posta-kodea…" autocomplete="off" enterkeyhint="next" value="${E(KF.kk_a||"")}"><div class="ksg" id="kk_sg_a" hidden></div></div><button class="xs kswap" data-kswap="1" aria-label="Trukatu">⇅</button><div class="kfld"><input id="kk_z" placeholder="Nora · herria, helbidea, posta-kodea…" autocomplete="off" enterkeyhint="go" value="${E(KF.kk_z||"")}"><div class="ksg" id="kk_sg_z" hidden></div></div></div>
 <div class="seg" style="grid-template-columns:1fr 1fr"><button data-krt="1" class="${rt?"on":""}">Joan-etorria</button><button data-krt="0" class="${rt?"":"on"}">Joan bakarrik</button></div>
 <div id="kk_info">${kkInfoHTML()}</div><div id="kk_map" class="kmap" hidden></div>${(KF.map&&setTimeout(()=>kmMap($("#kk_map"),KF.map.p,KF.map.a,KF.map.z),0))?"":""}
 <div class="kmore"><label><span class="mu">Kilometroak</span><input id="kk_k" inputmode="decimal" placeholder="0" value="${E(KF.kk_k||"")}"></label><label><span class="mu">Bidesaria (€)</span><input id="kk_b" inputmode="decimal" placeholder="0" value="${E(KF.kk_b||"")}"></label></div>
