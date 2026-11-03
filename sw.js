@@ -1,9 +1,9 @@
-const V="anube-v2";
+const V="anube-v3";
 const SHELL=["./","index.html","backend.js","config.js","manifest.webmanifest","icon-192.png","icon-512.png","icon-180.png"];
 const key=u=>new Request(u.origin+u.pathname);
 self.addEventListener("install",e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
-self.addEventListener("fetch",e=>{const r=e.request;if(r.method!=="GET")return;const u=new URL(r.url);
+self.addEventListener("fetch",e=>{const r=e.request;if(r.method!=="GET")return;const u=new URL(r.url);if(u.searchParams.has("chk"))return;
   if(u.origin===location.origin){ // web propia: caché primero (abre al instante, también sin cobertura) y se actualiza en segundo plano
     const k=key(u),isPage=r.mode==="navigate"||/\/(index\.html)?$/.test(u.pathname);
     e.respondWith(caches.open(V).then(async c=>{

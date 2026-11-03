@@ -113,6 +113,12 @@ label.chk{display:flex;align-items:center;gap:8px;font-size:14px}label.chk input
 .kswap{flex:none;font-size:16px;padding:6px 10px}
 .kmc .mu{line-height:1.5}
 .kmc{padding-bottom:10px}
+.upd{position:fixed;inset:0;z-index:100000;background:rgba(8,47,67,.62);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:grid;place-items:center;padding:24px;animation:updin .35s cubic-bezier(.22,1,.36,1)}
+.updc{background:var(--card);color:var(--tx);border-radius:22px;padding:24px 22px 20px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.updc h3{margin:6px 0 6px;font-size:20px}.updc p{margin:0 0 16px;color:var(--mu);font-size:14px;line-height:1.45}.updi{font-size:34px}.updc .btn{width:100%}
+.nws{position:fixed;left:0;right:0;bottom:calc(84px + env(safe-area-inset-bottom));z-index:9000;display:flex;justify-content:center;padding:0 14px;animation:nwin .5s cubic-bezier(.22,1,.36,1);transition:opacity .3s,transform .3s}.nws.out{opacity:0;transform:translateY(16px)}
+.nwc{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:18px;padding:14px 16px;max-width:420px;width:100%;box-shadow:0 12px 34px rgba(0,0,0,.28)}.nwc ul{margin:8px 0 12px;padding-left:18px;font-size:13px;line-height:1.5;color:var(--mu)}.nwc .btn{width:100%}
+@keyframes updin{from{opacity:0}to{opacity:1}}@keyframes nwin{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
 .kmc .mh{flex-wrap:nowrap;align-items:center}.kmc .mh>b{flex:0 1 auto}.kmc .mh>b:last-child{margin-left:auto}.kmc .mh b.ok{font-size:16px}
 .kb{height:10px;background:var(--ac2);border-radius:6px;overflow:hidden;margin:7px 0 6px}.kb i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--pk),var(--gd));min-width:3px;opacity:.9}
 .kfoot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px}
@@ -167,7 +173,7 @@ button:active:not(:disabled){transform:scale(.97)}
 
 @keyframes nlin{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
-.sx{display:grid;grid-template-rows:1fr;opacity:1;transition:grid-template-rows .38s cubic-bezier(.32,.72,0,1),opacity .3s ease}.sx.cl{grid-template-rows:0fr;opacity:0}.sxi{overflow:hidden;min-height:0}.sx[hidden]{display:none}
+.sx{display:block}.sx.cl{opacity:0}.sxi{overflow:hidden;min-height:0}.sx[hidden]{display:none}
 button,input,select,textarea{font-family:inherit}
 .svh{display:flex;align-items:center;justify-content:space-between;gap:12px}.svh>b{font-size:16px;line-height:1.25}.svt{display:flex;align-items:baseline;gap:6px;flex:none}.svt b{font-size:30px;line-height:1;font-variant-numeric:tabular-nums}.svt small{font-size:12px;color:var(--mu)}.sv{display:flex;flex-direction:column;gap:6px;margin-top:12px}.sr{display:flex;align-items:center;justify-content:space-between;padding:8px 16px 8px 20px;position:relative;border-radius:12px;background:rgba(79,154,110,.10)}.sr:before{content:'';position:absolute;left:6px;top:9px;bottom:9px;width:4px;border-radius:2px;background:var(--on)}.sr.soff{background:rgba(196,100,95,.07)}.sr.soff:before{background:var(--off)}.sld{font-weight:500;font-size:11px;color:var(--mu);opacity:.7;margin-left:8px}.sn{font-weight:800;font-size:16px;color:var(--on);white-space:nowrap}.sr.soff .sn{color:var(--off)}.sq{font-size:28px;line-height:1;font-weight:800;min-width:60px;text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:6px 3px;border-top:1px solid var(--bd);text-align:center}td:first-child,th:first-child{text-align:left}th{font-size:11px;color:var(--mu);border:0}
 td input{width:62px;padding:6px;text-align:center}.warn{background:#fff4e0;color:#7a4b00;border-radius:10px;padding:10px;margin-bottom:10px;font-size:13px}
@@ -746,7 +752,7 @@ function kmTab(){const D=kmData(),ed=isEd();let h=hdr("Kilometroak");
  if(ed&&!D.rows.length)h+=`<button class="btn" data-kseed="1">Kideak gehitu (Excelekoak: Hans, Uri, Txikixa, Garmen, Egoitz, Abasolo)</button>`;
  const mxk=Math.max(0,...D.rows.map(r=>r.kmT)),rkk=[...D.rows].sort((x,y)=>y.kmT-x.kmT).map(r=>r.id);
  [...D.rows].sort((x,y)=>(y.kmT-x.kmT)||String(x.n).localeCompare(String(y.n),"eu")).forEach(r=>{const op=kmEd===r.id,pc=mxk>0?r.kmT/mxk*100:0,i=rkk.indexOf(r.id),md=r.kmT>0&&mxk>0?["🥇","🥈","🥉"][i]||"":"";
-  h+=`<div class="card kmc"><div class="mh"><b>${md?md+" ":""}${E(r.n)}</b><b class="ok">${ke(r.pay)}</b></div><div class="kb"><i style="width:${pc}%"></i></div><div class="mu">${kmf(r.kmT)} · ⛽ ${ke(r.gas)}${r.toll>0?` · 🛣️ ${ke(r.toll)}`:""}${r.nt?` · ${r.nt} bidaia`:""}${!ed&&r.r?` · 🎸 ${r.r}`:""}</div>`;
+  h+=`<div class="card kmc" data-kid="${r.id}"><div class="mh"><b>${md?md+" ":""}${E(r.n)}</b><b class="ok">${ke(r.pay)}</b></div><div class="kb"><i style="width:${pc}%"></i></div><div class="mu">${kmf(r.kmT)} · ⛽ ${ke(r.gas)}${r.toll>0?` · 🛣️ ${ke(r.toll)}`:""}${r.nt?` · ${r.nt} bidaia`:""}${!ed&&r.r?` · 🎸 ${r.r}`:""}</div>`;
   if(ed)h+=`<div class="kfoot"><div class="st sm"><span class="mu">🎸 Entseguak</span><button data-kr="${r.id}|-1" aria-label="−1">−</button><span class="n">${r.r||0}</span><button class="p" data-kr="${r.id}|1" aria-label="+1">+</button></div><button class="xs kedb" data-kedit="${r.id}" aria-label="${op?"Itxi":"Editatu"}">${op?"✕":"✎"}</button></div>`;
   if(ed&&op)h+=`<div class="f" style="margin-top:8px;padding:10px;background:var(--ac2);border-radius:8px"><input id="kn" value="${E(r.n)}" placeholder="Izena"><label class="mu">Etxea (herria, helbidea, posta-kodea edo koordenatuak)</label><input id="kh" value="${E(r.h||"")}" placeholder="herria, helbidea, posta-kodea edo koordenatuak"><label class="mu">Etxea → lokala (km, joan-etorria barne bada, jarri osoa)</label><input id="kd" inputmode="decimal" value="${r.d||0}"><label class="mu">Bidesaria entsegu bakoitzeko (€)</label><input id="kt" inputmode="decimal" value="${r.t||0}"><div style="display:flex;gap:8px"><button class="btn" style="flex:1" data-ksave="${r.id}">Gorde</button><button class="xs ${kmArm===r.id?"arm":""}" data-kdel="${r.id}">${kmArm===r.id?"Ziur? Sakatu berriro":"Kendu kidea"}</button></div></div>`;
   h+=`</div>`});
@@ -763,8 +769,8 @@ function kmTab(){const D=kmData(),ed=isEd();let h=hdr("Kilometroak");
 <div class="kmore"><label><span class="mu">Kilometroak</span><input id="kk_k" inputmode="decimal" placeholder="0" value="${E(KF.kk_k||"")}"></label><label><span class="mu">Bidesaria (€)</span><input id="kk_b" inputmode="decimal" placeholder="0" value="${E(KF.kk_b||"")}"></label></div>
 <input id="kk_o" placeholder="Oharra (aukerakoa)" value="${E(KF.kk_o||"")}"><button class="btn" data-kadd="1">Gehitu bidaia</button></div>`})():`<button class="btn kadd" data-kaddt="1">＋ Bidaia berria</button>`;
    tb+=D.trips.length?D.trips.slice(0,60).map(t=>{const mm=D.mem.find(x=>x.id===t.m);return `<div class="card f"><div class="mh"><b>${E(mm?mm.n:"?")}</b><span class="mu">${E(t.d||"")}</span></div><div class="mu">${kmf(t.km||0)}${t.t>0?` · bidesaria ${ke(t.t)}`:""}${t.o?` · ${E(t.o)}`:""}</div>${ed?`<div><button class="xs ${kmArm===t.id?"arm":""}" data-ktdel="${t.id}">${kmArm===t.id?"Ziur? Sakatu berriro":"Ezabatu"}</button></div>`:""}</div>`}).join(""):`<div class="card mu">Ez dago bidaiarik. Kontzertuetako eta beste bidaietako kilometroak hemen agertuko dira.</div>`;
-   if(D.paid.length)tb+=`<div class="mu" style="margin:14px 0 6px;font-weight:700">Ordainketak (${D.paid.length})</div>`+D.paid.slice(0,20).map((st,i)=>`<div class="card f"><div class="mh"><b>${ke(st.tot||0)}</b><span class="mu">${E(new Date(st.ts||0).toLocaleDateString("es-ES"))}${st.by?" · "+E(st.by):""}</span></div><div class="mu" style="line-height:1.6">${(st.rows||[]).map(r=>{const q=Array.isArray(r)?r:String(r).split("|");return E(q[0])+" "+ke(parseFloat(q[1])||0)}).join(" · ")}<br>${kmf(st.km||0)} · ${ke(st.price||0)} / km</div>${ed&&i===0?`<div><button class="xs ${kmArm==="undo"?"arm":""}" data-kundo="${st.id}">${kmArm==="undo"?"Ziur? Sakatu berriro":"↩ Desegin azken ordainketa"}</button></div>`:""}</div>`).join("");
-   h+=secS("ktr","Bidaiak eta ordainketak ("+D.trips.length+")")+tb+secE()}
+   let pb="";if(D.paid.length)pb=D.paid.slice(0,20).map((st,i)=>`<div class="card f"><div class="mh"><b>${ke(st.tot||0)}</b><span class="mu">${E(new Date(st.ts||0).toLocaleDateString("es-ES"))}${st.by?" · "+E(st.by):""}</span></div><div class="mu" style="line-height:1.6">${(st.rows||[]).map(r=>{const q=Array.isArray(r)?r:String(r).split("|");return E(q[0])+" "+ke(parseFloat(q[1])||0)}).join(" · ")}<br>${kmf(st.km||0)} · ${ke(st.price||0)} / km</div>${ed&&i===0?`<div><button class="xs ${kmArm==="undo"?"arm":""}" data-kundo="${st.id}">${kmArm==="undo"?"Ziur? Sakatu berriro":"↩ Desegin azken ordainketa"}</button></div>`:""}</div>`).join("");
+   h+=secS("ktr","Bidaiak ("+D.trips.length+")")+tb+secE();if(D.paid.length)h+=secS("kpay","Ordainketak ("+D.paid.length+")")+pb+secE()}
  return h}
 function buildKm(D){const k=pdfKit(),{T,R,np}=k,td=new Date().toLocaleDateString("es-ES");
  T("AÑUBE · MERTXAN · KILOMETROAK",10,16,18,1);T("Ordaintzeko · "+td+" · "+ke(D.price)+" / km",10,23,12,1);R(10,25,190,.8,0,"0");
@@ -866,9 +872,14 @@ const TORD=["res","con","stk","out","km","set"];
 function fxEnter(prev){if(RM)return;try{const dir=TORD.indexOf(tab)>=TORD.indexOf(prev)?1:-1;
  app.animate([{opacity:.35},{opacity:1}],{duration:220,easing:"cubic-bezier(.32,.72,0,1)"});
  [...app.children].slice(0,10).forEach((k,i)=>{k.animate([{opacity:0,transform:`translate(${dir*8}px,10px)`},{opacity:1,transform:"none"}],{duration:420,delay:i*24,easing:"cubic-bezier(.32,.72,0,1)",fill:"backwards"})})}catch(e){}}
-function fxSec(sb,open){clearTimeout(sb._t);if(RM){sb.hidden=!open;sb.classList.toggle("cl",!open);return}
- if(open){sb.hidden=false;sb.classList.add("cl");void sb.offsetHeight;requestAnimationFrame(()=>requestAnimationFrame(()=>sb.classList.remove("cl")))}
- else{sb.classList.add("cl");sb._t=setTimeout(()=>{sb.hidden=true},400)}}
+function fxSec(sb,open){if(sb._a){try{sb._a.cancel()}catch(e){}sb._a=null}
+ if(RM||!sb.animate){sb.hidden=!open;sb.classList.toggle("cl",!open);return}
+ sb.classList.remove("cl");sb.style.overflow="hidden";
+ if(open){sb.hidden=false;const h=sb.scrollHeight,a=sb._a=sb.animate([{height:"0px",opacity:0,transform:"translateY(-8px)"},{height:h+"px",opacity:1,transform:"none"}],{duration:460,easing:"cubic-bezier(.22,1,.36,1)"});a.onfinish=()=>{sb.style.overflow="";sb._a=null}}
+ else{const h=sb.getBoundingClientRect().height,a=sb._a=sb.animate([{height:h+"px",opacity:1,transform:"none"},{height:"0px",opacity:0,transform:"translateY(-6px)"}],{duration:340,easing:"cubic-bezier(.4,0,.2,1)",fill:"forwards"});a.onfinish=()=>{sb.hidden=true;sb.classList.add("cl");sb.style.overflow="";try{a.cancel()}catch(e){}sb._a=null}}}
+function kcSnap(){const m={};document.querySelectorAll("#app .kmc[data-kid]").forEach(e=>{m[e.dataset.kid]=e.getBoundingClientRect().top});return m}
+function kcFlip(m){if(RM)return;document.querySelectorAll("#app .kmc[data-kid]").forEach(e=>{const o=m[e.dataset.kid];if(o==null)return;const d=o-e.getBoundingClientRect().top;if(Math.abs(d)<2)return;try{e.style.position="relative";e.style.zIndex=2;const a=e.animate([{transform:"translateY("+d+"px) scale(1.015)",boxShadow:"0 10px 24px rgba(0,0,0,.16)"},{transform:"none",boxShadow:"0 0 0 rgba(0,0,0,0)"}],{duration:560,easing:"cubic-bezier(.22,1,.36,1)"});a.onfinish=a.oncancel=()=>{e.style.zIndex=""}}catch(x){}})}
+{const _r=render;render=function(){const m=kcSnap();_r.apply(this,arguments);kcFlip(m)}}
 var popQ=null;
 function popRec(t){try{const d=t.dataset;const ks=Object.keys(d);if(!ks.length||!t.parentElement)return;if(!(t.matches("button.p")||/^(sa|sd|kr|d|gu|oq)$/.test(ks[0])||t.closest(".st,.gm")))return;popQ=ks.map(k=>"[data-"+k.replace(/[A-Z]/g,m=>"-"+m.toLowerCase())+'="'+String(d[k]).replace(/(["\\])/g,"\\$1")+'"]').join("")}catch(e){popQ=null}}
 function popRun(){if(!popQ||RM){popQ=null;return}const q=popQ;popQ=null;try{const b=document.querySelector(q);const n=b&&b.parentElement&&b.parentElement.querySelector("input,.n,b");if(n)n.animate([{transform:"scale(1.1)"},{transform:"scale(1)"}],{duration:240,easing:"cubic-bezier(.32,.72,0,1)"})}catch(e){}}
@@ -938,8 +949,14 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
+var BUILD="20261103a",NEWS=["Kilometroak: mapa zoomarekin, kideak km-ka ordenatuta","Bidaiak eta ordainketak bereizita, animazio leunagoak","Helbideak, posta-kodeak eta koordenatuak onartzen dira"];
+var updShown=false;
+function showUpd(){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button></div>';document.body.appendChild(o);const b=o.querySelector("#updgo");b.onclick=()=>{b.disabled=true;b.textContent="Eguneratzen…";try{navigator.serviceWorker.getRegistration().then(r=>r&&r.update()).catch(()=>{})}catch(e){}setTimeout(()=>location.reload(),350)};try{b.focus()}catch(e){}}
+async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd()}catch(e){}}
+setTimeout(chkUpd,4000);setInterval(chkUpd,600000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)chkUpd()});
+setTimeout(()=>{try{const k="anube.build",pv=localStorage.getItem(k);localStorage.setItem(k,BUILD);if(pv&&pv!==BUILD&&code&&!updShown){const o=document.createElement("div");o.className="nws";o.innerHTML='<div class="nwc"><b>✨ Aplikazioa eguneratu da</b><ul>'+NEWS.map(x=>"<li>"+E(x)+"</li>").join("")+'</ul><button class="btn">Ados</button></div>';document.body.appendChild(o);o.querySelector("button").onclick=()=>{o.classList.add("out");setTimeout(()=>o.remove(),300)}}}catch(e){}},1800);
 if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
- navigator.serviceWorker.addEventListener("message",e=>{if(e.data==="upd"){const go=()=>{if(document.activeElement&&document.activeElement.matches("input,textarea")||dragging)return setTimeout(go,4000);location.reload()};setTimeout(go,600)}})}
+ navigator.serviceWorker.addEventListener("message",e=>{if(e.data==="upd")showUpd()})}
 
 (function(){let st=null;
 const py=e=>e.clientY+app.scrollTop;
