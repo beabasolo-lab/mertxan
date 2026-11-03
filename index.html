@@ -19,6 +19,20 @@ nav button{flex:1;border:0;background:none;color:var(--mu);padding:12px 4px;font
 .row{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--bd)}.row:first-of-type{border-top:0}
 .sz{width:62px;font-weight:700}.nums{flex:1;color:var(--mu);font-size:12px}.nums b{color:var(--tx)}
 .st{display:flex;align-items:center;gap:6px}.st button{width:40px;height:40px;border-radius:12px;border:0;background:var(--ac2);color:var(--ac);font-size:22px;font-weight:700}.st button.p{background:var(--hd);color:#fff}.st .n{min-width:30px;text-align:center;font-size:18px;font-weight:800}
+.ld{display:flex;align-items:center;gap:6px;padding:5px 0;flex:1;justify-content:flex-end;min-width:0}
+.ld small{display:block;font-size:9.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--mu,#7a7a7a);font-weight:600;line-height:1}
+.ld .lb,.ld .lt{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:42px}
+.ld .lb b{font-size:17px;font-weight:700;color:var(--mu,#7a7a7a)}
+.ld .lt b{font-size:20px;font-weight:800;color:var(--tx);background:var(--ac2);border-radius:10px;padding:3px 9px;line-height:1.2}
+.ld .lo{font-size:16px;color:var(--mu,#7a7a7a);font-weight:600}
+.ld .st{gap:4px}
+.ld .st .n{min-width:30px;font-size:16px}
+.ld .st .n.up{color:var(--on)}.ld .st .n.dn{color:var(--off)}
+.lsum{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:6px;text-align:center;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:10px 8px;margin-bottom:10px}
+.lsum small{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--mu,#7a7a7a);font-weight:600}
+.lsum b{font-size:22px;font-weight:800}
+.lsum .lo{font-size:18px;color:var(--mu,#7a7a7a)}
+
 .mh{display:flex;justify-content:space-between;align-items:baseline;gap:4px 8px;flex-wrap:wrap}.mh>b,.mh>.tt{flex:1 1 170px;min-width:0}.mh>span:last-child{margin-left:auto}.mh b{font-size:15px}.mh span{color:var(--mu);font-size:12px;white-space:nowrap}
 input,select{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:9px;width:100%}
 .f{display:grid;gap:8px}.btn{border:0;background:var(--hd);color:#fff;border-radius:12px;padding:11px 14px;font-weight:700;font-size:14px}
@@ -168,6 +182,7 @@ const eur=x=>(Math.round(x*100)/100).toLocaleString("es-ES",{minimumFractionDigi
 let db=null,S={c:{},l:{},k:{},i:{},o:{},m:{},pr:{}},tab="res",cur=null,mode="v",flt="all",pend=false;
 const $=q=>document.querySelector(q),app=$("#app");
 const ln=(c,p)=>S.l[c+"_"+p]||{l:0,v:0,r:0};
+function baseOf(c,p){const x=S.l[c+"_"+p];if(x&&x.b!=null)return x.b;const ids=Object.keys(S.c).sort(),i=ids.indexOf(c);if(i<=0)return 0;const q=ln(ids[i-1],p);return Math.max(0,q.l-q.v-q.r)}
 const tot=(f,pred)=>{let a=0;Object.values(S.l).forEach(x=>{if(pred(x))a+=x[f]||0});return a};
 var IX=null;
 function ixb(){const a={p:{},pc:{},g:{},py:{},o:{},gc:{},gy:{}};Object.values(S.l).forEach(x=>{const v=x.v||0,r=x.r||0;a.p[x.p]=(a.p[x.p]||0)+v;const k1=x.p+"|"+x.c;a.pc[k1]=(a.pc[k1]||0)+v;a.g[x.p]=(a.g[x.p]||0)+r;a.gc[k1]=(a.gc[k1]||0)+r;if(S.c[x.c]){a.gy[x.p+"|"+yOf(x.c)]=(a.gy[x.p+"|"+yOf(x.c)]||0)+r;const k=x.p+"|"+yOf(x.c);a.py[k]=(a.py[k]||0)+v}});Object.values(S.o).forEach(x=>{const k=x.p+"|"+x.t;a.o[k]=(a.o[k]||0)+(x.q||0)});IX=a}
@@ -179,10 +194,10 @@ const giftF=(p,c)=>{if(c==="all")return gift(p);if(c==="out")return outq(p,"r");
 const base=p=>{const k=S.k[p]||{};return (k.i||0)+(k.e||0)+(k.a||0)};
 const stock=p=>base(p)-sold(p,"all")-gift(p);
 const money=(c)=>P.reduce((a,p)=>a+(c==="all"||c?sold(p.id,c)*p.p:0),0);
-function setLine(c,p,f,d){if(isLocked(c))return;const o={...ln(c,p)},v=Math.max(0,(o[f]||0)+d);if(v===o[f])return;const n={c,p,l:o.l||0,v:o.v||0,r:o.r||0,[f]:v};S.l[c+"_"+p]=n;render();db&&db.collection("lines").doc(c+"_"+p).set(n).catch(()=>{})}
+function setLine(c,p,f,d){if(isLocked(c))return;const o={...ln(c,p)},v=Math.max(0,(o[f]||0)+d);if(v===o[f])return;const n={c,p,l:o.l||0,v:o.v||0,r:o.r||0,[f]:v};if(o.b!=null)n.b=o.b;S.l[c+"_"+p]=n;render();db&&db.collection("lines").doc(c+"_"+p).set(n).catch(()=>{})}
 function setStock(p,f,v){const k={...(S.k[p]||{i:0,e:0}),[f]:Math.max(0,parseInt(v)||0)};S.k[p]=k;db&&db.collection("stock").doc(p).set(k).catch(()=>{});render()}
 function newConc(){const n=$("#cn").value.trim();if(!n)return;const prev=Object.keys(S.c).sort().pop(),id="c"+Date.now(),d={n,d:$("#cd").value,p:$("#cp").value.trim(),cash:null};
- if(prev)P.forEach(p=>{const x=ln(prev,p.id),b=x.l-x.v-x.r;if(b>0){const o={c:id,p:p.id,l:b,v:0,r:0};S.l[id+"_"+p.id]=o;db&&db.collection("lines").doc(id+"_"+p.id).set(o).catch(()=>{})}});
+ if(prev)P.forEach(p=>{const x=ln(prev,p.id),b=x.l-x.v-x.r;if(b>0){const o={c:id,p:p.id,l:b,v:0,r:0,b};S.l[id+"_"+p.id]=o;db&&db.collection("lines").doc(id+"_"+p.id).set(o).catch(()=>{})}});
  S.c[id]=d;cur=id;mode="l";db&&db.collection("concerts").doc(id).set(d).catch(()=>{});render()}
 function setCash(v){if(isLocked(cur))return;const c=S.c[cur];c.cash=v===""?null:parseFloat(v);db&&db.collection("concerts").doc(cur).set(c).catch(()=>{});render()}
 function stp(p,f,ic,n){return `<div class="st">${ic?`<span style="font-size:20px">${ic}</span>`:""}<button data-d="-1" data-p="${p}" data-ff="${f}">−</button><span class="n">${n}</span><button class="p" data-d="1" data-p="${p}" data-ff="${f}">+</button></div>`}
@@ -335,9 +350,10 @@ function concierto(){
  const hid=d.hid||[];
  if(lastHid&&hid.includes(lastHid)){const lm=M.find(x=>x.id===lastHid);if(lm)h+=`<div class="gc" style="margin-bottom:10px"><span><b>${E(lm.n)}</b> kenduta.</span><button class="p" data-hundo="1">Desegin</button></div>`}
  h+=`${dlc?`<div class="f" style="grid-template-columns:1fr 1fr;margin-bottom:12px"><button class="btn" data-prd="1">Betetzeko orria (PDF)</button><button class="btn" style="background:var(--ac2);color:var(--ac)" data-prs="1">Laburpena (PDF)</button></div>`:""}`;
+ if(mode=="l"){let tb=0,tl=0;P.forEach(p=>{if(hid.some(id=>M[p.mi]&&M[p.mi].id===id))return;tb+=baseOf(cur,p.id);tl+=ln(cur,p.id).l||0});h+=`<div class="lsum"><div><small>Zegoen</small><b>${tb}</b></div><span class="lo">+</span><div><small>Gehitu</small><b style="color:${tl-tb>0?"var(--on)":tl-tb<0?"var(--off)":"inherit"}">${tl-tb>0?"+":tl-tb<0?"−":""}${Math.abs(tl-tb)}</b></div><span class="lo">=</span><div><small>Guztira</small><b>${tl}</b></div></div>`}
  let shown=0;M.forEach((m,mi)=>{if(hid.includes(m.id))return;const u0=P.filter(p=>p.mi==mi).reduce((a,p)=>a+(ln(cur,p.id).l||0),0);if(mode=="v"&&!P.some(p=>{if(p.mi!=mi)return false;const q=ln(cur,p.id);return q.l>0||q.v>0||q.r>0}))return;shown++;h+=`<div class="card ${u0>0?"on":"off"}"><div class="mh"><b>${E(m.n)}</b><span><span class="bd ${u0>0?"on":"off"}">${u0>0?u0+" eraman":"0"}</span> ${eur(m.p)} <button class="xs" data-hid="${m.id}">Ez dugu eramaten</button></span></div>${hidAsk==m.id?(()=>{const u=P.filter(p=>p.mi==mi).reduce((a,p)=>a+(ln(cur,p.id).l||0),0);return `<div class="gc"><span>Ziur zaude <b>${E(m.n)}</b> kontzertu honetatik kendu nahi duzula?${u>0?` Dagoeneko ${u} unitate ditu apuntatuta eta zenbaketan jarraituko dute.`:""}</span><div style="display:flex;gap:6px"><button data-hno="1">Utzi</button><button class="p" data-hyes="${m.id}">Bai, kendu</button></div></div>`})():""}`;
   P.filter(p=>p.mi==mi).forEach(p=>{const x=ln(cur,p.id),back=x.l-x.v-x.r,bad=x.v+x.r>x.l;if(mode=="v"&&!(x.l>0||x.v>0||x.r>0))return;
-   h+=`<div class="row ${mode=="l"?"":"rv"} ${x.l>0?"zon":"z zoff"}" style="flex-wrap:wrap"><span class="sz">${E(p.z)}</span><span class="nums">ekar <b>${x.l}</b>${mode=="l"?` · salt <b>${x.v}</b> · opa <b>${x.r}</b>`:""}<br>bueltan <b class="${bad?"neg":""}">${back}</b>${bad?" ⚠":""}</span>${mode=="l"?stp(p.id,"l","",x.l):`<span class="gm"><button data-gu="${p.id}" ${x.r>0?"":"disabled"}>−</button><b>🎁 ${x.r}</b><button data-g="${p.id}">+</button></span>`+stp(p.id,"v","",x.v)}${giftP==p.id?`<div class="gc"><span>Benetan <b>1 oparitu</b> nahi duzu: ${E(p.n)} (${E(p.z)})?</span><div style="display:flex;gap:6px"><button data-gno="1">Utzi</button><button class="p" data-gyes="${p.id}">Bai, oparitu</button></div></div>`:""}</div>`});h+=`</div>`});
+   h+=`<div class="row ${mode=="l"?"":"rv"} ${x.l>0?"zon":"z zoff"}" style="flex-wrap:wrap"><span class="sz">${E(p.z)}</span>${mode=="l"?(()=>{const b0=baseOf(cur,p.id),ad=x.l-b0;return `<span class="ld"><span class="lb"><small>Zegoen</small><b>${b0}</b></span><span class="lo">+</span><div class="st"><button data-d="-1" data-p="${p.id}" data-ff="l">−</button><span class="n ${ad>0?"up":ad<0?"dn":""}">${ad>0?"+":ad<0?"−":""}${Math.abs(ad)}</span><button class="p" data-d="1" data-p="${p.id}" data-ff="l">+</button></div><span class="lo">=</span><span class="lt"><small>Guztira</small><b>${x.l}</b></span></span>${x.v||x.r?`<span class="mu" style="width:100%;font-size:11.5px">salt <b>${x.v}</b> · opa <b>${x.r}</b> · bueltan <b class="${bad?"neg":""}">${back}</b>${bad?" ⚠":""}</span>`:""}`})():`<span class="nums">ekar <b>${x.l}</b><br>bueltan <b class="${bad?"neg":""}">${back}</b>${bad?" ⚠":""}</span>`}${mode=="l"?"":`<span class="gm"><button data-gu="${p.id}" ${x.r>0?"":"disabled"}>−</button><b>🎁 ${x.r}</b><button data-g="${p.id}">+</button></span>`+stp(p.id,"v","",x.v)}${giftP==p.id?`<div class="gc"><span>Benetan <b>1 oparitu</b> nahi duzu: ${E(p.n)} (${E(p.z)})?</span><div style="display:flex;gap:6px"><button data-gno="1">Utzi</button><button class="p" data-gyes="${p.id}">Bai, oparitu</button></div></div>`:""}</div>`});h+=`</div>`});
  if(mode=="v"&&!shown)h+=`<div class="mu" style="text-align:center;padding:18px">Ez da ezer ekarri kontzertu honetara. Joan "Eraman" atalera.</div>`;
  const hm=M.filter(m=>hid.includes(m.id));
  if(hm.length)h+=showH?`<div class="card"><div class="mh"><b>Gehitu artikulua</b><button class="xs" data-hshow="0">Itxi</button></div><div class="chips" style="flex-wrap:wrap;margin:8px 0 0">${hm.map(m=>`<button class="chip ${addAsk==m.id?"on":""}" data-ask="${m.id}">+ ${E(m.n)}</button>`).join("")}</div>${addAsk&&hm.find(m=>m.id===addAsk)?`<div class="gc"><span>Ziur zaude <b>${E(hm.find(m=>m.id===addAsk).n)}</b> kontzertu honetara gehitu nahi duzula?</span><div style="display:flex;gap:6px"><button data-ano="1">Utzi</button><button class="p" data-ayes="${addAsk}">Bai, gehitu</button></div></div>`:""}</div>`:`<div style="text-align:center;margin:14px 0 0"><button class="xs" data-hshow="1">+ Kendutako artikulua gehitu (${hm.length})</button></div>`;
