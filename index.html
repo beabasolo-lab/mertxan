@@ -607,6 +607,27 @@ html,body{padding-top:0!important}
 :root[data-theme="dark"] nav button:active{transform:scale(.96)}
 :root[data-theme="dark"] nav .pill{display:none!important}
 </style>
+<style>
+/* v11 · kolore gehiago, emojiak koloretan, azala leunago */
+:root[data-theme="dark"] .kpi .ki{filter:none!important;width:34px;height:34px;font-size:18px;border-radius:10px;display:grid;place-items:center;background:rgba(109,179,227,.16)}
+:root[data-theme="dark"] .kpis .kpi:nth-child(2) .ki{background:rgba(74,190,120,.17)}
+:root[data-theme="dark"] .kpis .kpi:nth-child(3) .ki{background:rgba(224,112,155,.18)}
+:root[data-theme="dark"] .kpis .kpi:nth-child(4) .ki{background:rgba(227,179,65,.18)}
+:root[data-theme="dark"] .kpis .kpi:nth-child(5) .ki{background:rgba(109,179,227,.18)}
+:root[data-theme="dark"] .card,:root[data-theme="dark"] .kpi{background:linear-gradient(180deg,#171e28 0%,#11151c 100%)}
+:root[data-theme="dark"] .kpi.big,:root[data-theme="dark"] #app .kpi.big{background:linear-gradient(150deg,#1a3a56 0%,#122131 55%,#10151c 100%)!important}
+:root[data-theme="dark"] #app{background:radial-gradient(130% 55% at 50% -8%,#18283a 0%,rgba(11,12,15,0) 62%)}
+:root[data-theme="dark"] .hdr{background:linear-gradient(180deg,#16212d 0%,#0e1218 100%)}
+:root[data-theme="dark"] .row.cp,:root[data-theme="dark"] .row.cp.rv{background:rgba(109,179,227,.06)!important}
+:root[data-theme="dark"] .btn[data-prm],:root[data-theme="dark"] .btn[data-prd],:root[data-theme="dark"] .btn[data-prs],:root[data-theme="dark"] .btn[data-psk],:root[data-theme="dark"] .btn.alt{background:rgba(63,143,200,.2)!important;color:#a9d4f2!important;box-shadow:inset 0 0 0 1px rgba(109,179,227,.4)!important}
+:root[data-theme="dark"] .seg button.on,:root[data-theme="dark"] .kcg button.on{background:rgba(63,143,200,.32)!important;color:#d6ebfa!important;box-shadow:inset 0 0 0 1px rgba(109,179,227,.45)!important}
+:root[data-theme="dark"] .sh i{background:rgba(63,143,200,.22)}
+:root[data-theme="dark"] .btn.kadd{color:#8cc4ea!important;border-color:rgba(109,179,227,.4)}
+:root[data-theme="dark"] .hcov::after{background:linear-gradient(180deg,rgba(11,12,15,.55) 0,rgba(11,12,15,.08) 36%,rgba(11,12,15,0) 48%,rgba(11,12,15,.45) 68%,rgba(11,12,15,.85) 88%,#0b0c0f 100%)}
+:root[data-theme="dark"] .hcov .cvi{margin-bottom:-4px;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 26%,#000 52%,transparent 96%);mask-image:linear-gradient(to bottom,transparent 0,#000 26%,#000 52%,transparent 96%)}
+:root[data-theme="dark"] .hcov{margin-bottom:0}
+</style>
+
 
 
 
@@ -1295,7 +1316,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261104l",NEWS=["Diseinu berria: garbiagoa eta soilagoa","Kideen aurpegiak eta taldearen argazkia Laburpenean","Bidaiak editatu daitezke eta kide bakoitzak bere bidaiak ikusten ditu","Stocka: zegoena + gehitu = guztira"];
+var BUILD="20261104m",NEWS=["Diseinu berria: garbiagoa eta soilagoa","Kideen aurpegiak eta taldearen argazkia Laburpenean","Bidaiak editatu daitezke eta kide bakoitzak bere bidaiak ikusten ditu","Stocka: zegoena + gehitu = guztira"];
 var updShown=false;
 function showUpd(){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button></div>';document.body.appendChild(o);const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd()}catch(e){}}
