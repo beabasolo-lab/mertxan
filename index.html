@@ -734,11 +734,10 @@ html:root[data-theme] #app .kmc .kedb,html:root[data-theme] #app .kmc .kpdb{heig
 html:root[data-theme] #app .kmc .n{font-size:14px!important}
 /* cabecera fina */
 html:root[data-theme] .hcov{overflow:hidden}
-html:root[data-theme] .hcov .cvi{max-width:100%}
+html:root[data-theme] .hcov .cvi{max-width:100%;height:clamp(76px,22vw,124px)!important}
 html:root[data-theme] .hdr,html:root[data-theme] .hcov .hdr{padding-top:calc(4px + env(safe-area-inset-top,0px))!important;padding-bottom:4px!important}
 html:root[data-theme] .hdr .logo{height:20px!important}
 html:root[data-theme] .hcov .hdr{padding-bottom:0!important}
-html:root[data-theme] .hcov .cvi{height:clamp(56px,16vw,92px)!important}
 html:root[data-theme] .hdr .gear,html:root[data-theme] .hdr .bell{width:32px!important;height:32px!important}
 html:root[data-theme] .whob{padding-top:3px!important;padding-bottom:4px!important}
 /* barra inferior: solo iconos */
@@ -767,9 +766,12 @@ html:root[data-theme] nav{padding:2px 4px calc(0px + env(safe-area-inset-bottom,
 html:root[data-theme] nav button,html:root[data-theme] nav button.on{height:38px!important}
 html:root[data-theme] nav button .ic svg{width:22px!important;height:22px!important}
 @media (hover:none) and (pointer:coarse){html:root[data-theme] nav button{height:38px!important}html:root[data-theme] nav{padding:2px 4px calc(0px + env(safe-area-inset-bottom,0px)*.5)!important}}
-html:root[data-theme] .hcov .cvi{height:clamp(44px,12vw,70px)!important}
 html:root[data-theme] .hdr .logo{height:18px!important}
 html:root[data-theme] .hdr .gear,html:root[data-theme] .hdr .bell{width:30px!important;height:30px!important}
+html:root[data-theme] #app .cashr{display:flex;justify-content:space-between;align-items:center;gap:10px}
+html:root[data-theme] #app .cashl{display:flex;align-items:center;gap:6px;opacity:.75}
+html:root[data-theme] #app .cashl .mu{font-size:11px!important;white-space:nowrap}
+html:root[data-theme] #app .cashl input{width:78px!important;height:28px!important;padding:2px 8px!important;font-size:14px;text-align:right;border-radius:8px!important}
 </style>
 
 
@@ -990,8 +992,7 @@ function concierto(){
  if(cur==="new"||(!viewAr&&!act.length)){return h+`<div class="card f"><b>Kontzertu berria</b>${cs.length?`<span class="mu">Aurreko kontzertuan geratu zena automatikoki furgonetara pasatzen da. Gero + sakatuta gehiago gehi dezakezu Eraman atalean.</span>`:""}<input id="cn" placeholder="Izena (adib. Gazteszena)" value="${E((CE&&CE.id==="new"&&CE.n)||"")}">${ceDate("new")}<input id="cp" placeholder="Lekua" value="${E((CE&&CE.id==="new"&&CE.p)||"")}"><button class="btn" id="mk">Sortu kontzertua</button></div>`}
  if(!S.c[cur])cur=act[act.length-1];const d=S.c[cur],i=money(cur);
  if(isAr(cur)){const lk=isLocked(cur),ed=isEd();h+=`<div class="gc" style="margin-bottom:10px;display:grid;gap:8px"><span>${lk?"🔒 Kontzertu hau artxibatuta eta <b>blokeatuta</b> dago.":"🔓 Kontzertu hau artxibatuta dago, baina <b>desblokeatuta</b> editatzeko."} Zenbaketetan eta historikoan sartzen da.</span>${ed?(lk?(unlArm===cur?`<span class="neg">Ziur zaude? Itxitako datuak aldatuko dituzu.</span><div style="display:flex;gap:6px"><button data-unlno="1">Utzi</button><button class="p" data-unl="${cur}">Bai, desblokeatu</button></div>`:`<button class="btn" data-unlask="${cur}">🔓 Desblokeatu editatzeko</button>`):`<button class="btn" data-lockb="${cur}">🔒 Blokeatu berriro</button>`)+`<button class="xs" data-unar="${cur}">Berreskuratu kontzertuen zerrendara</button>`:`<span class="mu">Editoreek bakarrik desblokea dezakete.</span>`}</div>`}
- h+=`<div class="card">${CE&&CE.id===cur?ceDate(cur):`<div class="mh"><b>${E(d.n)}</b><span>${d.d?E(kdLbl(d.d)):`<i class="nodate">Eguna jarri gabe</i>`} ${E(d.p||"")} ${isEd()&&!isLocked(cur)?`<button class="xs cedit" data-cedit="1" aria-label="Editatu kontzertua">✎</button>`:""}</span></div>`}<div style="font-size:21px;font-weight:600">${eur(i)}</div>
- <div class="f" style="grid-template-columns:1fr 1fr;margin-top:8px;align-items:center"><span class="mu">Kutxan kontatutako dirua (€)</span><input type="number" inputmode="decimal" step="0.01" value="${d.cash??""}" data-cash ${isLocked(cur)?"disabled":""}></div>${d.cash==null?"":`<div class="${d.cash==i?"ok":"neg"}">${d.cash==i?"Kutxa zuzen dago ✓":"Aldea: "+eur(d.cash-i)}</div>`}</div>
+ h+=`<div class="card">${CE&&CE.id===cur?ceDate(cur):`<div class="mh"><b>${E(d.n)}</b><span>${d.d?E(kdLbl(d.d)):`<i class="nodate">Eguna jarri gabe</i>`} ${E(d.p||"")} ${isEd()&&!isLocked(cur)?`<button class="xs cedit" data-cedit="1" aria-label="Editatu kontzertua">✎</button>`:""}</span></div>`}<div class="cashr"><div style="font-size:21px;font-weight:600">${eur(i)}</div><label class="cashl"><span class="mu">Kutxa (€)</span><input type="number" inputmode="decimal" step="0.01" placeholder="–" value="${d.cash??""}" data-cash ${isLocked(cur)?"disabled":""}></label></div>${d.cash==null?"":`<div class="${d.cash==i?"ok":"neg"}">${d.cash==i?"Kutxa zuzen dago ✓":"Aldea: "+eur(d.cash-i)}</div>`}</div>
  <div class="mu">Aukeratu zer idatzi eta sakatu + / −</div><div class="seg" style="grid-template-columns:1fr 1fr"><button data-m="l" class="${mode=="l"?"on":""}">Eraman</button><button data-m="v" class="${mode!="l"?"on":""}">Saldutakoak</button></div>`;
  const hid=d.hid||[];
  if(lastHid&&hid.includes(lastHid)){const lm=M.find(x=>x.id===lastHid);if(lm)h+=`<div class="gc" style="margin-bottom:10px"><span><b>${E(lm.n)}</b> kenduta.</span><button class="p" data-hundo="1">Desegin</button></div>`}
@@ -1501,7 +1502,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261104x",NEWS=["Nor zara? Aukeratu zure izena eta goiburuan Añubek zor dizuna ikusiko duzu","Kontzertuak editatu daitezke (izena, lekua, eguna) egutegiarekin","Opariak arrosaz, salmentak urdinez barretan","Diseinu berria: garbiagoa eta soilagoa"];
+var BUILD="20261104y",NEWS=["Nor zara? Aukeratu zure izena eta goiburuan Añubek zor dizuna ikusiko duzu","Kontzertuak editatu daitezke (izena, lekua, eguna) egutegiarekin","Opariak arrosaz, salmentak urdinez barretan","Diseinu berria: garbiagoa eta soilagoa"];
 var updShown=false;
 function showUpd(){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button></div>';document.body.appendChild(o);const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd()}catch(e){}}
