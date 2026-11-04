@@ -430,6 +430,30 @@ body{color:var(--tx)}
 :root[data-theme="dark"] .hcov .hdr{background:linear-gradient(180deg,rgba(10,10,12,.7),transparent)}
 :root[data-theme="dark"] .card,:root[data-theme="dark"] .kpi{border-radius:20px}
 </style>
+<style>
+/* v6 · koloreen logika: urrea=ekintza nagusia, urdina=PDF/partekatu/info, arrosa=opariak */
+:root[data-theme="dark"]{--bl:#6bbfe0;--blt:rgba(107,191,224,.14);--rs:#ef93b7;--rst:rgba(239,147,183,.15)}
+nav .pill{display:none!important}
+:root[data-theme="dark"] nav button.on,:root[data-theme="dark"] nav button{background:none!important;box-shadow:none!important;border:0!important;outline:0!important;-webkit-tap-highlight-color:transparent}
+:root[data-theme="dark"] nav button.on{color:var(--ac)!important}
+:root[data-theme="dark"] nav button.on .nl{color:var(--ac)}
+:root[data-theme="dark"] .btn[data-prm],:root[data-theme="dark"] .btn[data-prd],:root[data-theme="dark"] .btn[data-prs],:root[data-theme="dark"] .btn[data-psk],:root[data-theme="dark"] .btn.alt{background:var(--blt)!important;color:var(--bl)!important;box-shadow:inset 0 0 0 1px rgba(107,191,224,.28)!important}
+:root[data-theme="dark"] .btn.kadd{color:var(--bl)!important;border-color:rgba(107,191,224,.4)}
+:root[data-theme="dark"] .st button.p{background:#26262b!important;color:var(--ac)!important}
+:root[data-theme="dark"] .chip.on{background:rgba(232,185,92,.16);color:var(--ac);box-shadow:inset 0 0 0 1px rgba(232,185,92,.5)}
+:root[data-theme="dark"] .seg button.on,:root[data-theme="dark"] .kcg button.on{background:rgba(232,185,92,.16)!important;color:var(--ac)!important;box-shadow:inset 0 0 0 1px rgba(232,185,92,.5)}
+:root[data-theme="dark"] .kpi.big{border-top:0;box-shadow:0 0 0 1px rgba(255,255,255,.06),0 18px 40px -22px rgba(0,0,0,.9)}
+:root[data-theme="dark"] .kpi.big b{color:#fff}
+:root[data-theme="dark"] .kpi.big::after{display:block!important;content:"";position:absolute;left:16px;top:0;width:36px;height:3px;border-radius:0 0 3px 3px;background:var(--ac)}
+:root[data-theme="dark"] .kpi.kg b{color:var(--rs)}
+:root[data-theme="dark"] .kpi.kg .ki{background:var(--rst)}
+:root[data-theme="dark"] .gm b{color:var(--rs)}
+:root[data-theme="dark"] h2{color:#fff}
+:root[data-theme="dark"] .sh i{color:var(--bl);background:var(--blt)}
+:root[data-theme="dark"] a,:root[data-theme="dark"] button.xs{color:var(--bl)}
+:root[data-theme="dark"] .nbd{background:var(--rs);color:#1a1a1a}
+</style>
+
 
 
 
@@ -605,7 +629,7 @@ function resumen(){
  const cv=P.reduce((a,p)=>a+sold(p.id,"all")*p.c,0),cg=P.reduce((a,p)=>a+gift(p.id)*p.c,0),inv=P.reduce((a,p)=>a+base(p.id)*p.c,0),cs0=P.reduce((a,p)=>a+Math.max(0,stock(p.id))*p.c,0),nc=M.filter((m,mi)=>!(m.c>0)&&P.some(p=>p.mi==mi&&(base(p.id)>0||stock(p.id)>0||sold(p.id,"all")>0||gift(p.id)>0))).length;
  let h=`${hdr("Mertxan 2026 · merchandising",1)}`+(db?"":`<div class="warn">${connErr?E(connErr)+` <button class="xs" data-set="retry">Berriro saiatu</button>`:"Konektatzen…"}</div>`);
  h+=propsHTML();if(dlc)h+=`<button class="btn" style="width:100%;margin:10px 0 4px" data-prm="1">Laburpena (PDF)</button>`;
- h+=`<div class="kpis"><div class="kpi big"><span>Sortutako dirua</span>${kc(ing,"eur")}</div><div class="kpi"><i class="ki">🛍️</i><span>Saldutakoak</span>${kc(P.reduce((a,p)=>a+sold(p.id,"all"),0),"int")}</div><div class="kpi"><i class="ki">🎁</i><span>Oparituak</span>${kc(P.reduce((a,p)=>a+gift(p.id),0),"int")}</div><div class="kpi"><i class="ki">📦</i><span>Biltegian</span>${kc(st,"int")}</div><div class="kpi"><i class="ki">💶</i><span>Stockaren balioa</span>${kc(val,"eur")}</div></div>`;
+ h+=`<div class="kpis"><div class="kpi big"><span>Sortutako dirua</span>${kc(ing,"eur")}</div><div class="kpi"><i class="ki">🛍️</i><span>Saldutakoak</span>${kc(P.reduce((a,p)=>a+sold(p.id,"all"),0),"int")}</div><div class="kpi kg"><i class="ki">🎁</i><span>Oparituak</span>${kc(P.reduce((a,p)=>a+gift(p.id),0),"int")}</div><div class="kpi"><i class="ki">📦</i><span>Biltegian</span>${kc(st,"int")}</div><div class="kpi"><i class="ki">💶</i><span>Stockaren balioa</span>${kc(val,"eur")}</div></div>`;
  h+=secS("gain","Benetako irabazia")+`<div class="card"><div class="mh"><b>Irabazi garbia</b><b class="${ing-cv-cg>=0?"ok":"neg"}">${eur(ing-cv-cg)}</b></div><div class="mu" style="line-height:1.7">Salmentak ${eur(ing)}<br>− Saldutakoen kostua ${eur(cv)}<br><b>= Irabazi gordina ${eur(ing-cv)}</b> (${ing>0?Math.round((ing-cv)/ing*100):0}%)<br>− Oparien kostua ${eur(cg)}<br><b>= Irabazi garbia ${eur(ing-cv-cg)}</b></div><hr style="border:0;border-top:1px solid var(--bd);margin:8px 0"><div class="mu" style="line-height:1.7">Inbertsio osoa (erositako guztia) ${eur(inv)}<br>Biltegian geratzen denaren kostua ${eur(cs0)}<br>Berreskuratutako inbertsioa: <b>${inv>0?Math.round(ing/inv*100):0}%</b></div>${nc?`<div class="mu" style="margin-top:6px">⚠ ${nc} artikulutan kostua ez dago jarrita (0 € kontatzen da). Sartu Stocka fitxan, izenburuan sakatuta.</div>`:""}</div>`;
  h+=secE();
  h+=secS("neur","Zein neurri saltzen da gehien?")+`<div class="chips"><button class="chip ${flt=="all"?"on":""}" data-f="all">Denak</button>${ys.map(y=>`<button class="chip ${flt=="y"+y?"on":""}" data-f="y${y}">${y}</button>`).join("")}${csA.map(c=>`<button class="chip ${flt==c?"on":""}" data-f="${c}">${E(S.c[c].n)}</button>`).join("")}<button class="chip ${flt=="out"?"on":""}" data-f="out">Añube</button></div>`;
@@ -1113,7 +1137,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261104g",NEWS=["Diseinu beltz zinematografikoa: argazki handia, urre koloreko ikonoak, zuzen eta garbi","Laburpenean taldearen argazkia goiburuan","Diseinu berria: txartel gehiago sakonera, ikono berriak eta animazio leunagoak","Kideen aurpegiak Laburpenean eta Km fitxan","Bidaien eta entseguen zenbatekoa xehetasunetan; egutegia euskaraz bidaia editatzean","Stocka: zegoena + gehitu = guztira, «Gorde» botoiarekin","Kide bakoitzak bere bidaiak eta entseguak ikusten ditu bere txartelean","Bidaiak editatu daitezke (bidesaria, km, oharra…) ezabatu gabe","Eguneraketen abisu berria"];
+var BUILD="20261104h",NEWS=["Koloreak funtzioaren arabera: urdina PDFak, arrosa opariak, urrea ekintza nagusia","Diseinu beltz zinematografikoa: argazki handia, urre koloreko ikonoak, zuzen eta garbi","Laburpenean taldearen argazkia goiburuan","Diseinu berria: txartel gehiago sakonera, ikono berriak eta animazio leunagoak","Kideen aurpegiak Laburpenean eta Km fitxan","Bidaien eta entseguen zenbatekoa xehetasunetan; egutegia euskaraz bidaia editatzean","Stocka: zegoena + gehitu = guztira, «Gorde» botoiarekin","Kide bakoitzak bere bidaiak eta entseguak ikusten ditu bere txartelean","Bidaiak editatu daitezke (bidesaria, km, oharra…) ezabatu gabe","Eguneraketen abisu berria"];
 var updShown=false;
 function showUpd(){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button></div>';document.body.appendChild(o);const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd()}catch(e){}}
