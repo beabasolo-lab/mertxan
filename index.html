@@ -681,14 +681,21 @@ html,body{padding-top:0!important}
 .whob:active{opacity:.85}
 </style>
 <style>
-/* v16 · mugikorra: pantaila osoa (beheko zerrenda beltza kendu) */
+/* v16b · mugikorra: altuera % (dvh-k beheko 34px galtzen ditu iOS-en) + goiburu trinkoagoa */
 @media (hover:none) and (pointer:coarse){
- html,body{position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:0!important;width:100%!important;height:auto!important;min-height:0!important;overflow:hidden}
- body{display:flex;flex-direction:column}
- nav{padding:8px 10px calc(6px + env(safe-area-inset-bottom,0px)*.42)!important;flex:none}
- nav button{height:56px!important}
+ html,body{height:100%!important}
+ body{height:100%!important;display:flex;flex-direction:column}
+ nav{padding:7px 10px calc(5px + env(safe-area-inset-bottom,0px)*.4)!important;flex:none}
+ nav button{height:54px!important}
 }
+.hdr,.hcov .hdr{padding-top:calc(6px + env(safe-area-inset-top,0px))!important;padding-bottom:6px!important}
+.hdr .logo{height:24px}
+.hcov .hdr{padding-bottom:0!important}
+.whob{padding-top:5px;padding-bottom:6px}
+.hcov .cvi{height:clamp(76px,22vw,124px);object-fit:cover;object-position:50% 14%;width:100%}
+:root[data-theme="dark"] .hcov .cvi{margin-bottom:-2px}
 </style>
+
 
 
 
@@ -1411,7 +1418,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261104s",NEWS=["Nor zara? Aukeratu zure izena eta goiburuan Añubek zor dizuna ikusiko duzu","Kontzertuak editatu daitezke (izena, lekua, eguna) egutegiarekin","Opariak arrosaz, salmentak urdinez barretan","Diseinu berria: garbiagoa eta soilagoa"];
+var BUILD="20261104t",NEWS=["Nor zara? Aukeratu zure izena eta goiburuan Añubek zor dizuna ikusiko duzu","Kontzertuak editatu daitezke (izena, lekua, eguna) egutegiarekin","Opariak arrosaz, salmentak urdinez barretan","Diseinu berria: garbiagoa eta soilagoa"];
 var updShown=false;
 function showUpd(){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button></div>';document.body.appendChild(o);const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd()}catch(e){}}
