@@ -881,16 +881,7 @@ html.tl:root[data-theme] .hdr,html.tl:root[data-theme] .hcov .hdr{padding-top:ca
 html.tl:root[data-theme] .hcov .hdr{background:linear-gradient(180deg,rgba(10,12,16,.9) 0,rgba(10,12,16,.6) 75%,rgba(10,12,16,0) 100%)!important}
 html:root[data-theme] .sxbar{animation:none!important}
 </style><style>
-/* build u: glass bars, a11y */
-html:root[data-theme] nav{background:rgba(24,30,40,.50)!important;-webkit-backdrop-filter:blur(22px) saturate(170%);backdrop-filter:blur(22px) saturate(170%);border:1px solid rgba(255,255,255,.16)!important;box-shadow:0 8px 28px rgba(0,0,0,.28)!important}
-html:root[data-theme="light"] nav{background:rgba(255,255,255,.55)!important;border:1px solid rgba(0,0,0,.08)!important;box-shadow:0 8px 28px rgba(0,0,0,.14)!important}
-html:root[data-theme="light"] nav button{color:rgba(20,30,40,.6)!important}
-html:root[data-theme="light"] nav button.on{color:#0c4a78!important;background:rgba(12,74,120,.12)!important}
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){html:root[data-theme] nav{background:rgba(24,30,40,.94)!important}html:root[data-theme="light"] nav{background:rgba(255,255,255,.94)!important}}
-html:root[data-theme] #app{padding-bottom:calc(104px + env(safe-area-inset-bottom,0px)*.4)!important}
-html:root[data-theme] .hdr .gear,html:root[data-theme] .hdr .bell{background:rgba(18,24,34,.62)!important;-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);border:1px solid rgba(255,255,255,.3)!important;box-shadow:0 2px 8px rgba(0,0,0,.3)!important;color:#fff!important}
-html:root[data-theme] .hdr .gear svg,html:root[data-theme] .hdr .bell svg{stroke:#fff!important;stroke-width:2.2;filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}
-html:root[data-theme] .hcov .hdr{background:linear-gradient(180deg,rgba(10,12,16,.38) 0,rgba(10,12,16,0) 100%)!important}
+/* build v: a11y */
 /* contrast: white text on blue >= 4.5 */
 html:root[data-theme] .btn,html:root[data-theme="dark"] .btn{background:#1c6aa0!important;color:#fff!important}
 /* touch targets >= 44pt (visuals unchanged) */
@@ -980,8 +971,8 @@ async function sendDraft(){const el=$("#pn"),nm=((el&&el.value)||dName||"").trim
  const ops=Object.values(DR);if(!ops.length)return;const id="p"+Date.now()+Math.random().toString(36).slice(2,5);
  try{await db.collection("props").doc(id).set({ts:Date.now(),by:nm,ops:ops.map(o=>({c:o.c,id:o.id,t:o.t,d:o.d})),sum:sumOps(ops)});DR={};restoreSrv();edErr="";edMsg="Proposamena bidali da ✓ Editoreek onartzean agertuko da."}catch(e){edErr="Ezin izan da bidali: "+((e&&e.message)||e)}render()}
 async function propAct(id,ok){const p=(S.pr||{})[id];if(!p)return;edErr="";try{if(ok){noLog=true;let ps;try{ps=(p.ops||[]).map(o=>o.t=="d"?db.collection(o.c).doc(o.id).delete():db.collection(o.c).doc(o.id).set(o.d))}finally{noLog=false}await Promise.all(ps);await putAct({ts:Date.now(),by:(p.by||"?")+" ✓",dv:devId,sum:(p.sum||[]).slice(0,30)})}await db.collection("props").doc(id).delete()}catch(e){edErr="Errorea: "+((e&&e.message)||e)}render()}
-var SEC={kont:1,gain:0};try{const v=JSON.parse(localStorage.getItem("anube.sec")||"null");if(v)SEC=v}catch(e){}
-const secOpen=k=>SEC[k]!==undefined?!!SEC[k]:(k==="gain"||k==="ktr"||k==="krace");
+var SEC={};
+const secOpen=k=>SEC[k]!==undefined?!!SEC[k]:false;
 function secS(k,t,b){const o=secOpen(k);return `<h2 class="shh"><button class="sh" data-sec="${k}" aria-expanded="${o}"><span>${t}${b||""}</span><i>${o?"▾":"▸"}</i></button></h2><div class="sx${o?"":" cl"}"${o?"":" hidden"}><div class="sxi">`}
 const secE=()=>`</div></div>`;
 /* ===== Jarduera (aldaketen erregistroa + irakurri gabeak) ===== */
@@ -1103,7 +1094,7 @@ function resumen(){
  return h}
 function concierto(){
  const cs=Object.keys(S.c).sort((a,b)=>(S.c[a].d||"").localeCompare(S.c[b].d||"")),act=cs.filter(c=>!isAr(c)),arc=cs.filter(isAr),viewAr=!!(S.c[cur]&&isAr(cur));
- let h=`${hdr("Kontzertua")}<div class="chips">${act.map(c=>`<button class="chip ${cur==c?"on":""}" data-c="${c}">${E(S.c[c].n)}</button>`).join("")}${viewAr?`<button class="chip on" data-c="${cur}">🔒 ${E(S.c[cur].n)}</button>`:""}<button class="chip ${cur==="new"?"on":""}" data-c="new">+ Berria</button>${arc.length?`<button class="chip ${showAr?"on":""}" data-sar="1">🔒 Blokeatuak (${arc.length})</button>`:""}</div>`;
+ let h=`${hdr("Kontzertua")}<div class="chips"><button class="chip ${cur==="new"?"on":""}" data-c="new" aria-label="Kontzertu berria" style="font-weight:600;padding-left:16px;padding-right:16px">+</button>${act.map(c=>`<button class="chip ${cur==c?"on":""}" data-c="${c}">${E(S.c[c].n)}</button>`).join("")}${viewAr?`<button class="chip on" data-c="${cur}">🔒 ${E(S.c[cur].n)}</button>`:""}${arc.length?`<button class="chip ${showAr?"on":""}" data-sar="1">🔒 Blokeatuak (${arc.length})</button>`:""}</div>`;
  if(showAr&&arc.length){const yy=[...new Set(arc.map(yOf))].sort().reverse();h+=`<div class="card"><div class="mh"><b>Blokeatutako kontzertuak</b></div>${yy.map(y=>`<div class="mu" style="margin:8px 0 4px">${y}</div><div class="chips" style="flex-wrap:wrap;margin:0">${arc.filter(c=>yOf(c)===y).map(c=>`<button class="chip ${cur==c?"on":""}" data-c="${c}">${E(S.c[c].n)}${S.c[c].d?" · "+E(S.c[c].d):""}</button>`).join("")}</div>`).join("")}</div>`}
  if(cur==="new"||(!viewAr&&!act.length)){return h+`<div class="card f"><b>Kontzertu berria</b>${cs.length?`<span class="mu">Data aldetik aurreko kontzertuan geratu dena automatikoki furgonetara pasatzen da, eta aldatzen baduzu, hau ere eguneratzen da. Gero + sakatuta gehiago gehi dezakezu Eraman atalean.</span>`:""}<input id="cn" placeholder="Izena (adib. Gazteszena)" required value="${E((CE&&CE.id==="new"&&CE.n)||"")}">${ceDate("new")}<input id="cp" placeholder="Lekua" value="${E((CE&&CE.id==="new"&&CE.p)||"")}">${ncErr?`<div class="warn">${E(ncErr)}</div>`:""}<button class="btn" id="mk">Sortu kontzertua</button></div>`}
  if(!S.c[cur])cur=act[act.length-1];const d=S.c[cur],i=money(cur);
@@ -1699,7 +1690,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261109u",NEWS=["Barra inferior y cabecera translúcidas: la app se ve por detrás","Botones más grandes y fáciles de pulsar","Ya se puede hacer zoom, y mejor contraste en los botones azules"];
+var BUILD="20261109v",NEWS=["Ireki orduko atal guztiak tolestuta agertzen dira","Botoi handiagoak eta kontraste hobea","Orain zoom egin daiteke","Kontzertuak: + botoia beti lehena da, kontzertu berria sortzeko"];
 var updShown=false;
 function showUpd(nv){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button><div class="updv" id="updv">'+(nv?"Bertsio berria: "+E(nv):"")+'</div></div>';document.body.appendChild(o);if(!nv){fetch("index.html?v="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{const m=/var BUILD="([^"]+)"/.exec(t),u=document.getElementById("updv");if(m&&u)u.textContent="Bertsio berria: "+m[1]}).catch(()=>{})}const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd(m[1])}catch(e){}}
