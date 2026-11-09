@@ -772,10 +772,11 @@ html:root[data-theme] #app .cashr{display:flex;justify-content:space-between;ali
 html:root[data-theme] #app .cashl{display:flex;align-items:center;gap:6px;opacity:.75}
 html:root[data-theme] #app .cashl .mu{font-size:11px!important;white-space:nowrap}
 html:root[data-theme] #app .cashl input{width:78px!important;height:28px!important;padding:2px 8px!important;font-size:14px;text-align:right;border-radius:8px!important}
-@media (hover:none) and (pointer:coarse){html.sfix,html.sfix body{bottom:auto!important;height:var(--sh,100%)!important}
-html.kb,html.kb body{bottom:auto!important;height:var(--vvh,100%)!important}
+@media (hover:none) and (pointer:coarse){html.kb,html.kb body{bottom:auto!important;height:var(--vvh,100%)!important}
 html.kb nav{display:none!important}
-html:root[data-theme] nav,html:root[data-theme] nav{padding-bottom:calc(0px + env(safe-area-inset-bottom,0px)*.6)!important}
+html:root[data-theme] nav{padding-bottom:calc(env(safe-area-inset-bottom,0px)*.6)!important}
+html.short:root[data-theme] nav{padding-bottom:0!important}
+@media (display-mode: standalone){html.hfix{min-height:min(100lvh,calc(100% + env(safe-area-inset-top,0px)))}}
 }
 
 @keyframes pgin{from{opacity:0}to{opacity:1}}
@@ -1014,7 +1015,7 @@ function yStats(y){const pm={};P.forEach(p=>pm[p.id]=p);let u=0,rev=0,cv=0,cg=0;
  return{n,u,rev,cv,cg,net:rev-cv-cg}}
 function concCard(c){const d=S.c[c],i=money(c),l=tot("l",x=>x.c==c),v=tot("v",x=>x.c==c),r=tot("r",x=>x.c==c),lk=isAr(c),df=d.cash==null?"":d.cash-i;
   return `<div class="card cc ${lk?"lk":""}" data-cs="${c}" role="button" tabindex="0"><div class="mh"><b>${lk?"🔒 ":""}${E(d.n)}</b><span>${E(d.d?kdLbl(d.d):"")} ${E(d.p||"")}</span></div><div class="ccs">${lk?`<span><b>${v}</b> saldu</span>${r?`<span><b class="gf">${r}</b> oparitu</span>`:""}<span><b>${l-v-r}</b> bueltan</span><span class="ccm"><b>${eur(i)}</b></span>`:`<span><b>${l}</b> eramateko</span><span class="mu">Prestatzen · ikusi zerrenda</span>`}</div>${lk&&df!==""?`<div class="${df==0?"ok":"neg"}" style="font-size:12px">kutxa ${df==0?"zuzen ✓":(df>0?"+":"")+eur(df)}</div>`:""}<i class="ccx">›</i></div>`}
-function ajustes(){return hdr("Ezarpenak")+`<button class="xs" data-t="res" style="margin-bottom:6px">← Atzera</button>`+whoSet()+`<h2>Taldea eta datuak</h2>`+`<div class="card f"><span class="mu">Taldearen kodea: <b>${E(code||"")}</b></span>${roleHTML()}${vw()?"":`<button class="btn" style="background:var(--ac2);color:var(--ac)" data-set="link">${copied?"Kopiatuta ✓":"Esteka kopiatu (kideentzat)"}</button>${linkTxt?`<input readonly value="${E(linkTxt)}" onfocus="this.select()" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--ac);background:var(--bg,#111);color:inherit;font-size:13px">`:""}`}${secS("adv","Aurreratua")}${vw()?"":`<button class="btn" style="background:var(--ac2);color:var(--ac)" data-set="exp">Babeskopia deskargatu (JSON)</button>`}${isEd()?`<label class="btn" style="background:var(--ac2);color:var(--ac);text-align:center;display:block;cursor:pointer">Datuak inportatu (JSON)<input id="imp" type="file" accept=".json,application/json" style="display:none"></label>`:""}${secE()}${impData?`<div class="gc"><span><b>${impData.n}</b> dokumentu inportatuko dira talde honetara (lehendik daudenak gainidatziko dira).</span><div style="display:flex;gap:6px"><button data-set="impno">Utzi</button><button class="p" data-set="impok">Bai, inportatu</button></div></div>`:""}<button class="xs ${outArm?"arm":""}" data-set="out">${outArm?"Ziur? Sakatu berriro":"Talde honetatik irten"}</button><span class="mu">Irtetean datuak ez dira ezabatzen; kodea berriro sartuz gero, dena han dago.</span>${connErr?`<div class="warn">${E(connErr)}</div>`:""}</div>`+`<div class="mu" style="text-align:center;margin:14px 0 4px;font-size:11.5px">Bertsioa ${BUILD}<br><span id="dgv" style="opacity:.7">${E(DG)}</span><br><button class="xs" data-set="sfix">Pantaila-doiketa aldatu</button></div>`}
+function ajustes(){return hdr("Ezarpenak")+`<button class="xs" data-t="res" style="margin-bottom:6px">← Atzera</button>`+whoSet()+`<h2>Taldea eta datuak</h2>`+`<div class="card f"><span class="mu">Taldearen kodea: <b>${E(code||"")}</b></span>${roleHTML()}${vw()?"":`<button class="btn" style="background:var(--ac2);color:var(--ac)" data-set="link">${copied?"Kopiatuta ✓":"Esteka kopiatu (kideentzat)"}</button>${linkTxt?`<input readonly value="${E(linkTxt)}" onfocus="this.select()" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--ac);background:var(--bg,#111);color:inherit;font-size:13px">`:""}`}${secS("adv","Aurreratua")}${vw()?"":`<button class="btn" style="background:var(--ac2);color:var(--ac)" data-set="exp">Babeskopia deskargatu (JSON)</button>`}${isEd()?`<label class="btn" style="background:var(--ac2);color:var(--ac);text-align:center;display:block;cursor:pointer">Datuak inportatu (JSON)<input id="imp" type="file" accept=".json,application/json" style="display:none"></label>`:""}${secE()}${impData?`<div class="gc"><span><b>${impData.n}</b> dokumentu inportatuko dira talde honetara (lehendik daudenak gainidatziko dira).</span><div style="display:flex;gap:6px"><button data-set="impno">Utzi</button><button class="p" data-set="impok">Bai, inportatu</button></div></div>`:""}<button class="xs ${outArm?"arm":""}" data-set="out">${outArm?"Ziur? Sakatu berriro":"Talde honetatik irten"}</button><span class="mu">Irtetean datuak ez dira ezabatzen; kodea berriro sartuz gero, dena han dago.</span>${connErr?`<div class="warn">${E(connErr)}</div>`:""}</div>`+`<div class="mu" style="text-align:center;margin:14px 0 4px;font-size:11.5px">Bertsioa ${BUILD}<br><span id="dgv" style="opacity:.7">${E(DG)}</span></div>`}
 function resumen(){
  const cs=Object.keys(S.c).sort((a,b)=>(S.c[b].d||"").localeCompare(S.c[a].d||"")),csA=cs.filter(c=>!isAr(c)),ys=[...new Set(cs.map(yOf))].sort().reverse();
  const ing=P.reduce((a,p)=>a+sold(p.id,"all")*p.p,0),st=P.reduce((a,p)=>a+stock(p.id),0),val=P.reduce((a,p)=>a+stock(p.id)*p.p,0);
@@ -1022,8 +1023,7 @@ function resumen(){
  let h=`${hdr("Mertxan 2026 · merchandising",1)}`+(db?"":`<div class="warn">${connErr?E(connErr)+` <button class="xs" data-set="retry">Berriro saiatu</button>`:"Konektatzen…"}</div>`);
  h+=propsHTML();if(dlc)h+=`<div style="text-align:right;margin:2px 0 0"><button class="xs" data-prm="1">📄 PDF</button></div>`;
  h+=`<div class="kpis"><div class="kpi big"><span>Sortutako dirua</span>${kc(ing,"eur")}</div><div class="kpi"><i class="ki">🛍️</i><span>Saldutakoak</span>${kc(P.reduce((a,p)=>a+sold(p.id,"all"),0),"int")}</div><div class="kpi kg"><i class="ki">🎁</i><span>Oparituak</span>${kc(P.reduce((a,p)=>a+gift(p.id),0),"int")}</div><div class="kpi"><i class="ki">📦</i><span>Biltegian</span>${kc(st,"int")}</div><div class="kpi"><i class="ki">💶</i><span>Stockaren balioa</span>${kc(val,"eur")}</div></div>`;
- h+=secS("kont","Kontzertuak")+(csA.length?csA.map(c=>concCard(c)).join(""):`<div class="card mu">${cs.length?"Kontzertu guztiak blokeatuta daude.":"Oraindik ez dago kontzerturik. Sortu lehena Kontzertua fitxan."}</div>`);
- {const ca=cs.filter(isAr);if(ca.length){h+=`<div style="text-align:center;margin:10px 0"><button class="xs" data-sres="1">🔒 Blokeatuak (${ca.length}) ${showArR?"▲":"▼"}</button></div>`;if(showArR)h+=ca.map(c=>concCard(c)).join("")}}
+ h+=secS("kont","Kontzertuak")+(cs.length?cs.map(c=>concCard(c)).join(""):`<div class="card mu">Oraindik ez dago kontzerturik. Sortu lehena Kontzertua fitxan.</div>`);
  {const ov=P.reduce((a,p)=>a+outq(p.id,"v"),0),og=P.reduce((a,p)=>a+outq(p.id,"r"),0);if(ov+og>0)h+=`<h2>Kontzertuetatik kanpo</h2><div class="card"><div class="mu">Saldutakoak ${ov} · Oparituak ${og}</div><div><b>${eur(P.reduce((a,p)=>a+outq(p.id,"v")*p.p,0))}</b></div>${outList().map(x=>`<div class="bi" style="border-top:1px solid var(--bd);margin-top:8px;padding-top:8px;display:flex;justify-content:space-between;gap:10px"><div style="min-width:0"><b>${x.q} × ${E(x.nm)}</b><div class="mu">${x.t=="v"?"Salmenta":"Oparia"} · ${E(x.dt)}${x.note?" · "+E(x.note):""}</div></div>${x.t=="v"?`<b>${eur(x.amt)}</b>`:`<span class="mu">🎁</span>`}</div>`).join("")}</div>`}
  h+=secE();
  h+=secS("gain","Benetako irabazia")+`<div class="card"><div class="mh"><b>Irabazi garbia</b><b class="${ing-cv-cg>=0?"ok":"neg"}">${eur(ing-cv-cg)}</b></div><div class="mu" style="line-height:1.7">Salmentak ${eur(ing)}<br>− Saldutakoen kostua ${eur(cv)}<br><b>= Irabazi gordina ${eur(ing-cv)}</b> (${ing>0?Math.round((ing-cv)/ing*100):0}%)<br>− Oparien kostua ${eur(cg)}<br><b>= Irabazi garbia ${eur(ing-cv-cg)}</b></div><hr style="border:0;border-top:1px solid var(--bd);margin:8px 0"><div class="mu" style="line-height:1.7">Inbertsio osoa (erositako guztia) ${eur(inv)}<br>Biltegian geratzen denaren kostua ${eur(cs0)}<br>Berreskuratutako inbertsioa: <b>${inv>0?Math.round(ing/inv*100):0}%</b></div>${nc?`<div class="mu" style="margin-top:6px">⚠ ${nc} artikulutan kostua ez dago jarrita (0 € kontatzen da). Sartu Stocka fitxan, izenburuan sakatuta.</div>`:""}</div>`;
@@ -1464,22 +1464,31 @@ function fitNav(){try{const sa=matchMedia("(display-mode: standalone)").matches|
  const gap=sa?Math.max(0,Math.round(screen.height-innerHeight)):0;
  document.documentElement.style.setProperty("--nsab",Math.round(Math.max(0,inset-gap)*0.3)+"px")}catch(e){}}
 addEventListener("resize",fitNav);addEventListener("orientationchange",()=>setTimeout(fitNav,300));addEventListener("load",fitNav);fitNav();
-var DG="";
-function fitScr(){try{const root=document.documentElement,touch=matchMedia("(hover:none) and (pointer:coarse)").matches,sa=matchMedia("(display-mode: standalone)").matches||navigator.standalone;
- const a=document.createElement("div");a.style.cssText="position:fixed;top:0;left:0;width:1px;height:100%;visibility:hidden;pointer-events:none";document.body.appendChild(a);const lh=a.getBoundingClientRect().height;a.remove();
+var DG="",HF={n:0,ok:"",busy:false};
+function vpH(){const v=window.visualViewport;return Math.round(v?v.height:innerHeight)}
+function fitScr(){try{const root=document.documentElement,touch=matchMedia("(hover:none) and (pointer:coarse)").matches,sa=!!(matchMedia("(display-mode: standalone)").matches||navigator.standalone);
  const b=document.createElement("div");b.style.cssText="position:fixed;bottom:0;left:0;padding-bottom:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none";document.body.appendChild(b);const ins=parseFloat(getComputedStyle(b).paddingBottom)||0;b.remove();
- const gap=Math.round(screen.height-lh);let off=false;try{off=localStorage.getItem("anube.sfix")==="0"}catch(_){}
- const on=!!(!off&&touch&&sa&&innerHeight>innerWidth&&gap>=6&&gap<=120&&!root.classList.contains("kb"));
- if(on)root.style.setProperty("--sh",screen.height+"px");root.classList.toggle("sfix",on);
- DG="inner "+innerHeight+" · layout "+Math.round(lh)+" · screen "+screen.height+" · safe "+ins+" · gap "+gap+(on?" · doitua":"")+(off?" · off":"");
- const e=document.getElementById("dgv");if(e)e.textContent=DG}catch(e){}}
-addEventListener("resize",fitScr);addEventListener("orientationchange",()=>setTimeout(fitScr,300));addEventListener("load",()=>{fitScr();setTimeout(fitScr,600)});fitScr();
+ const t=document.createElement("div");t.style.cssText="position:fixed;top:0;left:0;padding-top:env(safe-area-inset-top,0px);visibility:hidden;pointer-events:none";document.body.appendChild(t);const top=parseFloat(getComputedStyle(t).paddingTop)||0;t.remove();
+ const h=vpH(),gap=Math.round(screen.height-h),kb=root.classList.contains("kb"),port=innerHeight>innerWidth;
+ const bug=touch&&sa&&port&&!kb&&gap>=20&&gap<=130;
+ root.classList.toggle("short",bug&&HF.n>=3);
+ DG="inner "+innerHeight+" · vv "+h+" · screen "+screen.height+" · safe "+top+"/"+ins+" · gap "+gap+(bug?" · iOS-bug":"")+(HF.ok?" · ok:"+HF.ok:"")+(bug&&HF.n>=3?" · short":"");
+ const e=document.getElementById("dgv");if(e)e.textContent=DG;
+ if(bug&&HF.n<3&&!HF.busy)healVp()}catch(e){}}
+function healVp(){HF.busy=true;const step=HF.n++;const done=()=>{HF.busy=false;fitScr()};
+ const chk=name=>{setTimeout(()=>{const g=Math.round(screen.height-vpH());if(g<8){HF.ok=name;HF.n=3;root0().classList.remove("short")}done()},320)};
+ try{
+  if(step===0){const m=document.querySelector('meta[name=viewport]');const c=m.getAttribute("content");m.setAttribute("content",c.replace("viewport-fit=cover","viewport-fit=auto"));setTimeout(()=>{m.setAttribute("content",c);chk("meta")},120)}
+  else if(step===1){const a=document.body;const d=a.style.display;a.style.display="none";void a.offsetHeight;a.style.display=d;chk("flip")}
+  else{root0().classList.add("hfix");chk("css")}
+ }catch(e){HF.busy=false}}
+function root0(){return document.documentElement}
+addEventListener("resize",()=>{if(!HF.busy)fitScr()});addEventListener("orientationchange",()=>{HF.n=0;HF.ok="";setTimeout(fitScr,300)});
+addEventListener("pageshow",()=>{HF.n=0;HF.ok="";setTimeout(fitScr,200)});document.addEventListener("visibilitychange",()=>{if(!document.hidden){HF.n=0;HF.ok="";setTimeout(fitScr,250)}});
+addEventListener("load",()=>{setTimeout(fitScr,300);setTimeout(fitScr,1200)});fitScr();
 (function(){const vv=window.visualViewport;if(!vv)return;const r=document.documentElement;
- function f(){const kb=matchMedia("(hover:none) and (pointer:coarse)").matches&&innerHeight-vv.height>150;r.classList.toggle("kb",kb);r.style.setProperty("--vvh",vv.height+"px");if(kb&&(vv.offsetTop>0||scrollY>0))scrollTo(0,0);if(!kb)fitScr()}
- vv.addEventListener("resize",f);vv.addEventListener("scroll",f)})();
-
-
-
+ function f(){const kb=matchMedia("(hover:none) and (pointer:coarse)").matches&&screen.height-vv.height>150&&document.activeElement&&/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);r.classList.toggle("kb",!!kb);r.style.setProperty("--vvh",vv.height+"px");if(kb&&(vv.offsetTop>0||scrollY>0))scrollTo(0,0)}
+ vv.addEventListener("resize",f);vv.addEventListener("scroll",f);document.addEventListener("focusout",()=>setTimeout(()=>{f();if(!r.classList.contains("kb")){HF.n=0;HF.ok="";setTimeout(fitScr,200)}},350))})();
 /* ===== kontzertu orria (sheet) ===== */
 var CSH=null;
 function csData(c){const d=S.c[c],hid=d.hid||[],rows=[];M.forEach((m,mi)=>{const ps=P.filter(p=>p.mi==mi);let l=0,v=0,r=0;const sz=ps.map(p=>{const x=ln(c,p.id);l+=x.l||0;v+=x.v||0;r+=x.r||0;return {z:p.z,l:x.l||0,v:x.v||0,r:x.r||0}});if(l||v||r)rows.push({n:m.n,pr:m.p,l,v,r,sz})});return rows}
@@ -1558,7 +1567,6 @@ document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)r
   try{navigator.clipboard?navigator.clipboard.writeText(u).then(ok,fb):fb()}catch(_){fb()}}
  else if(a=="exp"){db&&db.__export().then(o=>dlc.save({filename:"mertxan-babeskopia-"+new Date().toISOString().slice(0,10)+".json",data:new TextEncoder().encode(JSON.stringify(o)),type:"application/json"}))}
  else if(a=="retry"){connErr="";start()}
- else if(a=="sfix"){try{localStorage.setItem("anube.sfix",localStorage.getItem("anube.sfix")==="0"?"1":"0")}catch(_){}fitScr();render()}
  else if(a=="impno"){impData=null;render()}
  else if(a=="impok"){const d=impData;impData=null;render();db&&db.__import(d.obj).then(()=>{}).catch(e=>{connErr="Inportazioak huts egin du: "+((e&&e.message)||e)})}
  else if(a=="out"){if(outArm){try{localStorage.removeItem("anube.code")}catch(e){}try{document.cookie="anube_code=;max-age=0;path="+location.pathname.replace(/[^/]*$/,"")}catch(e){}try{history.replaceState(null,"",location.pathname)}catch(e){}code=null;db=null;S={c:{},l:{},k:{},i:{},o:{},m:{},pr:{}};cur=null;outArm=false;location.reload()}else{outArm=true;render()}}}
@@ -1607,7 +1615,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261109b",NEWS=["Nor zara? Aukeratu zure izena eta goiburuan Añubek zor dizuna ikusiko duzu","Kontzertuak editatu daitezke (izena, lekua, eguna) egutegiarekin","Opariak arrosaz, salmentak urdinez barretan","Diseinu berria: garbiagoa eta soilagoa"];
+var BUILD="20261109d",NEWS=["Nor zara? Aukeratu zure izena eta goiburuan Añubek zor dizuna ikusiko duzu","Kontzertuak editatu daitezke (izena, lekua, eguna) egutegiarekin","Opariak arrosaz, salmentak urdinez barretan","Diseinu berria: garbiagoa eta soilagoa"];
 var updShown=false;
 function showUpd(){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button></div>';document.body.appendChild(o);const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd()}catch(e){}}
