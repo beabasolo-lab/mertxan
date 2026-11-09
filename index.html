@@ -681,13 +681,7 @@ html,body{padding-top:0!important}
 .whob:active{opacity:.85}
 </style>
 <style>
-/* v16b · mugikorra: altuera % (dvh-k beheko 34px galtzen ditu iOS-en) + goiburu trinkoagoa */
-@media (hover:none) and (pointer:coarse){
- html,body{position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:0!important;width:auto!important;height:auto!important;min-height:0!important;overflow:hidden}
- body{display:flex;flex-direction:column}
- nav{padding:7px 10px calc(5px + env(safe-area-inset-bottom,0px)*.4)!important;flex:none}
- nav button{height:54px!important}
-}
+/* v16b · goiburu trinkoagoa */
 .hdr,.hcov .hdr{padding-top:calc(6px + env(safe-area-inset-top,0px))!important;padding-bottom:6px!important}
 .hdr .logo{height:24px}
 .hcov .hdr{padding-bottom:0!important}
@@ -733,7 +727,7 @@ html:root[data-theme] #app .kmc .kfoot{gap:8px;min-height:0!important}
 html:root[data-theme] #app .kmc .kedb,html:root[data-theme] #app .kmc .kpdb{height:30px!important;min-height:0!important}
 html:root[data-theme] #app .kmc .n{font-size:14px!important}
 /* cabecera fina */
-html:root[data-theme] .hcov{overflow:hidden}
+html:root[data-theme] .hcov{overflow:hidden;transform:translateZ(0)}
 html:root[data-theme] .hcov .cvi{max-width:100%;height:clamp(76px,22vw,124px)!important}
 html:root[data-theme] .hdr,html:root[data-theme] .hcov .hdr{padding-top:calc(4px + env(safe-area-inset-top,0px))!important;padding-bottom:4px!important}
 html:root[data-theme] .hdr .logo{height:20px!important}
@@ -780,7 +774,6 @@ html.short:root[data-theme] nav{padding-bottom:0!important}
 }
 
 @keyframes pgin{from{opacity:0}to{opacity:1}}
-#app.pgin{animation:pgin .26s ease-out}
 @keyframes gcin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 #app .gc{animation:gcin .28s cubic-bezier(.22,1,.36,1)}
 #app .card.cc{position:relative;cursor:pointer;padding-right:30px!important;transition:transform .18s,background .2s}
@@ -833,7 +826,7 @@ html.short:root[data-theme] nav{padding-bottom:0!important}
 @media (prefers-reduced-motion:reduce){.csp,.csbk,#app.pgin,#app .gc{transition:none!important;animation:none!important}}
 
 /* ===== barra flotante (capsula) ===== */
-html:root[data-theme] nav{position:fixed!important;left:50%!important;right:auto!important;top:auto!important;bottom:calc(env(safe-area-inset-bottom,0px)*.4 + 10px)!important;transform:translateX(-50%);width:min(calc(100% - 32px),400px)!important;height:56px!important;padding:6px!important;gap:2px!important;border:1px solid rgba(255,255,255,.1)!important;border-radius:30px!important;background:rgba(26,32,42,.74)!important;-webkit-backdrop-filter:blur(22px) saturate(1.4);backdrop-filter:blur(22px) saturate(1.4);box-shadow:0 8px 28px rgba(0,0,0,.45)!important;z-index:20!important;flex:none}
+html:root[data-theme] nav{position:fixed!important;left:0!important;right:0!important;margin:0 auto!important;top:auto!important;bottom:calc(env(safe-area-inset-bottom,0px)*.4 + 10px)!important;width:min(calc(100% - 32px),400px)!important;height:56px!important;padding:6px!important;gap:2px!important;border:1px solid rgba(255,255,255,.1)!important;border-radius:30px!important;background:rgba(24,30,40,.96)!important;box-shadow:0 8px 28px rgba(0,0,0,.45)!important;z-index:20!important;flex:none}
 html.short:root[data-theme] nav{bottom:8px!important}
 html:root[data-theme] nav button,html:root[data-theme] nav button.on{flex:1 1 0!important;height:42px!important;border-radius:22px!important;background:none!important;box-shadow:none!important;border:0!important;color:rgba(255,255,255,.55)!important;transition:background .25s,color .25s,transform .15s}
 html:root[data-theme] nav button.on{background:rgba(255,255,255,.13)!important;color:#9ccdef!important}
@@ -1504,7 +1497,7 @@ addEventListener("resize",()=>{if(!HF.busy)fitScr()});addEventListener("orientat
 addEventListener("pageshow",()=>{HF.n=0;HF.ok="";setTimeout(fitScr,200)});document.addEventListener("visibilitychange",()=>{if(!document.hidden){HF.n=0;HF.ok="";setTimeout(fitScr,250)}});
 addEventListener("load",()=>{setTimeout(fitScr,300);setTimeout(fitScr,1200)});fitScr();
 (function(){const vv=window.visualViewport;if(!vv)return;const r=document.documentElement;
- function f(){const kb=matchMedia("(hover:none) and (pointer:coarse)").matches&&screen.height-vv.height>150&&document.activeElement&&/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);r.classList.toggle("kb",!!kb);r.style.setProperty("--vvh",vv.height+"px");if(kb&&(vv.offsetTop>0||scrollY>0))scrollTo(0,0)}
+ function f(){const kb=matchMedia("(hover:none) and (pointer:coarse)").matches&&screen.height-vv.height>150&&document.activeElement&&/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);if(r.classList.contains("kb")!==!!kb)r.classList.toggle("kb",!!kb);if(kb)r.style.setProperty("--vvh",vv.height+"px");if(kb&&(vv.offsetTop>0||scrollY>0))scrollTo(0,0)}
  vv.addEventListener("resize",f);vv.addEventListener("scroll",f);document.addEventListener("focusout",()=>setTimeout(()=>{f();if(!r.classList.contains("kb")){HF.n=0;HF.ok="";setTimeout(fitScr,200)}},350))})();
 /* ===== kontzertu orria (sheet) ===== */
 var CSH=null;
@@ -1525,27 +1518,29 @@ function csHTML(c,vw0){const d=S.c[c];if(!d)return "";const lk=isAr(c),mode=vw0|
   if(!lk)h+=`<div class="mu" style="text-align:center;font-size:12px;margin-top:8px">Kontzertua blokeatzean zifra hauek itxita geratuko dira.</div>`;
  }
  return h}
-function csEl(){let e=document.getElementById("csh");if(!e){e=document.createElement("div");e.id="csh";e.className="csh";e.hidden=true;e.innerHTML='<div class="csbk" data-csx="1"></div><div class="csp" role="dialog" aria-modal="true"><i class="csg"></i><div class="csc"></div></div>';document.body.appendChild(e)}return e}
+function csEl(){let e=document.getElementById("csh");if(!e){e=document.createElement("div");e.id="csh";e.className="csh";e.hidden=true;e.innerHTML='<div class="csbk" data-csx="1"></div><div class="csp" role="dialog" aria-modal="true"><i class="csg"></i><div class="csc"></div></div>';document.body.appendChild(e);csDrag.attach(e)}return e}
 function csOpen(c){CSH={c:c,v:null};const e=csEl();e.querySelector(".csc").innerHTML=csHTML(c);e.hidden=false;e.querySelector(".csp").style.transform="";void e.offsetWidth;e.classList.add("on");try{e.querySelector(".csc").scrollTop=0}catch(_){}}
 function csClose(){const e=document.getElementById("csh");if(!e||!CSH)return;CSH=null;e.classList.remove("on");setTimeout(()=>{if(!CSH)e.hidden=true},320)}
 function csUpd(){if(!CSH)return;if(!S.c[CSH.c]){csClose();return}const e=document.getElementById("csh");if(e){const c=e.querySelector(".csc"),st=c.scrollTop;c.innerHTML=csHTML(CSH.c,CSH.v);c.scrollTop=st}}
 document.addEventListener("click",e=>{const t=e.target.closest("[data-cs],[data-csx],[data-csv]");if(!t)return;if(t.dataset.cs){csOpen(t.dataset.cs)}else if(t.dataset.csx!==undefined){csClose()}else if(t.dataset.csv&&CSH){CSH.v=t.dataset.csv;csUpd()}});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")csClose();if((e.key==="Enter"||e.key===" ")&&e.target&&e.target.dataset&&e.target.dataset.cs){e.preventDefault();csOpen(e.target.dataset.cs)}});
-(function(){let y0=null,dy=0,t0=0,pn=null,bk=null,sc=null,mode=0;
- const area=e=>e.target.closest&&e.target.closest("#csh .csp");
- function start(y,e){if(!CSH)return;if(!area(e))return;pn=document.querySelector("#csh .csp");bk=document.querySelector("#csh .csbk");sc=pn.querySelector(".csc");
-  const hdr=!!e.target.closest(".csg,.csh2,.csseg");mode=hdr?2:(sc.scrollTop<=0?1:0);if(!mode){pn=null;return}y0=y;dy=0;t0=Date.now()}
- function move(y,e){if(y0==null)return;const d=y-y0;if(mode===1&&d<=4&&dy===0){if(d<-4){y0=null;pn.style.transition="";}return}
+var csDrag=(function(){let y0=null,dy=0,t0=0,pn=null,bk=null,sc=null,mode=0;
+ function start(e){if(!CSH||y0!=null)return;pn=document.querySelector("#csh .csp");bk=document.querySelector("#csh .csbk");if(!pn)return;sc=pn.querySelector(".csc");
+  const hdr=!!e.target.closest(".csg,.csh2,.csseg");mode=hdr?2:(sc.scrollTop<=0?1:0);if(!mode)return;y0=e.touches[0].clientY;dy=0;t0=Date.now()}
+ function move(e){if(y0==null)return;const d=e.touches[0].clientY-y0;if(mode===1&&dy===0&&d<=4){if(d<-4)y0=null;return}
   dy=Math.max(0,d);if(dy>0){pn.style.transition="none";bk.style.transition="none";pn.style.transform="translateY("+dy+"px)";bk.style.opacity=String(Math.max(0,1-dy/420));if(e.cancelable)e.preventDefault()}}
- function end(){if(y0==null)return;const v=dy/Math.max(1,Date.now()-t0);pn.style.transition="";bk.style.transition="";
-  const P0=pn,B0=bk;if(dy>110||(dy>30&&v>.6)){csClose();setTimeout(()=>{P0.style.transform="";B0.style.opacity=""},340)}else{P0.style.transform="";B0.style.opacity=""}y0=null;dy=0;pn=null}
- document.addEventListener("touchstart",e=>start(e.touches[0].clientY,e),{passive:true});
- document.addEventListener("touchmove",e=>move(e.touches[0].clientY,e),{passive:false});
- document.addEventListener("touchend",end);document.addEventListener("touchcancel",end);
- let md=false;document.addEventListener("mousedown",e=>{if(e.button!==0||e.target.closest("button"))return;start(e.clientY,e);md=y0!=null});
- document.addEventListener("mousemove",e=>{if(md)move(e.clientY,e)});document.addEventListener("mouseup",()=>{if(md){md=false;end()}})})();
+ function end(){if(y0==null)return;const v=dy/Math.max(1,Date.now()-t0),P0=pn,B0=bk;P0.style.transition="";B0.style.transition="";
+  if(dy>110||(dy>30&&v>.6)){csClose();setTimeout(()=>{P0.style.transform="";B0.style.opacity=""},340)}else{P0.style.transform="";B0.style.opacity=""}y0=null;dy=0}
+ return {attach(el){el.addEventListener("touchstart",start,{passive:true});el.addEventListener("touchmove",move,{passive:false});el.addEventListener("touchend",end);el.addEventListener("touchcancel",end);
+  let md=false;el.addEventListener("mousedown",e=>{if(e.button!==0||e.target.closest("button"))return;const hdr=!!e.target.closest(".csg,.csh2");if(!hdr)return;y0=e.clientY;dy=0;t0=Date.now();pn=el.querySelector(".csp");bk=el.querySelector(".csbk");sc=pn.querySelector(".csc");mode=2;md=true});
+  document.addEventListener("mousemove",e=>{if(md&&y0!=null)move({touches:[{clientY:e.clientY}],cancelable:true,preventDefault(){}})});document.addEventListener("mouseup",()=>{if(md){md=false;end()}})}}})();
 /* transiciones entre pestañas */
-var _rn2=render,_lt2=null;render=function(){_rn2.apply(this,arguments);if(_lt2!==tab){const first=_lt2===null;_lt2=tab;if(!first){const a=document.getElementById("app");if(a){a.classList.remove("pgin");void a.offsetWidth;a.classList.add("pgin")}}}csUpd()};
+var _rn2=render,_lt2=null;render=function(){_rn2.apply(this,arguments);if(_lt2!==tab){const first=_lt2===null;_lt2=tab;if(!first){const a=document.getElementById("app");if(a){}}}csUpd()};
+
+/* iOS: botoiak ez dute fokua kentzen -> testu-eremua fokatuta geratzen da eta render() ez da exekutatzen */
+function tapBlur(e){const a=document.activeElement;if(!a||!/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return;const t=e.target;if(!t||!t.closest)return;if(t.closest("input,textarea,select,label,[data-sg]"))return;if(t.closest("button,a,[role=button],[data-cs]"))a.blur()}
+document.addEventListener("pointerdown",tapBlur,true);document.addEventListener("touchstart",tapBlur,{capture:true,passive:true});
+document.addEventListener("click",e=>{tapBlur(e);if(pend&&!(document.activeElement&&/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)))setTimeout(()=>{if(pend)render()},0)},true);
 var animT0=0;const kickAnim=()=>{animT0=Date.now()};
 function runAnims(){const el0=Date.now()-animT0;if(!animT0||el0>1600)return;const D=1100,EA="cubic-bezier(.16,1,.3,1)";
  document.querySelectorAll("#app .race .rt i,#app .kmc .kb i,#app .bar .bt i").forEach((b,i)=>{const w=b.style.width;if(!w||w==="0%")return;try{const a=b.animate([{width:"0%"},{width:w}],{duration:D,delay:Math.min(i,9)*70,easing:EA,fill:"backwards"});a.currentTime=el0}catch(e){}});
@@ -1641,7 +1636,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261109g",NEWS=["Nor zara? Aukeratu zure izena eta goiburuan Añubek zor dizuna ikusiko duzu","Kontzertuak editatu daitezke (izena, lekua, eguna) egutegiarekin","Opariak arrosaz, salmentak urdinez barretan","Diseinu berria: garbiagoa eta soilagoa"];
+var BUILD="20261109h",NEWS=["Nor zara? Aukeratu zure izena eta goiburuan Añubek zor dizuna ikusiko duzu","Kontzertuak editatu daitezke (izena, lekua, eguna) egutegiarekin","Opariak arrosaz, salmentak urdinez barretan","Diseinu berria: garbiagoa eta soilagoa"];
 var updShown=false;
 function showUpd(){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button></div>';document.body.appendChild(o);const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd()}catch(e){}}
