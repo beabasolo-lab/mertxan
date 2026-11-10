@@ -882,6 +882,20 @@ html.tl:root[data-theme] .hcov .hdr{background:linear-gradient(180deg,rgba(10,12
 html:root[data-theme] .sxbar{animation:none!important}
 </style><style>
 /* build v: a11y */
+/* build w: Instagram-like bars */
+html:root[data-theme] nav{background:rgba(22,28,38,.52)!important;-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);border:1px solid rgba(255,255,255,.14)!important;box-shadow:0 6px 24px rgba(0,0,0,.25)!important;height:60px!important}
+html:root[data-theme="light"] nav{background:rgba(255,255,255,.58)!important;border:1px solid rgba(0,0,0,.08)!important;box-shadow:0 6px 24px rgba(0,0,0,.12)!important}
+html:root[data-theme="light"] nav button{color:rgba(20,30,40,.62)!important}
+html:root[data-theme="light"] nav button.on{color:#0c4a78!important;background:rgba(12,74,120,.12)!important}
+html:root[data-theme] nav button,html:root[data-theme] nav button.on{height:46px!important}
+html:root[data-theme] nav button .ic svg{width:27px!important;height:27px!important}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){html:root[data-theme] nav{background:rgba(22,28,38,.94)!important}html:root[data-theme="light"] nav{background:rgba(255,255,255,.94)!important}}
+html:root[data-theme] #app{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px)*.4)!important}
+html:root[data-theme] #app>.hdr{position:sticky!important;top:-14px;z-index:8;background:rgba(10,14,20,.55)!important;-webkit-backdrop-filter:blur(22px) saturate(170%);backdrop-filter:blur(22px) saturate(170%);border-bottom:1px solid rgba(255,255,255,.08)!important}
+html:root[data-theme="light"] #app>.hdr{background:rgba(12,70,96,.72)!important}
+html:root[data-theme] .hdr .gear,html:root[data-theme] .hdr .bell{width:40px!important;height:40px!important;background:rgba(18,24,34,.5)!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.22)!important;box-shadow:none!important}
+html:root[data-theme] .hdr .gear svg,html:root[data-theme] .hdr .bell svg{width:24px!important;height:24px!important;stroke-width:2!important}
+html:root[data-theme] .hdr .hr{gap:12px}
 /* contrast: white text on blue >= 4.5 */
 html:root[data-theme] .btn,html:root[data-theme="dark"] .btn{background:#1c6aa0!important;color:#fff!important}
 /* touch targets >= 44pt (visuals unchanged) */
@@ -1690,7 +1704,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261109v",NEWS=["Ireki orduko atal guztiak tolestuta agertzen dira","Botoi handiagoak eta kontraste hobea","Orain zoom egin daiteke","Kontzertuak: + botoia beti lehena da, kontzertu berria sortzeko"];
+var BUILD="20261110w",NEWS=["Barra inferior eta goiburua gardenak: aplikazioa atzean ikusten da","Goiburuko botoiak handiagoak"];
 var updShown=false;
 function showUpd(nv){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button><div class="updv" id="updv">'+(nv?"Bertsio berria: "+E(nv):"")+'</div></div>';document.body.appendChild(o);if(!nv){fetch("index.html?v="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{const m=/var BUILD="([^"]+)"/.exec(t),u=document.getElementById("updv");if(m&&u)u.textContent="Bertsio berria: "+m[1]}).catch(()=>{})}const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd(m[1])}catch(e){}}
