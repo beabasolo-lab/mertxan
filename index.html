@@ -189,7 +189,6 @@ button:active:not(:disabled){transform:scale(.97)}
 @media (hover:hover){.card:hover{box-shadow:0 6px 18px rgba(0,0,0,.08)}.btn:hover{filter:brightness(1.07)}}
 
 
-@keyframes nlin{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 .sx{display:block}.sx.cl{opacity:0}.sxi{overflow:hidden;min-height:0}.sx[hidden]{display:none}
 button,input,select,textarea{font-family:inherit}
@@ -773,7 +772,6 @@ html.short:root[data-theme] nav{padding-bottom:0!important}
 
 }
 
-@keyframes pgin{from{opacity:0}to{opacity:1}}
 @keyframes gcin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 #app .gc{animation:gcin .28s cubic-bezier(.22,1,.36,1)}
 #app .card.cc{position:relative;cursor:pointer;padding-right:30px!important;transition:transform .18s,background .2s}
@@ -823,7 +821,7 @@ html.short:root[data-theme] nav{padding-bottom:0!important}
 .cslg i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
 .csh .gf,.csh em.gf,.csh b.gf{border:0!important;background:none!important;padding:0!important;outline:0!important;box-shadow:none!important}
 .csc .ok{color:#6fd49a}.csc .neg{color:#ff8a8a}.gf{color:#f08ab0}
-@media (prefers-reduced-motion:reduce){.csp,.csbk,#app.pgin,#app .gc{transition:none!important;animation:none!important}}
+@media (prefers-reduced-motion:reduce){.csp,.csbk,#app .gc{transition:none!important;animation:none!important}}
 
 /* ===== barra flotante (capsula) ===== */
 html:root[data-theme] nav{position:fixed!important;left:0!important;right:0!important;margin:0 auto!important;top:auto!important;bottom:calc(env(safe-area-inset-bottom,0px)*.4 + 10px)!important;width:min(calc(100% - 32px),400px)!important;height:56px!important;padding:6px!important;gap:2px!important;border:1px solid rgba(255,255,255,.1)!important;border-radius:30px!important;background:rgba(24,30,40,.96)!important;box-shadow:0 8px 28px rgba(0,0,0,.45)!important;z-index:20!important;flex:none}
@@ -941,6 +939,36 @@ svg.cfg-i{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-
 html:root[data-theme="light"] .cfg-out{color:#b3261e;border-color:#d4504a;background:rgba(214,69,69,.07)}
 html:root[data-theme="light"] .cfg-out.arm{color:#fff;background:#c93a3a}
 .cfg-ver{text-align:center;font-size:11.5px;color:var(--mu);opacity:.7;margin:18px 0 6px}
+/* build af: light contrast */
+html:root[data-theme="light"]{--mu:#58636a;--on:#2a6a45;--off:#a8403a}
+html:root[data-theme="light"] .gf,html:root[data-theme="light"] #app .card.cc .ccs b.gf,html:root[data-theme="light"] .cst b.gf{color:#a8305f!important}
+@media (hover:none) and (pointer:coarse){
+html:root[data-theme] #app .btn,html:root[data-theme] #app .seg button,.csseg button{min-height:44px!important}
+.whob{min-height:44px}
+.kpdb{position:relative}.kpdb::after{content:"";position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
+.tt,.ib,.dh{position:relative}
+.tt::after,.ib::after{content:"";position:absolute;left:-4px;right:-4px;top:50%;height:44px;transform:translateY(-50%)}
+}
+/* build af: sheet light */
+html:root[data-theme="light"] .csp{background:#fff;border-color:rgba(0,0,0,.08);color:#10181c}
+html:root[data-theme="light"] .csn,html:root[data-theme="light"] .cst b,html:root[data-theme="light"] .csrh b{color:#10181c}
+html:root[data-theme="light"] .csg::after{background:rgba(0,0,0,.22)}
+html:root[data-theme="light"] .csx{background:rgba(0,0,0,.07);color:#3a464c}
+html:root[data-theme="light"] .csseg{background:rgba(0,0,0,.05)}
+html:root[data-theme="light"] .csseg button{color:#58636a}
+html:root[data-theme="light"] .csseg button.on{background:rgba(12,70,96,.13);color:#0c4660}
+html:root[data-theme="light"] .cst div{background:rgba(0,0,0,.045)}
+html:root[data-theme="light"] .cst span{color:#58636a}
+html:root[data-theme="light"] .cst .mny b{color:#2a6a45}
+html:root[data-theme="light"] .csr{border-top-color:rgba(0,0,0,.08)}
+html:root[data-theme="light"] .csrh span{color:#58636a}
+html:root[data-theme="light"] .csbar{background:rgba(0,0,0,.08)}
+html:root[data-theme="light"] .csbar.st3 .b,html:root[data-theme="light"] .cslg .b{background:rgba(0,0,0,.18)}
+html:root[data-theme="light"] .cschips span{background:rgba(0,0,0,.05);color:#3a464c}
+html:root[data-theme="light"] .cschips b{color:#10181c}
+html:root[data-theme="light"] .cslg{color:#58636a}
+html:root[data-theme="light"] .csc .ok{color:#2a6a45}
+html:root[data-theme="light"] .csc .neg{color:#b3261e}
 /* contrast: white text on blue >= 4.5 */
 html:root[data-theme] .btn,html:root[data-theme="dark"] .btn{background:#1c6aa0!important;color:#fff!important}
 /* touch targets >= 44pt (visuals unchanged) */
@@ -1060,12 +1088,6 @@ function propsHTML(){const ids=Object.keys(S.pr||{}).sort((a,b)=>(S.pr[a].ts||0)
  return `<h2>Onartzeko proposamenak (${ids.length})</h2>`+ids.map(id=>{const p=S.pr[id],sm=p.sum||[];return `<div class="card f" style="border-color:var(--warn)"><div class="mh"><b>${E(p.by||"?")}</b><span class="mu">${E(new Date(p.ts||0).toLocaleString("es-ES",{dateStyle:"short",timeStyle:"short"}))}</span></div><div class="mu" style="line-height:1.6">${sm.slice(0,14).map(x=>"• "+E(x)).join("<br>")}${sm.length>14?`<br>… +${sm.length-14}`:""}</div><div style="display:flex;gap:8px;align-items:center"><button class="xs" data-px="${id}">Baztertu</button><button class="btn" style="flex:1" data-pa="${id}">Onartu eta aplikatu</button></div></div>`}).join("")+(edErr?`<div class="warn">${E(edErr)}</div>`:"")}
 var edOpen=false;
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-edopen]");if(!b)return;edOpen=true;render();setTimeout(()=>{const i=document.getElementById("ec2");if(i)i.focus()},60)});
-function roleHTML(){const ed=isEd();let h=`<div class="mu">Rola: <b>${!mLoaded?"…":ed?(hasCfg()?"Editorea ✓":"Editorea (kode librea)"):"Ikuslea"}</b></div>`;if(!mLoaded)return h;
- const inp=ph=>`<input id="ec2" placeholder="${ph}" autocapitalize="off" autocomplete="off">`;
- if(!hasCfg())h+=`<span class="mu">Orain talde osoak editatu dezake. Sortu editore-kode bat: gero kode normalarekin ikusi bakarrik egingo dute (aldaketak proposatu ditzakete eta zuk onartuko dituzu).</span>${inp("Editore-kodea (adib. nire-kodea-2026)")}<button class="btn" data-ed="create">Editore-kodea sortu</button>`;
- else if(ed)h+=nameHTML("nm")+`${inp("Editore-kode berria (aldatzeko)")}<button class="xs" data-ed="change">Editore-kodea aldatu</button><button class="xs" data-ed="leave">Editore modutik irten (gailu honetan)</button>`;
- else if(!edOpen)h+=`<button class="xs" data-edopen="1">Editorea zara? Sartu kodea</button>`;else h+=`${inp("Editore-kodea")}<button class="btn" data-ed="join">Editore izan</button>`;
- if(edErr)h+=`<div class="warn">${E(edErr)}</div>`;if(edMsg)h+=`<div class="mu ok">${E(edMsg)}</div>`;return h}
 document.addEventListener("change",e=>{const t=e.target;if(!t||t.id!=="kp"||!isEd())return;const v=num(t.value);if(!(v>0)||v>5){kmMsg="Prezio baliogabea (0 eta 5 € artean).";kmPm="";render();return}kmMsg="";const old=kmData().price;if(Math.abs(v-old)<1e-9){kmPm="";render();return}kmSet("kcfg",{price:v});kmLog("Km · prezioa: "+ke(old)+" → "+ke(v)+" / km");kmPm="✓ Gordeta: "+ke(v)+" / km. Kalkulu guztiak eguneratu dira.";kmPrOpen=false;clearTimeout(kmPmT);kmPmT=setTimeout(()=>{kmPm="";render()},5000)});
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.id==="kp"){e.preventDefault();e.target.blur()}});
 document.addEventListener("click",async e=>{const t=e.target.closest("button");if(!t)return;const D=t.dataset;if(D.t&&bellOpen)bellOpen=false;
@@ -1205,7 +1227,6 @@ function sheet(){const d=S.c[cur];if(!d)return"";const hid=d.hid||[];
  let h=`<div class="ps"><div class="ph"><b>AÑUBE · MERTXAN</b><span>${E(d.n)} · ${E(d.d||"")} · ${E(d.p||"")}</span></div><div class="pn">Palitos: una raya por cada unidad (||||, la quinta tacha las cuatro). Al terminar, apunta el total en el cuadrado pequeño para pasarlo rápido a la app.</div>`;
  M.forEach((m,mi)=>{if(hid.includes(m.id))return;h+=`<table><thead><tr class="tt"><th colspan="7">${E(m.n)} · ${eur(m.p)}</th></tr><tr><th>Talla</th><th>Llevadas</th><th>Vendidas (palitos)</th><th>Total</th><th>Regaladas</th><th>Total</th><th>Vuelven</th></tr></thead><tbody>`+P.filter(p=>p.mi==mi).map(p=>`<tr><td class="z">${E(p.z)}</td><td class="c">${ln(cur,p.id).l||0}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join("")+`</tbody></table>`});
  return h+`<div class="pc">Dinero contado en caja: ____________ €</div></div>`}
-function doPrint(){$("#pr").innerHTML=`<style>${PSTYLE}</style>`+sheet();try{window.print()}catch(e){}}
 function pdfKit(){const k={pages:[],c:""};
  const mm=v=>(v*2.83465).toFixed(2),Yp=y=>(841.89-y*2.83465).toFixed(2);
  const enc=s=>String(s).split("").map(ch=>{const q=ch.charCodeAt(0);let o=(q<128||(q>=160&&q<256))?ch:(ch==="€"?"\x80":"?");return o==="\\"||o==="("||o===")"?"\\"+o:o}).join("");
@@ -1273,8 +1294,6 @@ async function saveSheet(){if(!dlc)return;const d=S.c[cur];if(!d)return;
  try{await dlc.save({filename:"orria-"+(d.n||"kontzertua").replace(/[^\w\-]+/g,"_")+".pdf",data:buildPDF(d)})}catch(e){}}
 async function saveSummary(){if(!dlc)return;const d=S.c[cur];if(!d)return;
  try{await dlc.save({filename:"laburpena-"+(d.n||"kontzertua").replace(/[^\w\-]+/g,"_")+".pdf",data:buildSummary(d)})}catch(e){}}
-async function saveHTML(){if(!dlc)return;const d=S.c[cur];const html=`<!doctype html><html lang="eu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hoja ${E(d.n)}</title><style>${PSTYLE}@page{size:A4;margin:10mm}body{margin:12px}@media print{body{margin:0}}</style></head><body>${sheet()}<script>onload=()=>setTimeout(()=>print(),400)<\/script></body></html>`;
- try{await dlc.save({filename:"hoja-"+(d.n||"concierto").replace(/[^\w\-]+/g,"_")+".html",data:html})}catch(e){}}
 function delConc(){const id=cur;if(!id||!S.c[id]||isLocked(id))return;delete S.c[id];Object.keys(S.l).forEach(k=>{if(k.startsWith(id+"_")){delete S.l[k];db&&db.collection("lines").doc(k).delete().catch(()=>{})}});db&&db.collection("concerts").doc(id).delete().catch(()=>{});dcf=false;cur=null;render()}
 function addOut(){const ps=P.filter(p=>p.mi==O.a),p=ps[O.z]||ps[0];if(!p)return;const note=(O.note||"").trim();
  if(!note){const e=$("#oerr");if(e)e.style.display="block";const i=$("#on");if(i)i.focus();return}
@@ -1284,8 +1303,8 @@ function outTab(){
  const ps=P.filter(p=>p.mi==O.a);if(O.z>=ps.length)O.z=0;const p=ps[O.z];
  let h=`${hdr("Kontzertuetatik kanpo")}<div class="card f"><b>Mugimendu berria</b><span class="mu">Kontzertuez kanpo saldu edo oparitutakoa idatzi hemen. Stocka automatikoki eguneratzen da.</span>
  <div class="seg" style="grid-template-columns:1fr 1fr"><button data-ot="v" class="${O.t=="v"?"on":""}">Salmenta</button><button data-ot="r" class="${O.t=="r"?"on":""}">Oparia</button></div>
- <select id="oa">${M.map((x,i)=>`<option value="${i}" ${i==O.a?"selected":""}>${E(x.n)}</option>`).join("")}</select>
- ${ps.length>1?`<select id="oz">${ps.map((x,i)=>`<option value="${i}" ${i==O.z?"selected":""}>${E(x.z)}</option>`).join("")}</select>`:""}
+ <select id="oa" aria-label="Artikulua">${M.map((x,i)=>`<option value="${i}" ${i==O.a?"selected":""}>${E(x.n)}</option>`).join("")}</select>
+ ${ps.length>1?`<select id="oz" aria-label="Neurria">${ps.map((x,i)=>`<option value="${i}" ${i==O.z?"selected":""}>${E(x.z)}</option>`).join("")}</select>`:""}
  <div style="display:flex;align-items:center;justify-content:space-between"><span class="mu">Kopurua · stockean: <b>${stock(p.id)}</b></span><div class="st"><button data-oq="-1">−</button><span class="n">${O.q}</span><button class="p" data-oq="1">+</button></div></div>
  <input id="on" placeholder="Norentzat edo non? (beharrezkoa)" value="${E(O.note)}"><div id="oerr" class="neg" style="display:none;font-size:12px">Idatzi nori edo non, mesedez.</div>
  <button class="btn" id="oadd">Gehitu</button></div><h2>Mugimenduak</h2>`;
@@ -1368,8 +1387,6 @@ function kmDel(id){if(!isEd())return;if(S.m)delete S.m[id];db&&db.collection("me
 function kmLog(t){putAct({ts:Date.now(),by:myName()||"Editorea",dv:devId,sum:[t]}).catch(()=>{})}
 const kmBlur=()=>{try{document.activeElement&&document.activeElement.blur&&document.activeElement.blur()}catch(e){}};
 const KROL={hans:["🎤","Abeslaria"],egoitz:["🥁","Bateria"],garmen:["🎷","Saxoa"],uri:["🎸","Gitarra"],abasolo:["🎸","Gitarra"],txikixa:["🎸","Baxua"]};
-const kmIc=r=>(r.ic&&r.ic.trim())||(KROL[(r.n||"").toLowerCase()]||["🎵"])[0];
-const kmRol=r=>(KROL[(r.n||"").toLowerCase()]||["","Kidea"])[1];
 var kmAnim=false,kmPm="",kmPmT=null;
 var KGEO={};try{KGEO=JSON.parse(localStorage.getItem("anube.geo")||"{}")}catch(e){}
 var KF={},CE=null;
@@ -1484,7 +1501,6 @@ async function kmCalc(){const my=++kcSeq,set=t=>{KF.st=t;if(!KF.res)kkInfo()};if
 var AVD=window.AVD||{};
 const avKey=n=>String(n||"").toLowerCase().normalize("NFD").replace(/[^a-z]/g,"");
 const avHTML=(n,sz)=>{const k=avKey(n),u=AVD[k],c=sz?" "+sz:"";return u?`<span class="av${c}"><img alt="" src="${u}" draggable="false"></span>`:`<span class="av i${c}">${E((String(n||"?").trim()[0]||"?").toUpperCase())}</span>`};
-const bandStrip=()=>`<div class="band" aria-label="AÑUBE">${["Abasolo","Txikixa","Egoitz","Hans","Garmen","Uri"].map((n,i)=>`<div class="bm" style="--i:${i}">${avHTML(n,"b")}<small>${n}</small></div>`).join("")}</div>`;
 function kmTab(){const D=kmData(),ed=isEd();let h=hdr("Kilometroak");
  const tcard=(t,inP)=>{const mm=D.mem.find(x=>x.id===t.m);return `<div class="card f${inP?" kin":""}"><div class="mh"><b>${inP?E(kdLbl(t.d||"")):E(mm?mm.n:"?")}</b>${inP?"":`<span class="mu">${E(t.d||"")}</span>`}</div><div class="mu">${kmf(t.km||0)}${t.t>0?` · bidesaria ${ke(t.t)}`:""}${t.o?` · ${E(t.o)}`:""} · <b>${ke((t.km||0)*D.price+(t.t||0))}</b></div>${ed?(kmTE===t.id?`<div class="f" style="margin-top:8px;padding:10px;background:var(--ac2);border-radius:10px"><label class="mu">Nork gidatu du?</label><select id="te_m">${D.mem.map(x=>`<option value="${x.id}"${x.id===(KTD.m||t.m)?" selected":""}>${E(x.n)}</option>`).join("")}</select><label class="mu">Noiz?</label><button class="kdate" data-ktdate="1"><span>📅 ${kdLbl(KTD.d)}</span><i>${KTD.open?"▴":"▾"}</i></button>${KTD.open?kcalHTML(KTD):""}<div class="kmore"><label><span class="mu">Kilometroak</span><input id="te_k" inputmode="decimal" value="${E(KTD.k!=null?KTD.k:String(t.km||0).replace(".",","))}"></label><label><span class="mu">Bidesaria (€)</span><input id="te_b" inputmode="decimal" value="${E(KTD.b!=null?KTD.b:String(t.t||0).replace(".",","))}"></label></div><input id="te_o" placeholder="Oharra (aukerakoa)" value="${E(KTD.o!=null?KTD.o:(t.o||""))}"><div style="display:flex;gap:8px"><button class="btn" style="flex:1" data-ktsave="${t.id}">Gorde</button><button class="xs" data-kte="${t.id}">Utzi</button></div></div>`:`<div style="display:flex;gap:8px"><button class="xs" data-kte="${t.id}">✎ Editatu</button><button class="xs ${kmArm===t.id?"arm":""}" data-ktdel="${t.id}">${kmArm===t.id?"Ziur? Sakatu berriro":"Ezabatu"}</button></div>`):""}</div>`};
  h+=`<div class="kpis"><div class="kpi big"><span>Ordaintzeko guztira</span>${kc(D.T.pay,"ke")}</div><div class="kpi"><i class="ki">🛣️</i><span>Km guztira</span>${kc(D.T.kmT,"km")}</div>${ed?`<button class="kpi kpb" data-kprc="1"><i class="ki">⛽</i><span>€ / km</span><b>${ke(D.price)} <em>✎</em></b></button>`:`<div class="kpi"><i class="ki">⛽</i><span>€ / km</span><b>${ke(D.price)}</b></div>`}</div>`;
@@ -1617,14 +1633,6 @@ function fitScr(){try{const root=document.documentElement,touch=matchMedia("(hov
  DG="inner "+innerHeight+" · vv "+h+" · screen "+screen.height+" · safe "+top+"/"+ins+" · gap "+gap+(bug?" · iOS-bug":"")+(HF.ok?" · ok:"+HF.ok:"")+(bug?" · short":"");
  const e=document.getElementById("dgv");if(e)e.textContent=DG;
  }catch(e){}}
-function healVp(){HF.busy=true;const step=HF.n++;const done=()=>{HF.busy=false;fitScr()};
- const chk=name=>{setTimeout(()=>{const g=Math.round(screen.height-vpH());if(g<8){HF.ok=name;HF.n=3;root0().classList.remove("short")}done()},320)};
- try{
-  if(step===0){const m=document.querySelector('meta[name=viewport]');const c=m.getAttribute("content");m.setAttribute("content",c.replace("viewport-fit=cover","viewport-fit=auto"));setTimeout(()=>{m.setAttribute("content",c);chk("meta")},120)}
-  else if(step===1){const a=document.body;const d=a.style.display;a.style.display="none";void a.offsetHeight;a.style.display=d;chk("flip")}
-  else{root0().classList.add("hfix");chk("css")}
- }catch(e){HF.busy=false}}
-function root0(){return document.documentElement}
 addEventListener("resize",()=>{if(!HF.busy)fitScr()});addEventListener("orientationchange",()=>{HF.n=0;HF.ok="";setTimeout(fitScr,300)});
 addEventListener("pageshow",()=>{HF.n=0;HF.ok="";setTimeout(fitScr,200)});document.addEventListener("visibilitychange",()=>{if(!document.hidden){HF.n=0;HF.ok="";setTimeout(fitScr,250)}});
 addEventListener("load",()=>{setTimeout(fitScr,300);setTimeout(fitScr,1200)});fitScr();
@@ -1698,6 +1706,7 @@ function kcSnap(){const m={};document.querySelectorAll("#app .kmc[data-kid]").fo
 function kcFlip(m){if(RM)return;document.querySelectorAll("#app .kmc[data-kid]").forEach(e=>{const o=m[e.dataset.kid];if(o==null)return;const d=o-e.getBoundingClientRect().top;if(Math.abs(d)<2)return;try{e.style.position="relative";e.style.zIndex=2;const a=e.animate([{transform:"translateY("+d+"px) scale(1.015)",boxShadow:"0 10px 24px rgba(0,0,0,.16)"},{transform:"none",boxShadow:"0 0 0 rgba(0,0,0,0)"}],{duration:560,easing:"cubic-bezier(.22,1,.36,1)"});a.onfinish=a.oncancel=()=>{e.style.zIndex=""}}catch(x){}})}
 {const _r=render;render=function(){const m=tab=="km"?kcSnap():{};_r.apply(this,arguments);kcFlip(m)}}
 {const _r2=render;render=function(){_r2.apply(this,arguments);try{whoChk()}catch(e){}try{sxSync()}catch(e){}}}
+(function(){const m=document.querySelector('meta[name=theme-color]');if(!m)return;const u=()=>{m.content=document.documentElement.getAttribute("data-theme")==="light"?"#0c4660":"#0b0c0f"};u();try{new MutationObserver(u).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]})}catch(e){}})();
 var CHS={t:null,sl:[],k:{}};
 function chipRows(){return [...document.querySelectorAll("#app .chips")].filter(r=>getComputedStyle(r).flexWrap==="nowrap")}
 function chipSave(){try{CHS.t=tab;CHS.sl=chipRows().map(r=>r.scrollLeft)}catch(e){}}
@@ -1767,7 +1776,6 @@ var code=null,connErr="",impData=null,outArm=false,copied=false,linkTxt="";
 const normCode=v=>(v||"").toLowerCase().replace(/[^a-z0-9-]/g,"");
 function genCode(){const a="abcdefghjkmnpqrstuvwxyz23456789";let o="";const r=crypto.getRandomValues(new Uint8Array(12));r.forEach(n=>o+=a[n%a.length]);return o.slice(0,4)+"-"+o.slice(4,8)+"-"+o.slice(8,12)}
 function gateHTML(){return `${hdr("Taldera sartu")}<div class="card f"><h1 style="margin:0">AÑUBE · Mertxan</h1><span class="mu">Sartu zure taldearen kodea. Ez da kontu edo pasahitzik behar: kodea duen edonork ikus eta edita dezake.</span><input id="gc" placeholder="Taldearen kodea (adib. abcd-efgh-jklm)" autocapitalize="off" autocomplete="off" value="${E(window.__gcv||"")}"><button class="btn" id="gok">Sartu</button>${connErr?`<div class="warn">${E(connErr)}</div>`:""}<hr style="border:0;border-top:1px solid var(--bd);width:100%"><span class="mu">Taldea lehen aldiz sortzen ari zara? Sortu kode berri bat eta partekatu zure kideekin.</span><button class="btn" style="background:var(--ac2);color:var(--ac)" id="gnew">Kode berria sortu</button></div>`}
-function gateOn(){return !code}
 async function start(){
  if(!code){render();return}
  connErr="";render();
@@ -1790,7 +1798,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261111ae",NEWS=["Editoreak bere identitatea gogoratzen du (ez du izenik eskatzen)","Ikusleen ezarpenak garbiagoak","Editore-kodea idaztean pantaila ez da gehiago dardarka"];
+var BUILD="20261111af",NEWS=["Azterketa osoa: kontraste hobea gai argian eta botoi guztiak errazago sakatzeko","Kontzertu-orria gai argiarekin bat dator","Kode zaharra garbitu da"];
 var updShown=false;
 function showUpd(nv){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button><div class="updv" id="updv">'+(nv?"Bertsio berria: "+E(nv):"")+'</div></div>';document.body.appendChild(o);if(!nv){fetch("index.html?v="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{const m=/var BUILD="([^"]+)"/.exec(t),u=document.getElementById("updv");if(m&&u)u.textContent="Bertsio berria: "+m[1]}).catch(()=>{})}const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd(m[1])}catch(e){}}
