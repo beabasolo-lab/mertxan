@@ -1025,7 +1025,7 @@ function sumOps(ops){const so=(k,o)=>o.old!==undefined?o.old:(SRV[k]||{})[o.id],
   else if(o.c=="outs"){t="Añube · "+(o.t=="d"?"mugimendua ezabatu":(d.t=="v"?"salmenta ":"oparia ")+pl(d.p)+" ×"+d.q)}
   else t=o.c+"/"+o.id;
   out.push(t.replace("undefined",""))});return out}
-async function sendDraft(){const el=$("#pn"),nm=((el&&el.value)||dName||"").trim();if(el&&nm)nmEdit=false;if(!nm){edErr="Idatzi zure izena";render();return}
+async function sendDraft(){const el=$("#pn"),nm=((el&&el.value)||myName()||"").trim();if(el&&nm)nmEdit=false;if(!nm){edErr="Idatzi zure izena";render();return}
  dName=nm;try{localStorage.setItem("anube.name",nm)}catch(e){}
  const ops=Object.values(DR);if(!ops.length)return;const id="p"+Date.now()+Math.random().toString(36).slice(2,5);
  try{await db.collection("props").doc(id).set({ts:Date.now(),by:nm,ops:ops.map(o=>({c:o.c,id:o.id,t:o.t,d:o.d})),sum:sumOps(ops)});DR={};restoreSrv();edErr="";edMsg="Proposamena bidali da ✓ Editoreek onartzean agertuko da."}catch(e){edErr="Ezin izan da bidali: "+((e&&e.message)||e)}render()}
@@ -1046,7 +1046,7 @@ function initSeen(){if(mLoaded&&seenTs===null&&code){const a=acts();saveSeen(a.l
 function markRead(){const a=acts();saveSeen(Math.max(Date.now(),a.length?a[0].ts:0));actHide=false;render()}
 function logOp(name,id,t,d){if(noLog||name==="props"||name==="meta"||!SK[name])return;const k=name+"/"+id;if(!LB[k])LB[k]={c:name,id,t,d:null,old:clone((SRV[SK[name]]||{})[id])||null};LB[k].t=t;LB[k].d=clone(d)||null;clearTimeout(LBt);LBt=setTimeout(flushLog,12000)}
 async function putAct(o){const id="a_"+o.ts+"_"+Math.random().toString(36).slice(2,5);await db.collection("meta").doc(id).set(o);const l=acts();if(l.length>120)l.slice(120).forEach(a=>db.collection("meta").doc(a.id).delete().catch(()=>{}))}
-async function flushLog(){clearTimeout(LBt);const ops=Object.values(LB);LB={};if(!ops.length||!db||!isEd())return;let sum;try{sum=sumOps(ops).filter(x=>!/aldaketarik gabe/.test(x))}catch(e){return}if(!sum.length)return;try{await putAct({ts:Date.now(),by:dName||"Editorea",dv:devId,sum:sum.slice(0,30)})}catch(e){}}
+async function flushLog(){clearTimeout(LBt);const ops=Object.values(LB);LB={};if(!ops.length||!db||!isEd())return;let sum;try{sum=sumOps(ops).filter(x=>!/aldaketarik gabe/.test(x))}catch(e){return}if(!sum.length)return;try{await putAct({ts:Date.now(),by:myName()||"Editorea",dv:devId,sum:sum.slice(0,30)})}catch(e){}}
 addEventListener("visibilitychange",()=>{if(document.hidden)flushLog()});addEventListener("pagehide",flushLog);
 const fdt=ts=>new Date(ts||0).toLocaleString("es-ES",{dateStyle:"short",timeStyle:"short"});
 function actBanner(){const u=unread();if(!u.length||actHide)return"";const L=[];u.forEach(a=>(a.sum||[]).forEach(x=>L.push(x)));
@@ -1132,9 +1132,9 @@ function ajustes(){
  const row=(k,v)=>`<div class="cfg-r"><span class="cfg-k">${k}</span>${v}</div>`;
  const inp=(ph,ac)=>`<input id="ec2" class="cfg-in" placeholder="${ph}" autocapitalize="off" autocomplete="off" ${ac||""}>`;
  let h=hdr("Ezarpenak")+`<button class="xs cfg-back" data-t="res">← Atzera</button><div class="cfg">`+whoSet();
- h+=`<div class="cfg-t">Taldea</div><div class="cfg-g">`+row("Taldearen kodea",`<b class="cfg-v">${E(code||"")}</b>`)+row("Rola",`<span class="cfg-pill ${ed?"ed":""}">${load?"…":ed?(hasCfg()?"Editorea ✓":"Editorea (kode librea)"):"Ikuslea"}</span>`);
- if(!load&&ed)h+=`<div class="cfg-r cfg-col">${nameHTML("nm")}</div>`+`<button class="cfg-b" data-set="link">${ico('<path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/>')}<span>${copied?"Kopiatuta ✓":"Esteka kopiatu (kideentzat)"}</span><em>›</em></button>${linkTxt?`<div class="cfg-r cfg-col"><input readonly value="${E(linkTxt)}" onfocus="this.select()" class="cfg-in"></div>`:""}`;
- h+=`</div>`;
+ if(ed||load)h+=`<div class="cfg-t">Taldea</div><div class="cfg-g">`+row("Taldearen kodea",`<b class="cfg-v">${E(code||"")}</b>`)+row("Rola",`<span class="cfg-pill ${ed?"ed":""}">${load?"…":hasCfg()?"Editorea ✓":"Editorea (kode librea)"}</span>`);
+ if(!load&&ed)h+=`<button class="cfg-b" data-set="link">${ico('<path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/>')}<span>${copied?"Kopiatuta ✓":"Esteka kopiatu (kideentzat)"}</span><em>›</em></button>${linkTxt?`<div class="cfg-r cfg-col"><input readonly value="${E(linkTxt)}" onfocus="this.select()" class="cfg-in"></div>`:""}`;
+ if(ed||load)h+=`</div>`;
  if(!load){
   if(!ed){
    h+=`<div class="cfg-t">Editorea</div><div class="cfg-g">`+(!edOpen?`<button class="cfg-b" data-edopen="1">${ico('<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l3 3"/>')}<span>Editorea zara? Sartu kodea</span><em>›</em></button>`:`<div class="cfg-r cfg-col">${inp("Editore-kodea")}<button class="btn" data-ed="join">Editore izan</button></div>`)+`</div>`;
@@ -1345,7 +1345,7 @@ var hpL=null;function hap(){return;try{if(!hpL){const l=document.createElement("
 try{document.querySelectorAll("label[aria-hidden] input[switch]").forEach(i=>i.parentNode.remove())}catch(e){}
 function vib(){if(RM)return;try{if(navigator.vibrate)navigator.vibrate(9);else hap()}catch(e){}}
 async function kmSettle(){if(!isEd())return;const D=kmData();if(!(D.T.pay>0||D.T.kmT>0))return;const ts=Date.now(),id="ksettle_"+ts,rs={};D.mem.forEach(m=>{rs[m.id]=m.r||0});
- const doc={ts,by:dName||"Editorea",tot:Math.round(D.T.pay*100)/100,km:Math.round(D.T.kmT*10)/10,price:D.price,rows:D.rows.filter(r=>r.kmT>0||r.pay>0).map(r=>r.n+"|"+Math.round(r.pay*100)/100+"|"+Math.round(r.kmT*10)/10),rs,tids:D.trips.map(t=>t.id)};
+ const doc={ts,by:myName()||"Editorea",tot:Math.round(D.T.pay*100)/100,km:Math.round(D.T.kmT*10)/10,price:D.price,rows:D.rows.filter(r=>r.kmT>0||r.pay>0).map(r=>r.n+"|"+Math.round(r.pay*100)/100+"|"+Math.round(r.kmT*10)/10),rs,tids:D.trips.map(t=>t.id)};
  kmMsg="";const jobs=[];
  D.mem.forEach(m=>{const x=S.m[m.id];if(x&&(x.r||0)!==0)jobs.push([m.id,{...x,r:0}])});
  D.trips.forEach(t=>{const x=S.m[t.id];if(x)jobs.push([t.id,{...x,ps:id}])});
@@ -1365,7 +1365,7 @@ function confetti(msg){try{const c=document.createElement("canvas");c.style.cssT
  try{navigator.vibrate&&navigator.vibrate([30,40,30])}catch(e){}
  const t0=performance.now();(function f(now){const el=now-t0;x.clearRect(0,0,W,H);P.forEach(p=>{p.vy+=.3;p.vx*=.992;p.vy*=.992;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;x.save();x.globalAlpha=Math.max(0,Math.min(1,(3800-el)/1000));x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;if(p.round){x.beginPath();x.arc(0,0,p.w/2,0,6.3);x.fill()}else x.fillRect(-p.w/2,-p.h/2,p.w,p.h);x.restore()});if(el<3800)requestAnimationFrame(f);else c.remove()})(t0)}catch(e){}}
 function kmDel(id){if(!isEd())return;if(S.m)delete S.m[id];db&&db.collection("meta").doc(id).delete().catch(()=>{});render()}
-function kmLog(t){putAct({ts:Date.now(),by:dName||"Editorea",dv:devId,sum:[t]}).catch(()=>{})}
+function kmLog(t){putAct({ts:Date.now(),by:myName()||"Editorea",dv:devId,sum:[t]}).catch(()=>{})}
 const kmBlur=()=>{try{document.activeElement&&document.activeElement.blur&&document.activeElement.blur()}catch(e){}};
 const KROL={hans:["🎤","Abeslaria"],egoitz:["🥁","Bateria"],garmen:["🎷","Saxoa"],uri:["🎸","Gitarra"],abasolo:["🎸","Gitarra"],txikixa:["🎸","Baxua"]};
 const kmIc=r=>(r.ic&&r.ic.trim())||(KROL[(r.n||"").toLowerCase()]||["🎵"])[0];
@@ -1391,6 +1391,8 @@ document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest
 /* nor zara? (ikusle moduan bakarrik) */
 var WHO=null;try{WHO=localStorage.getItem("anube.who")||null}catch(e){}
 const whoRow=()=>{if(!vw()||!WHO||WHO==="other")return null;return kmData().rows.find(r=>r.id===WHO)||null};
+const whoRow2=()=>{if(!WHO||WHO==="other")return null;return kmData().rows.find(r=>r.id===WHO)||null};
+const myName=()=>{try{const r=whoRow2();if(r&&r.n)return r.n}catch(e){}return dName||""};
 const whoOther=()=>`<span class="av wo"><img alt="AÑUBE" src="${LOGO}" draggable="false"></span>`;
 function whoBar(){if(!vw()||!WHO)return"";if(WHO==="other")return `<button class="whob" data-who="pick" aria-label="Nor zara? Aldatu"><span class="wa">${whoOther()}</span><span class="wn">Beste bat</span></button>`;const r=whoRow();if(!r)return"";return `<button class="whob" data-who="pick" aria-label="Nor zara? Aldatu"><span class="wa">${avHTML(r.n,"s")}</span><span class="wn">${E(r.n)}</span><span class="wl">Añubek zor dizu</span><b class="wm">${ke(r.pay)}</b></button>`}
 const whoNeed=()=>vw()&&kmData().mem.length>0&&(!WHO||(WHO!=="other"&&!whoRow()));
@@ -1398,7 +1400,7 @@ function whoClose(){const el=document.getElementById("who");if(!el)return;el.cla
 function whoShow(can){const old=document.getElementById("who");if(old)old.remove();const D=kmData(),el=document.createElement("div");el.id="who";el.className="whoo";el.innerHTML=`<div class="whos" role="dialog" aria-label="Nor zara?"><b class="wt">Nor zara?</b><span class="mu">Aukeratu zure izena. Goiburuan Añubek zor dizuna ikusiko duzu.</span><div class="wg">${D.mem.map(x=>`<button data-who="${E(x.id)}"><span class="wa">${avHTML(x.n,"s")}</span><span class="wnm">${E(x.n)}</span></button>`).join("")}<button data-who="other"><span class="wa">${whoOther()}</span><span class="wnm">Beste bat</span></button></div>${can?`<button class="whoc" data-who="close">Utzi</button>`:""}</div>`;document.body.appendChild(el)}
 function whoChk(){if(whoNeed()&&!document.getElementById("who"))whoShow(false)}
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-who]");if(!b)return;const v=b.dataset.who;if(v==="pick")whoShow(true);else if(v==="close")whoClose();else{WHO=v;try{localStorage.setItem("anube.who",v)}catch(x){}whoClose();render()}});
-function whoSet(){if(!vw())return"";const r=whoRow();return `<div class="card whoc2"><b>Nor zara?</b><div class="whocur">${WHO==="other"?`<span class="wa">${whoOther()}</span><span class="wn">Beste bat</span>`:r?`<span class="wa">${avHTML(r.n,"s")}</span><span class="wn">${E(r.n)}</span><span class="wm">${ke(r.pay)}</span>`:`<span class="mu">Ez dago aukeratuta</span>`}</div><button class="btn" data-who="pick">Aldatu</button></div>`}
+function whoSet(){const v=vw(),r=v?whoRow():whoRow2();return `<div class="card whoc2"><b>Nor zara?</b><div class="whocur">${WHO==="other"?`<span class="wa">${whoOther()}</span><span class="wn">Beste bat</span>`:r?`<span class="wa">${avHTML(r.n,"s")}</span><span class="wn">${E(r.n)}</span>${v?`<span class="wm">${ke(r.pay)}</span>`:""}`:`<span class="mu">Ez dago aukeratuta</span>`}</div><button class="btn" data-who="pick">${WHO?"Aldatu":"Aukeratu"}</button></div>`}
 
 /* zoom-a itzuli baldin bada */
 function noZoom(){}
@@ -1627,7 +1629,10 @@ addEventListener("resize",()=>{if(!HF.busy)fitScr()});addEventListener("orientat
 addEventListener("pageshow",()=>{HF.n=0;HF.ok="";setTimeout(fitScr,200)});document.addEventListener("visibilitychange",()=>{if(!document.hidden){HF.n=0;HF.ok="";setTimeout(fitScr,250)}});
 addEventListener("load",()=>{setTimeout(fitScr,300);setTimeout(fitScr,1200)});fitScr();
 (function(){const vv=window.visualViewport;if(!vv)return;const r=document.documentElement;
- function f(){const kb=matchMedia("(hover:none) and (pointer:coarse)").matches&&screen.height-vv.height>150&&document.activeElement&&/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);if(r.classList.contains("kb")!==!!kb)r.classList.toggle("kb",!!kb);if(kb)r.style.setProperty("--vvh",vv.height+"px");if(kb&&(vv.offsetTop>0||scrollY>0))scrollTo(0,0)}
+ const isIn=a=>!!a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName);
+ function reveal(){const a=document.activeElement;if(!isIn(a)||!r.classList.contains("kb"))return;const app=document.getElementById("app");if(!app||!app.contains(a))return;const ar=app.getBoundingClientRect(),q=a.getBoundingClientRect(),h=vv.height,top=Math.max(ar.top,0)+10,bot=Math.min(ar.bottom,h)-10;if(q.top<top)app.scrollTop+=q.top-top-30;else if(q.bottom>bot)app.scrollTop+=q.bottom-bot+50}
+ function f(){const kb=matchMedia("(hover:none) and (pointer:coarse)").matches&&screen.height-vv.height>150&&isIn(document.activeElement);if(r.classList.contains("kb")!==!!kb)r.classList.toggle("kb",!!kb);if(kb){r.style.setProperty("--vvh",vv.height+"px");if(vv.offsetTop>0||scrollY>0){const q=document.activeElement.getBoundingClientRect();if(q.top>=0&&q.bottom<=vv.height-6)scrollTo(0,0)}}else if((scrollY>0||vv.offsetTop>0)&&!isIn(document.activeElement))scrollTo(0,0)}
+ document.addEventListener("focusin",e=>{if(isIn(e.target)){setTimeout(()=>{f();reveal()},380);setTimeout(()=>{f();reveal()},800)}});
  vv.addEventListener("resize",f);vv.addEventListener("scroll",f);document.addEventListener("focusout",()=>setTimeout(()=>{f();if(!r.classList.contains("kb")){HF.n=0;HF.ok="";setTimeout(fitScr,200)}},350))})();
 /* ===== kontzertu orria (sheet) ===== */
 var CSH=null;
@@ -1785,7 +1790,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261111ad",NEWS=["Ezarpenak berrantolatuta: diseinu garbiagoa eta irten botoi gorria","Ikusleek ez dute aukera aurreraturik ikusten"];
+var BUILD="20261111ae",NEWS=["Editoreak bere identitatea gogoratzen du (ez du izenik eskatzen)","Ikusleen ezarpenak garbiagoak","Editore-kodea idaztean pantaila ez da gehiago dardarka"];
 var updShown=false;
 function showUpd(nv){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button><div class="updv" id="updv">'+(nv?"Bertsio berria: "+E(nv):"")+'</div></div>';document.body.appendChild(o);if(!nv){fetch("index.html?v="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{const m=/var BUILD="([^"]+)"/.exec(t),u=document.getElementById("updv");if(m&&u)u.textContent="Bertsio berria: "+m[1]}).catch(()=>{})}const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd(m[1])}catch(e){}}
