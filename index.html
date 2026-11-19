@@ -1033,7 +1033,7 @@ html:root[data-theme] .vi .vi-g{width:100%;min-width:0;height:34px;min-height:34
 html:root[data-theme] .vi .vi-g::placeholder{color:var(--mu);opacity:.75}
 html:root[data-theme] .vi .vi-g.f{border-style:solid;border-color:transparent;background:var(--ac2);font-weight:600}
 html:root[data-theme] .vi .vi-g:focus{border-style:solid;border-color:var(--ac);background:var(--card);box-shadow:none}
-.vi-lc{margin-top:8px;font-size:11px}
+.vi-lc{margin-top:0;font-size:11px}.vi-ft{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}.vi-ft .ib{flex:none;width:36px;height:36px}
 .vn-sw{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;font-weight:600;font-size:13.5px}
 .vn-tg{position:relative;flex:none;width:52px;height:32px;border-radius:999px;border:0;background:var(--bd);transition:background .25s;padding:0}
 .vn-tg i{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.35);transition:transform .28s cubic-bezier(.32,.72,0,1)}
@@ -1862,6 +1862,29 @@ function viGet(c){const pe=vPeople(),M=S.m||{},cf=M["vi_"+c+"_cfg"],mat=!!(cf&&c
  return{rows,sum,total,left:total-sum,mat,ts,by}}
 function viMat(c){const st=viGet(c);if(st.mat)return st;const ts=Date.now(),by=vBy();vPut("vi_"+c+"_cfg",{c,s:"cfg",t:st.total,ts,by});st.rows.forEach(r=>vPut(viId(c,r.n),{c,s:r.n,a:r.a,g:r.g,ts,by}));return viGet(c)}
 function viSave(c,r,add){vPut(viId(c,r.n),{c,s:r.n,a:r.g.length,g:r.g,ts:Date.now(),by:vBy(),ta:add?Date.now():(r.ta||0)})}
+/* Gonbidapenen historia (vi_<c>_h_*): azken aldaketak, plegatuta; aldaketa berdinak segidan batzen dira */
+function viLog(c,o,mg){const ts=Date.now(),by=vBy(),pf="vi_"+c+"_h_";
+ const ks=Object.keys(S.m||{}).filter(k=>k.startsWith(pf)&&S.m[k].c===c).sort((a,b)=>(S.m[b].ts||0)-(S.m[a].ts||0));
+ if(mg&&ks.length){const l=S.m[ks[0]];if(l.k===o.k&&(l.m||"")===(o.m||"")&&(l.by||"")===by&&ts-(l.ts||0)<20000){const n={...l,t:o.t,ts};if(n.t===n.f)vPut(ks[0],null);else vPut(ks[0],n);return}}
+ vPut(pf+ts.toString(36)+Math.random().toString(36).slice(2,5),{c,s:"h",ts,by,...o});
+ ks.slice(59).forEach(k=>vPut(k,null))}
+function vHistI(x){const a=x.f!==undefined&&x.t!==undefined?`<b>${x.f} → ${x.t}</b>`:"";let t="";
+ if(x.k=="t")t=`Guztira: ${a}`;
+ else if(x.k=="r")t=`Guztira: ${a} · banaketa 0ra itzuli da`;
+ else if(x.k=="x")t=`Guztira: ${a} · ${E(x.m)}: gonbidapen bat kendu da${x.v?` («${E(x.v)}»)`:""}`;
+ else if(x.k=="m")t=`${E(x.m)}: ${a}`;
+ else if(x.k=="n")t=x.v&&x.f?`${E(x.m)}: «${E(x.f)}» → «${E(x.v)}»`:x.v?`${E(x.m)}: «${E(x.v)}» gehitu da`:`${E(x.m)}: «${E(x.f)}» kendu da`;
+ return `<div class="vn-hr"><span class="vn-ht">${vTime(x.ts)}</span><span>${t}<small>${E(x.by||"")}</small></span></div>`}
+function viHist(c){const hs=Object.keys(S.m||{}).filter(k=>k.startsWith("vi_"+c+"_h_")&&S.m[k].c===c).map(k=>S.m[k]).sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,30);
+ return secS("vih","Gonbidapenen historia",hs.length?` <small class="mu">(${hs.length})</small>`:"")+(hs.length?`<div class="vn-hl">${hs.map(vHistI).join("")}</div>`:`<div class="mu" style="padding:6px 2px">Oraindik ez dago aldaketarik.</div>`)+secE()}
+function viText(c){const st=viGet(c),d=S.c[c]||{};
+ const L=st.rows.filter(r=>r.a>0).map(r=>{const nm=r.g.filter(Boolean),e=r.a-nm.length;return r.n+": "+(nm.length?nm.join(", ")+(e?" + "+e+" izenik gabe":""):r.a+" izenik gabe")});
+ return "🎟️ AÑUBE · Gonbidapenak\n"+(d.n||"")+(d.d?" · "+d.d:"")+(d.p?" · "+d.p:"")+"\n\n"+(L.length?L.join("\n"):"Oraindik ez dago banatuta.")+"\n\nGuztira: "+st.total+(st.left>0?" · "+st.left+" banatzeko":"")}
+var viCp=false;
+async function viCopy(c){const tx=viText(c);const ok=()=>{viCp=true;render();setTimeout(()=>{viCp=false;render()},2200)};
+ try{if(navigator.share&&/iPhone|iPad|Android/i.test(navigator.userAgent)){await navigator.share({text:tx});return}}catch(e){if(e&&e.name==="AbortError")return}
+ try{await navigator.clipboard.writeText(tx);ok();return}catch(e){}
+ try{const ta=document.createElement("textarea");ta.value=tx;ta.style.cssText="position:fixed;top:0;left:0;opacity:0";document.body.appendChild(ta);ta.focus();ta.select();ta.setSelectionRange(0,99999);const r=document.execCommand("copy");ta.remove();if(r)ok()}catch(e){}}
 var VIARM=null,VIARMT=0,VIARMX=0;
 const viArmed=c=>VIARM===c&&Date.now()-VIARMT<5000;
 /* Guztira −1: 12 (2×kide) azpira jaisten bada banaketa 0ra; bestela, gehiegi banatuta badago, azkena gehitu zaionari kendu; bestela ezer ez */
@@ -1873,22 +1896,23 @@ function viPlan(st){const base=2*st.rows.length,t=st.total-1;if(t<0)return null;
   if(rs.length){const r=rs[0];return{k:"t",r,i:r.g.length-1,ask:true}}}
  return{k:"p",ask:false}}
 function viTotal(c,d){
- if(d>0){VIARM=null;const st=viMat(c);if(st.total>=99)return;vPut("vi_"+c+"_cfg",{c,s:"cfg",t:st.total+1,ts:Date.now(),by:vBy()});return}
+ if(d>0){VIARM=null;const st=viMat(c);if(st.total>=99)return;vPut("vi_"+c+"_cfg",{c,s:"cfg",t:st.total+1,ts:Date.now(),by:vBy()});viLog(c,{k:"t",f:st.total,t:st.total+1},1);return}
  const st=viGet(c),pl=viPlan(st);if(!pl)return;
  if(pl.ask&&!viArmed(c)){VIARM=c;VIARMT=Date.now();clearTimeout(VIARMX);VIARMX=setTimeout(()=>{if(VIARM===c){VIARM=null;try{render()}catch(e){}}},5000);return}
  VIARM=null;const ts=Date.now(),by=vBy(),t=st.total-1;
- if(pl.k==="r"){vPut("vi_"+c+"_cfg",{c,s:"cfg",t,ts,by});st.rows.forEach(r=>vPut(viId(c,r.n),{c,s:r.n,a:0,g:[],ts,by,ta:0}));return}
+ if(pl.k==="r"){vPut("vi_"+c+"_cfg",{c,s:"cfg",t,ts,by});st.rows.forEach(r=>vPut(viId(c,r.n),{c,s:r.n,a:0,g:[],ts,by,ta:0}));viLog(c,{k:"r",f:st.total,t});return}
  viMat(c);
- if(pl.k==="t"){pl.r.g.splice(pl.i,1);viSave(c,pl.r)}
- vPut("vi_"+c+"_cfg",{c,s:"cfg",t,ts,by})}
-function viAllot(c,n,d){VIARM=null;const st=viMat(c),r=st.rows.find(x=>x.n===n);if(!r)return;if(d>0){if(st.left<=0)return;r.g.push("")}else{let k=-1;for(let i=r.g.length-1;i>=0;i--)if(!r.g[i]){k=i;break}if(k<0)return;r.g.splice(k,1)}viSave(c,r,d>0)}
-function viName(c,n,i,v){const st=viMat(c),r=st.rows.find(x=>x.n===n);if(!r||i<0||i>=r.g.length)return;v=String(v||"").replace(/\s+/g," ").trim().slice(0,24);if(r.g[i]===v)return;r.g[i]=v;viSave(c,r)}
+ let rv="";if(pl.k==="t"){rv=pl.r.g[pl.i]||"";pl.r.g.splice(pl.i,1);viSave(c,pl.r)}
+ vPut("vi_"+c+"_cfg",{c,s:"cfg",t,ts,by});
+ if(pl.k==="t")viLog(c,{k:"x",f:st.total,t,m:pl.r.n,v:rv});else viLog(c,{k:"t",f:st.total,t},1)}
+function viAllot(c,n,d){VIARM=null;const st=viMat(c),r=st.rows.find(x=>x.n===n);if(!r)return;const f0=r.g.length;if(d>0){if(st.left<=0)return;r.g.push("")}else{let k=-1;for(let i=r.g.length-1;i>=0;i--)if(!r.g[i]){k=i;break}if(k<0)return;r.g.splice(k,1)}viSave(c,r,d>0);viLog(c,{k:"m",m:n,f:f0,t:r.g.length},1)}
+function viName(c,n,i,v){const st=viMat(c),r=st.rows.find(x=>x.n===n);if(!r||i<0||i>=r.g.length)return;v=String(v||"").replace(/\s+/g," ").trim().slice(0,24);if(r.g[i]===v)return;const o0=r.g[i];r.g[i]=v;viSave(c,r);viLog(c,{k:"n",m:n,v,f:o0})}
 function viCard(c){const st=viGet(c),L=st.left,pl=viPlan(st),ar=!!(pl&&pl.ask&&viArmed(c));
  const hd=`<div class="vi-hd"><div><b>Gonbidapenak</b><span class="mu">${E(S.c[c].n)}</span></div><div class="vi-tot"><div class="vi-st"><button class="vi-b${ar?" arm":""}" data-vit="-1"${st.total<=0?" disabled":""} aria-label="${ar?"Berretsi: guztira gutxitu":"Guztira gutxitu"}">−</button><b>${st.total}</b><button class="vi-b" data-vit="1"${st.total>=99?" disabled":""} aria-label="Guztira gehitu">+</button></div><span>guztira</span></div></div>`;
  if(!st.rows.length)return `<div class="card vi">${hd}<span class="mu" style="display:block;margin-top:8px">Oraindik ez dago talderik.</span></div>`;
  const pool=`<div class="vi-pool ${L<0?"bad":L>0?"warn":"ok"}">${L>0?L+" banatzeko":L<0?(-L)+" soberan":"✓ Guztiak banatuta"}</div>`+(ar?`<div class="vi-hint vi-warn">${pl.k==="r"?`Guztira ${pl.base} baino gutxiago izanda, banaketa 0ra itzuliko da.`:`${E(pl.r.n)}: izena duen gonbidapen bat kenduko da.`} Sakatu − berriro baieztatzeko.</div>`:L===0&&st.total>0?`<div class="vi-hint">Beste bati gehitzeko, kendu bat norbaiti edo igo guztira.</div>`:"");
  const rows=st.rows.map(r=>{const emp=r.g.some(x=>!x);return `<div class="vi-m"><span class="vi-av">${avHTML(r.n,"s")}</span><b class="vi-nm">${E(r.n)}</b><div class="vi-st"><button class="vi-b" data-vim="${E(r.n)}" data-vdd="-1"${emp?"":" disabled"} aria-label="${E(r.n)}: gonbidapen bat kendu">−</button><b>${r.a}</b><button class="vi-b" data-vim="${E(r.n)}" data-vdd="1"${L>0?"":" disabled"} aria-label="${E(r.n)}: gonbidapen bat gehitu">+</button></div>${r.a?`<div class="vi-gs">${r.g.map((g,i)=>`<input class="vi-g${g?" f":""}" data-vig="${E(r.n)}" data-i="${i}" maxlength="24" autocomplete="off" autocorrect="off" autocapitalize="words" enterkeyhint="done" placeholder="Izena…" value="${E(g)}" aria-label="${E(r.n)}: ${i+1}. gonbidapena">`).join("")}</div>`:""}</div>`}).join("");
- return `<div class="card vi">${hd}${pool}<div class="vi-ms">${rows}</div>${st.ts?`<div class="vi-lc mu">Azken aldaketa: ${E(st.by||"Norbait")} · ${vTime(st.ts)}</div>`:""}</div>`}
+ return `<div class="card vi">${hd}${pool}<div class="vi-ms">${rows}</div><div class="vi-ft">${st.ts?`<div class="vi-lc mu">Azken aldaketa: ${E(st.by||"Norbait")} · ${vTime(st.ts)}</div>`:"<span></span>"}${st.sum>0?`<button class="ib${viCp?" ok":""}" data-vicp="1" aria-label="Zerrenda kopiatu / partekatu" title="Zerrenda kopiatu / partekatu">${viCp?'<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>':'<svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>'}</button>`:""}</div></div>`}
 function vanTab(){let h=hdr("Añubeta");const act=cOrd().filter(c=>!isAr(c)),c=vCid();
  if(!act.length||!c)return h+`<div class="card"><span class="mu">Oraindik ez dago kontzerturik. Editoreek sor dezakete «Kontzertua» atalean.</span></div>`;
  const d=S.c[c],on=vOn(c);
@@ -1898,7 +1922,7 @@ function vanTab(){let h=hdr("Añubeta");const act=cOrd().filter(c=>!isAr(c)),c=v
   const pe=vPeople(),mi=pe.filter(n=>!sI.has(n)&&!sV.has(n));h+=vSum(c)+vVan(c);
   if(pe.length){
    h+=`<div class="vn-un">${mi.length?`<span class="mu">Eserlekurik gabe</span><div class="r">${mi.map(n=>`<span class="vn-c">${avHTML(n,"s")}${E(n)}</span>`).join("")}</div>`:`<div class="vn-ok">✓ Denek dute eserlekua</div>`}</div>`}}
- h+=viCard(c);
+ h+=viCard(c);h+=viHist(c);
  const hs=Object.keys(S.m||{}).filter(k=>k.startsWith("vh_")&&S.m[k].c===c).map(k=>S.m[k]).sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,40);
  h+=secS("vhi","Aldaketen historia",hs.length?` <small class="mu">(${hs.length})</small>`:"")+(hs.length?`<div class="vn-hl">${hs.map(vHistH).join("")}</div>`:`<div class="mu" style="padding:6px 2px">Oraindik ez dago aldaketarik.</div>`)+secE();
  return h}
@@ -1924,12 +1948,12 @@ function vsUpd(force){if(!VS)return;const c=VS.c;if(tab!=="van"||!S.c[c]||!vOn(c
 function vsPick(name){if(!VS)return;const c=VS.c,w=VS.w,y=vSeat(c,VS.s);vAssign(c,VS.s,w,name);const z=vSeat(c,VS.s);
  if(y.sp&&z.sp){const o=w=="i"?"v":"i";if(!z[o]){VS.w=o;vsUpd(true);render();return}}
  vsClose();render()}
-document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-vs],[data-vx],[data-vsp],[data-vw],[data-vp],[data-vga],[data-vcl],[data-vc],[data-von],[data-vit],[data-vim]");if(!t)return;const D=t.dataset;
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-vs],[data-vx],[data-vsp],[data-vw],[data-vp],[data-vga],[data-vcl],[data-vc],[data-von],[data-vit],[data-vim],[data-vicp]");if(!t)return;const D=t.dataset;
  if(D.vs!==undefined)vsOpen(D.vs);
  else if(D.vx)vsClose();
  else if(D.vc!==undefined){VCUR=D.vc;render()}
  else if(D.von!==undefined){vOnOff(vCid(),D.von==="1");render()}
- else if(D.vit!==undefined){viTotal(vCid(),+D.vit);render()}
+ else if(D.vicp!==undefined){viCopy(vCid())} else if(D.vit!==undefined){viTotal(vCid(),+D.vit);render()}
  else if(D.vim!==undefined){viAllot(vCid(),D.vim,+D.vdd);render()}
  else if(!VS)return;
  else if(D.vsp!==undefined){vSplit(VS.c,VS.s,D.vsp==="1");VS.w=null;vsUpd(true);render()}
@@ -2027,7 +2051,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261119d",NEWS=["Gonbidapenak: guztira gutxitzean banaketa 0ra itzultzen da bakarrik 12 baino gutxiago geratzen bada; bestela ez da ezer aldatzen"]; 
+var BUILD="20261119e",NEWS=["Añubeta: gonbidapenen zerrenda kopiatu/partekatu daiteke eta aldaketen historia (plegatuta) ikusten da"]; 
 var updShown=false;
 function showUpd(nv){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button><div class="updv" id="updv">'+(nv?"Bertsio berria: "+E(nv):"")+'</div></div>';document.body.appendChild(o);if(!nv){fetch("index.html?v="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{const m=/var BUILD="([^"]+)"/.exec(t),u=document.getElementById("updv");if(m&&u)u.textContent="Bertsio berria: "+m[1]}).catch(()=>{})}const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd(m[1])}catch(e){}}
