@@ -1034,6 +1034,21 @@ html:root[data-theme] .vi .vi-g::placeholder{color:var(--mu);opacity:.75}
 html:root[data-theme] .vi .vi-g.f{border-style:solid;border-color:transparent;background:var(--ac2);font-weight:600}
 html:root[data-theme] .vi .vi-g:focus{border-style:solid;border-color:var(--ac);background:var(--card);box-shadow:none}
 .vi-lc{margin-top:0;font-size:11px}.vi-ft{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}.vi-ft .ib{flex:none;width:36px;height:36px}
+.vo-ic{width:17px;height:17px;margin-right:7px;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.vo-ls{display:grid;gap:8px}
+.vo-r{display:grid;grid-template-columns:112px minmax(0,1fr) 34px;gap:8px;align-items:center}
+.vo-t::-webkit-calendar-picker-indicator{display:none}.vo-t::-webkit-date-and-time-value{text-align:center;margin:0}.vo-t::-webkit-datetime-edit{padding:0}
+.vo-r.vo-v{padding:8px;border-radius:14px;background:var(--ac2)}
+.vo-lb{grid-column:1/-1;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ac)}
+html:root[data-theme] .vo .vo-t,html:root[data-theme] .vo .vo-p{display:block;width:100%;min-width:0;height:38px;min-height:38px;border-radius:12px;border:1.5px solid var(--bd);background:var(--card);color:var(--tx);padding:0 10px;box-shadow:none;-webkit-appearance:none;appearance:none}
+html:root[data-theme] .vo .vo-t{text-align:center;font-variant-numeric:tabular-nums;font-weight:700}
+html:root[data-theme] .vo .vo-p::placeholder{color:var(--mu);opacity:.75}
+html:root[data-theme] .vo .vo-t:focus,html:root[data-theme] .vo .vo-p:focus{border-color:var(--ac);box-shadow:none}
+.vo-x{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--bd);background:transparent;color:var(--mu);font-size:19px;line-height:1;padding:0;display:inline-flex;align-items:center;justify-content:center}
+.vo-ad{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.vo-a{height:34px;border-radius:999px;border:1.5px dashed var(--bd);background:transparent;color:var(--ac);padding:0 14px;font-weight:700;font-size:13px}
+.vo-ls+.vo-ad{margin-top:12px}
+
 .vn-sw{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;font-weight:600;font-size:13.5px}
 .vn-tg{position:relative;flex:none;width:52px;height:32px;border-radius:999px;border:0;background:var(--bd);transition:background .25s;padding:0}
 .vn-tg i{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.35);transition:transform .28s cubic-bezier(.32,.72,0,1)}
@@ -1138,7 +1153,7 @@ function loadTok(){try{edTok=localStorage.getItem(edKey())}catch(e){edTok=null}}
 function saveTok(t){edTok=t;try{t?localStorage.setItem(edKey(),t):localStorage.removeItem(edKey())}catch(e){}}
 const clone=o=>o==null?o:JSON.parse(JSON.stringify(o));
 function addDraft(c,id,t,d){DR[c+"/"+id]={c,id,t,d:clone(d)||null};rsoft()}
-function wrapDb(raw){return{collection:name=>{const c=raw.collection(name);return{doc:id=>{const dd=c.doc(id);const free=()=>isEd()||name==="props"||(name==="meta"&&/^v[ahi]_/.test(id));return{set:d=>free()?(logOp(name,id,"s",d),dd.set(d)):(addDraft(name,id,"s",d),Promise.resolve()),delete:()=>free()?(logOp(name,id,"d"),dd.delete()):(addDraft(name,id,"d"),Promise.resolve())}},onSnapshot:(a,b)=>c.onSnapshot(a,b)}},__export:()=>raw.__export().then(o=>{o.km={};Object.keys(S.m||{}).filter(k=>kmRe.test(k)).forEach(k=>{o.km[k]=S.m[k]});return o}),__import:o=>isEd()?raw.__import(o).then(()=>Promise.all(Object.entries(o.km||{}).filter(([k])=>kmRe.test(k)).map(([k,d])=>raw.collection("meta").doc(k).set(d)))):Promise.reject(new Error("Editoreek bakarrik inporta dezakete"))}}
+function wrapDb(raw){return{collection:name=>{const c=raw.collection(name);return{doc:id=>{const dd=c.doc(id);const free=()=>isEd()||name==="props"||(name==="meta"&&/^v[ahio]_/.test(id));return{set:d=>free()?(logOp(name,id,"s",d),dd.set(d)):(addDraft(name,id,"s",d),Promise.resolve()),delete:()=>free()?(logOp(name,id,"d"),dd.delete()):(addDraft(name,id,"d"),Promise.resolve())}},onSnapshot:(a,b)=>c.onSnapshot(a,b)}},__export:()=>raw.__export().then(o=>{o.km={};Object.keys(S.m||{}).filter(k=>kmRe.test(k)).forEach(k=>{o.km[k]=S.m[k]});return o}),__import:o=>isEd()?raw.__import(o).then(()=>Promise.all(Object.entries(o.km||{}).filter(([k])=>kmRe.test(k)).map(([k,d])=>raw.collection("meta").doc(k).set(d)))):Promise.reject(new Error("Editoreek bakarrik inporta dezakete"))}}
 function restoreSrv(){["c","l","k","i","o"].forEach(k=>{if(SRV[k])S[k]=clone(SRV[k])});pendHid={};pendAr={}}
 function sumOps(ops){const so=(k,o)=>o.old!==undefined?o.old:(SRV[k]||{})[o.id],pl=pid=>{const p=P.find(x=>x.id===pid);return p?p.n+(p.z&&p.z!=="Bakarra"?" "+p.z:""):pid},cn=id=>(S.c[id]||{}).n||id,out=[];
  ops.forEach(o=>{let t="";const d=o.d||{};
@@ -1390,7 +1405,7 @@ async function saveSheet(){if(!dlc)return;const d=S.c[cur];if(!d)return;
  try{await dlc.save({filename:"orria-"+(d.n||"kontzertua").replace(/[^\w\-]+/g,"_")+".pdf",data:buildPDF(d)})}catch(e){}}
 async function saveSummary(){if(!dlc)return;const d=S.c[cur];if(!d)return;
  try{await dlc.save({filename:"laburpena-"+(d.n||"kontzertua").replace(/[^\w\-]+/g,"_")+".pdf",data:buildSummary(d)})}catch(e){}}
-function delConc(){const id=cur;if(!id||!S.c[id]||isLocked(id))return;try{Object.keys(S.m||{}).filter(k=>/^v[ahi]_/.test(k)&&S.m[k].c===id).forEach(k=>vPut(k,null))}catch(e){}delete S.c[id];Object.keys(S.l).forEach(k=>{if(k.startsWith(id+"_")){delete S.l[k];db&&db.collection("lines").doc(k).delete().catch(()=>{})}});db&&db.collection("concerts").doc(id).delete().catch(()=>{});dcf=false;cur=null;render()}
+function delConc(){const id=cur;if(!id||!S.c[id]||isLocked(id))return;try{Object.keys(S.m||{}).filter(k=>/^v[ahio]_/.test(k)&&S.m[k].c===id).forEach(k=>vPut(k,null))}catch(e){}delete S.c[id];Object.keys(S.l).forEach(k=>{if(k.startsWith(id+"_")){delete S.l[k];db&&db.collection("lines").doc(k).delete().catch(()=>{})}});db&&db.collection("concerts").doc(id).delete().catch(()=>{});dcf=false;cur=null;render()}
 function addOut(){const ps=P.filter(p=>p.mi==O.a),p=ps[O.z]||ps[0];if(!p)return;const note=(O.note||"").trim();
  if(!note){const e=$("#oerr");if(e)e.style.display="block";const i=$("#on");if(i)i.focus();return}
  const id="o"+Date.now(),d={p:p.id,q:O.q,t:O.t,note,d:new Date().toISOString().slice(0,10)};S.o[id]=d;db&&db.collection("outs").doc(id).set(d).catch(()=>{});O.q=1;O.note="";render()}
@@ -1433,7 +1448,7 @@ function saveEdit(id){const n=$("#en").value.trim(),p=parseFloat($("#ep").value)
 const ke=x=>(Math.round(x*100)/100).toLocaleString("es-ES",{minimumFractionDigits:2,maximumFractionDigits:2})+" €";
 const fmtv=(v,f)=>f==="eur"?eur(v):f==="km"?kmf(v):f==="ke"?ke(v):String(Math.round(v));
 const kc=(v,f)=>`<b data-count="${v}" data-fmt="${f}">${fmtv(v,f)}</b>`;
-const kmRe=/^(k(cfg|mem_|trip_|settle_)|v[ahi]_)/;
+const kmRe=/^(k(cfg|mem_|trip_|settle_)|v[ahio]_)/;
 var KTD={},kmPD={},kmTE=null,kmEd=null,kmArm=null,kmMsg="",kmAddM=false,kmAddT=false,kmPrOpen=false;
 const num=v=>{const n=parseFloat(String(v==null?"":v).replace(",","."));return isNaN(n)?0:n};
 const kmf=n=>(Math.round(n*10)/10).toLocaleString("es-ES",{minimumFractionDigits:0,maximumFractionDigits:1})+" km";
@@ -1913,6 +1928,25 @@ function viCard(c){const st=viGet(c),L=st.left,pl=viPlan(st),ar=!!(pl&&pl.ask&&v
  const pool=`<div class="vi-pool ${L<0?"bad":L>0?"warn":"ok"}">${L>0?L+" banatzeko":L<0?(-L)+" soberan":"✓ Guztiak banatuta"}</div>`+(ar?`<div class="vi-hint vi-warn">${pl.k==="r"?`Guztira ${pl.base} baino gutxiago izanda, banaketa 0ra itzuliko da.`:`${E(pl.r.n)}: izena duen gonbidapen bat kenduko da.`} Sakatu − berriro baieztatzeko.</div>`:L===0&&st.total>0?`<div class="vi-hint">Beste bati gehitzeko, kendu bat norbaiti edo igo guztira.</div>`:"");
  const rows=st.rows.map(r=>{const emp=r.g.some(x=>!x);return `<div class="vi-m"><span class="vi-av">${avHTML(r.n,"s")}</span><b class="vi-nm">${E(r.n)}</b><div class="vi-st"><button class="vi-b" data-vim="${E(r.n)}" data-vdd="-1"${emp?"":" disabled"} aria-label="${E(r.n)}: gonbidapen bat kendu">−</button><b>${r.a}</b><button class="vi-b" data-vim="${E(r.n)}" data-vdd="1"${L>0?"":" disabled"} aria-label="${E(r.n)}: gonbidapen bat gehitu">+</button></div>${r.a?`<div class="vi-gs">${r.g.map((g,i)=>`<input class="vi-g${g?" f":""}" data-vig="${E(r.n)}" data-i="${i}" maxlength="24" autocomplete="off" autocorrect="off" autocapitalize="words" enterkeyhint="done" placeholder="Izena…" value="${E(g)}" aria-label="${E(r.n)}: ${i+1}. gonbidapena">`).join("")}</div>`:""}</div>`}).join("");
  return `<div class="card vi">${hd}${pool}<div class="vi-ms">${rows}</div><div class="vi-ft">${st.ts?`<div class="vi-lc mu">Azken aldaketa: ${E(st.by||"Norbait")} · ${vTime(st.ts)}</div>`:"<span></span>"}${st.sum>0?`<button class="ib${viCp?" ok":""}" data-vicp="1" aria-label="Zerrenda kopiatu / partekatu" title="Zerrenda kopiatu / partekatu">${viCp?'<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>':'<svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>'}</button>`:""}</div></div>`}
+/* Ordutegia: geldialdiak eta orduak (vo_<c>_<id>); denek editatu dezakete, plegatuta dago */
+const VOT=/^([01]\d|2[0-3]):[0-5]\d$/;
+function voList(c){return Object.keys(S.m||{}).filter(k=>k.startsWith("vo_"+c+"_")&&S.m[k].c===c).map(k=>{const x=S.m[k];return{id:k,k:x.k==="v"?"v":"s",t:VOT.test(x.t||"")?x.t:"",p:String(x.p||""),ts:x.ts||0,by:x.by||""}}).sort((a,b)=>(a.t&&!b.t?-1:!a.t&&b.t?1:0)||a.t.localeCompare(b.t)||(a.ts-b.ts))}
+function voAdd(c,k){const L=voList(c);if(L.length>=20||(k==="v"&&L.some(x=>x.k==="v")))return;const ts=Date.now();vPut("vo_"+c+"_"+ts.toString(36)+Math.random().toString(36).slice(2,5),{c,s:"z",k:k==="v"?"v":"s",t:"",p:"",ts,by:vBy()})}
+function voSet(c,id,f){const x=(S.m||{})[id];if(!x||x.c!==c)return false;const n={...x,ts:Date.now(),by:vBy()};if(f.t!==undefined)n.t=VOT.test(f.t)?f.t:"";if(f.p!==undefined)n.p=String(f.p).replace(/\s+/g," ").trim().slice(0,40);if(n.t===(x.t||"")&&n.p===(x.p||""))return false;vPut(id,n);return true}
+function voDel(c,id){const x=(S.m||{})[id];if(x&&x.c===c)vPut(id,null)}
+function voText(c){const d=S.c[c]||{},L=voList(c).filter(x=>x.t||x.p);
+ return "🕒 AÑUBE · Ordutegia\n"+(d.n||"")+(d.d?" · "+d.d:"")+(d.p?" · "+d.p:"")+"\n\n"+(L.length?L.map(x=>x.k==="v"?"🎤 "+(x.t||"—")+" · Kontzertuan izan behar dugu"+(x.p?" ("+x.p+")":""):(x.t||"—")+" · "+(x.p||"…")).join("\n"):"Oraindik ez dago ordutegirik.")}
+var voCp=false,VOR=false;
+async function voCopy(c){const tx=voText(c);const ok=()=>{voCp=true;render();setTimeout(()=>{voCp=false;render()},2200)};
+ try{if(navigator.share&&/iPhone|iPad|Android/i.test(navigator.userAgent)){await navigator.share({text:tx});return}}catch(e){if(e&&e.name==="AbortError")return}
+ try{await navigator.clipboard.writeText(tx);ok();return}catch(e){}
+ try{const ta=document.createElement("textarea");ta.value=tx;ta.style.cssText="position:fixed;top:0;left:0;opacity:0";document.body.appendChild(ta);ta.focus();ta.select();ta.setSelectionRange(0,99999);const r=document.execCommand("copy");ta.remove();if(r)ok()}catch(e){}}
+function voCard(c){const L=voList(c),n=L.filter(x=>x.t||x.p).length,hv=L.some(x=>x.k==="v");
+ const ic='<svg class="vo-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+ const rows=L.map(x=>`<div class="vo-r${x.k==="v"?" vo-v":""}">${x.k==="v"?`<div class="vo-lb">🎤 Kontzertuan izan behar dugu</div>`:""}<input class="vo-t" type="time" data-vot="${E(x.id)}" value="${E(x.t)}" aria-label="Ordua"><input class="vo-p" type="text" data-vop="${E(x.id)}" maxlength="40" autocomplete="off" autocorrect="off" autocapitalize="sentences" enterkeyhint="done" placeholder="${x.k==="v"?"Lekua…":"Herria / lekua…"}" value="${E(x.p)}" aria-label="${x.k==="v"?"Kontzertuko lekua":"Geldialdia"}"><button class="vo-x" data-vox="${E(x.id)}" aria-label="Kendu">×</button></div>`).join("");
+ const lc=L.reduce((a,x)=>x.ts>a.ts?x:a,{ts:0});
+ const ft=`<div class="vi-ft">${lc.ts?`<div class="vi-lc mu">Azken aldaketa: ${E(lc.by||"Norbait")} · ${vTime(lc.ts)}</div>`:"<span></span>"}${n>0?`<button class="ib${voCp?" ok":""}" data-vocp="1" aria-label="Ordutegia kopiatu / partekatu" title="Ordutegia kopiatu / partekatu">${voCp?'<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>':'<svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>'}</button>`:""}</div>`;
+ return secS("vo",ic+"Ordutegia",n?` <small class="mu">(${n})</small>`:"")+`<div class="card vo">${L.length?`<div class="vo-ls">${rows}</div>`:`<div class="mu" style="padding:2px 0 4px">Oraindik ez dago ordutegirik. Gehitu geldialdiak eta orduak: denek ikusi eta alda dezakete.</div>`}<div class="vo-ad"><button class="vo-a" data-voa="s">+ Geldialdia</button>${hv?"":`<button class="vo-a" data-voa="v">+ Kontzertuko ordua</button>`}</div>${L.length?ft:""}</div>`+secE()}
 function vanTab(){let h=hdr("Añubeta");const act=cOrd().filter(c=>!isAr(c)),c=vCid();
  if(!act.length||!c)return h+`<div class="card"><span class="mu">Oraindik ez dago kontzerturik. Editoreek sor dezakete «Kontzertua» atalean.</span></div>`;
  const d=S.c[c],on=vOn(c);
@@ -1921,7 +1955,7 @@ function vanTab(){let h=hdr("Añubeta");const act=cOrd().filter(c=>!isAr(c)),c=v
  if(on){const sI=new Set(),sV=new Set();VSE.forEach(s=>{const x=vSeat(c,s);if(x.i)sI.add(x.i);if(x.v)sV.add(x.v)});
   const pe=vPeople(),mi=pe.filter(n=>!sI.has(n)&&!sV.has(n));h+=vSum(c)+vVan(c);
   if(pe.length){
-   h+=`<div class="vn-un">${mi.length?`<span class="mu">Eserlekurik gabe</span><div class="r">${mi.map(n=>`<span class="vn-c">${avHTML(n,"s")}${E(n)}</span>`).join("")}</div>`:`<div class="vn-ok">✓ Denek dute eserlekua</div>`}</div>`}}
+   h+=`<div class="vn-un">${mi.length?`<span class="mu">Eserlekurik gabe</span><div class="r">${mi.map(n=>`<span class="vn-c">${avHTML(n,"s")}${E(n)}</span>`).join("")}</div>`:`<div class="vn-ok">✓ Denek dute eserlekua</div>`}</div>`}h+=voCard(c)}
  h+=viCard(c);h+=viHist(c);
  const hs=Object.keys(S.m||{}).filter(k=>k.startsWith("vh_")&&S.m[k].c===c).map(k=>S.m[k]).sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,40);
  h+=secS("vhi","Aldaketen historia",hs.length?` <small class="mu">(${hs.length})</small>`:"")+(hs.length?`<div class="vn-hl">${hs.map(vHistH).join("")}</div>`:`<div class="mu" style="padding:6px 2px">Oraindik ez dago aldaketarik.</div>`)+secE();
@@ -1948,12 +1982,12 @@ function vsUpd(force){if(!VS)return;const c=VS.c;if(tab!=="van"||!S.c[c]||!vOn(c
 function vsPick(name){if(!VS)return;const c=VS.c,w=VS.w,y=vSeat(c,VS.s);vAssign(c,VS.s,w,name);const z=vSeat(c,VS.s);
  if(y.sp&&z.sp){const o=w=="i"?"v":"i";if(!z[o]){VS.w=o;vsUpd(true);render();return}}
  vsClose();render()}
-document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-vs],[data-vx],[data-vsp],[data-vw],[data-vp],[data-vga],[data-vcl],[data-vc],[data-von],[data-vit],[data-vim],[data-vicp]");if(!t)return;const D=t.dataset;
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-vs],[data-vx],[data-vsp],[data-vw],[data-vp],[data-vga],[data-vcl],[data-vc],[data-von],[data-vit],[data-vim],[data-vicp],[data-voa],[data-vox],[data-vocp]");if(!t)return;const D=t.dataset;
  if(D.vs!==undefined)vsOpen(D.vs);
  else if(D.vx)vsClose();
  else if(D.vc!==undefined){VCUR=D.vc;render()}
  else if(D.von!==undefined){vOnOff(vCid(),D.von==="1");render()}
- else if(D.vicp!==undefined){viCopy(vCid())} else if(D.vit!==undefined){viTotal(vCid(),+D.vit);render()}
+ else if(D.vocp!==undefined){voCopy(vCid())} else if(D.voa!==undefined){voAdd(vCid(),D.voa);render()} else if(D.vox!==undefined){voDel(vCid(),D.vox);render()} else if(D.vicp!==undefined){viCopy(vCid())} else if(D.vit!==undefined){viTotal(vCid(),+D.vit);render()}
  else if(D.vim!==undefined){viAllot(vCid(),D.vim,+D.vdd);render()}
  else if(!VS)return;
  else if(D.vsp!==undefined){vSplit(VS.c,VS.s,D.vsp==="1");VS.w=null;vsUpd(true);render()}
@@ -1961,14 +1995,15 @@ document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest
  else if(D.vp!==undefined)vsPick(D.vp);
  else if(D.vga){const i=document.getElementById("vgn"),n=i?i.value.trim():"";if(!n)return;VG="";if(i)i.blur();vsPick(n)}
  else if(D.vcl){const y=vSeat(VS.c,VS.s);vAssign(VS.c,VS.s,VS.w,"");if(y.sp){vsUpd(true)}else vsClose();render()}});
-document.addEventListener("change",e=>{const t=e.target;if(t&&t.classList&&t.classList.contains("vi-g")){viName(vCid(),t.dataset.vig,+t.dataset.i,t.value);t.classList.toggle("f",!!t.value.trim())}});
+document.addEventListener("change",e=>{const t=e.target;if(t&&t.classList&&t.classList.contains("vi-g")){viName(vCid(),t.dataset.vig,+t.dataset.i,t.value);t.classList.toggle("f",!!t.value.trim())}else if(t&&t.dataset&&t.dataset.vot!==undefined){if(voSet(vCid(),t.dataset.vot,{t:t.value}))VOR=true}else if(t&&t.dataset&&t.dataset.vop!==undefined){voSet(vCid(),t.dataset.vop,{p:t.value})}});
+document.addEventListener("focusout",e=>{const t=e.target;if(VOR&&t&&t.dataset&&t.dataset.vot!==undefined){VOR=false;setTimeout(()=>{if(!(document.activeElement&&document.activeElement.dataset&&document.activeElement.dataset.vot!==undefined))render()},60)}});
 document.addEventListener("input",e=>{if(e.target&&e.target.id==="vgn"){VG=e.target.value;const b=document.querySelector("#vsh [data-vga]");if(b)b.disabled=!VG.trim()}});
 (function(){const vv=window.visualViewport;if(!vv)return;
  function sync(){const el=document.getElementById("vsh");if(!el)return;const a=document.activeElement,kb=!!a&&a.id==="vgn"&&innerHeight-vv.height>120;el.classList.toggle("kbd",kb);if(kb){el.style.setProperty("--vn-t",Math.max(0,vv.offsetTop)+"px");el.style.setProperty("--vn-h",vv.height+"px")}else{el.style.removeProperty("--vn-t");el.style.removeProperty("--vn-h")}}
  window.vnKbSync=sync;vv.addEventListener("resize",sync);vv.addEventListener("scroll",sync);
  document.addEventListener("focusin",e=>{if(e.target&&e.target.id==="vgn")[80,300,600,1000].forEach(t=>setTimeout(()=>{sync();const b=document.querySelector("#vsh .vn-bd");if(b)b.scrollTop=b.scrollHeight},t))});
  document.addEventListener("focusout",e=>{if(e.target&&e.target.id==="vgn")setTimeout(sync,300)})})();
-document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.classList&&e.target.classList.contains("vi-g")){e.preventDefault();e.target.blur();return}if(e.key==="Escape"&&VS)vsClose();if(e.key==="Enter"&&e.target&&e.target.id==="vgn"){e.preventDefault();const n=e.target.value.trim();if(n){VG="";vsPick(n)}}});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.classList&&(e.target.classList.contains("vi-g")||e.target.classList.contains("vo-p"))){e.preventDefault();e.target.blur();return}if(e.key==="Escape"&&VS)vsClose();if(e.key==="Enter"&&e.target&&e.target.id==="vgn"){e.preventDefault();const n=e.target.value.trim();if(n){VG="";vsPick(n)}}});
 var popQ=null;
 function popRec(t){try{const d=t.dataset;const ks=Object.keys(d);if(!ks.length||!t.parentElement)return;if(!(t.matches("button.p")||/^(sa|sd|kr|d|gu|oq)$/.test(ks[0])||t.closest(".st,.gm")))return;popQ=ks.map(k=>"[data-"+k.replace(/[A-Z]/g,m=>"-"+m.toLowerCase())+'="'+String(d[k]).replace(/(["\\])/g,"\\$1")+'"]').join("")}catch(e){popQ=null}}
 function popRun(){if(!popQ||RM){popQ=null;return}const q=popQ;popQ=null;try{const b=document.querySelector(q);const n=b&&b.parentElement&&b.parentElement.querySelector("input,.n,b");if(n)n.animate([{transform:"scale(1.1)"},{transform:"scale(1)"}],{duration:240,easing:"cubic-bezier(.32,.72,0,1)"})}catch(e){}}
@@ -2051,7 +2086,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261119e",NEWS=["Añubeta: gonbidapenen zerrenda kopiatu/partekatu daiteke eta aldaketen historia (plegatuta) ikusten da"]; 
+var BUILD="20261120a",NEWS=["Añubeta: ordutegia gehitu daiteke (geldialdiak eta kontzertuko ordua); plegatuta dago eta denek alda dezakete"]; 
 var updShown=false;
 function showUpd(nv){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button><div class="updv" id="updv">'+(nv?"Bertsio berria: "+E(nv):"")+'</div></div>';document.body.appendChild(o);if(!nv){fetch("index.html?v="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{const m=/var BUILD="([^"]+)"/.exec(t),u=document.getElementById("updv");if(m&&u)u.textContent="Bertsio berria: "+m[1]}).catch(()=>{})}const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd(m[1])}catch(e){}}
