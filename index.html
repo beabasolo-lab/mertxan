@@ -1028,26 +1028,37 @@ html:root[data-theme="light"] #app .row.cp.l0 .sz,html:root[data-theme="light"] 
 .vi-m{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:7px 10px;align-items:center;padding:8px 0;border-top:1px solid var(--bd)}
 .vi-av .av.s{width:30px;height:30px}.vi-av .av.s.i{font-size:13px}
 .vi-nm{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.vi-gs{grid-column:2/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:6px}
-html:root[data-theme] .vi .vi-g{width:100%;min-width:0;height:34px;min-height:34px;border-radius:999px;border:1.5px dashed var(--bd);background:transparent;color:var(--tx);padding:0 14px;box-shadow:none}
-html:root[data-theme] .vi .vi-g::placeholder{color:var(--mu);opacity:.75}
-html:root[data-theme] .vi .vi-g.f{border-style:solid;border-color:transparent;background:var(--ac2);font-weight:600}
-html:root[data-theme] .vi .vi-g:focus{border-style:solid;border-color:var(--ac);background:var(--card);box-shadow:none}
-.vi-lc{margin-top:0;font-size:11px}.vi-ft{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}.vi-ft .ib{flex:none;width:36px;height:36px}
+.vi-gs{grid-column:2/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:5px}
+.vi-gw{position:relative;display:block;height:28px;box-sizing:border-box;border-radius:999px;border:1px dashed var(--bd);overflow:hidden;transition:background .2s,border-color .2s}
+.vi-gw.f{border-style:solid;border-color:transparent;background:var(--ac2)}
+.vi-gw:focus-within{border-style:solid;border-color:var(--ac);background:var(--card)}
+html:root[data-theme] .vi .vi-g,html:root[data-theme] .vi .vi-g:focus{position:absolute;left:0;top:0;width:123.08%;height:123.08%;min-width:0;min-height:0;margin:0;box-sizing:border-box;transform:scale(.8125);transform-origin:0 0;border:0;border-radius:0;background:transparent;color:var(--tx);padding:0 14px;font-size:16px;line-height:1.2;text-overflow:ellipsis;box-shadow:none}
+html:root[data-theme] .vi .vi-g.f{font-weight:600}
+html:root[data-theme] .vi .vi-g::placeholder{color:var(--mu);opacity:.7}
+.vi-lc{margin-top:0;font-size:11px}.vi-ft{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}.vi-ft .ib{flex:none;width:32px;height:32px}
 .vo-ic{width:17px;height:17px;margin-right:7px;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.vo-ls{display:grid;gap:8px}
-.vo-r{display:grid;grid-template-columns:112px minmax(0,1fr) 34px;gap:8px;align-items:center}
+.card.vo{padding-top:10px;padding-bottom:10px}.vo .mu{font-size:13px}
+.vo-ls{display:block}
+.vo-r{display:grid;grid-template-columns:auto minmax(0,1fr) 28px;gap:0 10px;align-items:center;min-height:40px;padding:6px 0;border-top:1px solid var(--bd)}
+.vo-r:first-child,.vo-v+.vo-r{border-top:0}.vo-r:first-child{padding-top:0}
+.vo-r.vo-v{margin:6px -8px;padding:8px;border-radius:14px;background:var(--ac2);border-top:0}
+.vo-lb{grid-column:1/-1;margin-bottom:6px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ac)}
+.vo-tw{position:relative;display:flex;align-items:center;justify-content:center;width:58px;height:28px;box-sizing:border-box;border-radius:999px;background:var(--ac2);transition:background .2s}
+.vo-tw.e{background:transparent;box-shadow:inset 0 0 0 1px var(--bd)}
+.vo-v .vo-tw{background:var(--card)}.vo-v .vo-tw.e{background:transparent;box-shadow:inset 0 0 0 1px var(--bd)}
+.vo-tv{font-size:13px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:.01em;color:var(--tx);pointer-events:none}
+.vo-tw.e .vo-tv{color:var(--mu);font-weight:600}
+html:root[data-theme] .vo .vo-t,html:root[data-theme] .vo .vo-t:focus{position:absolute;left:0;top:0;z-index:1;width:100%;height:100%;min-width:0;min-height:0;margin:0;box-sizing:border-box;opacity:0;border:0;border-radius:999px;background:var(--card);color:var(--tx);padding:0;font-size:16px;text-align:center;-webkit-appearance:none;appearance:none;box-shadow:none}
+@media (hover:hover) and (pointer:fine){html:root[data-theme] .vo .vo-t:focus{opacity:1;z-index:3;left:0;width:112px;font-size:14px;font-weight:700;box-shadow:0 0 0 1.5px var(--ac)}}
 .vo-t::-webkit-calendar-picker-indicator{display:none}.vo-t::-webkit-date-and-time-value{text-align:center;margin:0}.vo-t::-webkit-datetime-edit{padding:0}
-.vo-r.vo-v{padding:8px;border-radius:14px;background:var(--ac2)}
-.vo-lb{grid-column:1/-1;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ac)}
-html:root[data-theme] .vo .vo-t,html:root[data-theme] .vo .vo-p{display:block;width:100%;min-width:0;height:38px;min-height:38px;border-radius:12px;border:1.5px solid var(--bd);background:var(--card);color:var(--tx);padding:0 10px;box-shadow:none;-webkit-appearance:none;appearance:none}
-html:root[data-theme] .vo .vo-t{text-align:center;font-variant-numeric:tabular-nums;font-weight:700}
-html:root[data-theme] .vo .vo-p::placeholder{color:var(--mu);opacity:.75}
-html:root[data-theme] .vo .vo-t:focus,html:root[data-theme] .vo .vo-p:focus{border-color:var(--ac);box-shadow:none}
-.vo-x{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--bd);background:transparent;color:var(--mu);font-size:19px;line-height:1;padding:0;display:inline-flex;align-items:center;justify-content:center}
-.vo-ad{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.vo-a{height:34px;border-radius:999px;border:1.5px dashed var(--bd);background:transparent;color:var(--ac);padding:0 14px;font-weight:700;font-size:13px}
-.vo-ls+.vo-ad{margin-top:12px}
+.vo-pw{position:relative;display:block;height:28px;min-width:0;border-bottom:1px solid transparent;transition:border-color .2s}
+.vo-pw:focus-within{border-bottom-color:var(--ac)}
+html:root[data-theme] .vo .vo-p,html:root[data-theme] .vo .vo-p:focus{position:absolute;left:0;top:0;width:114.29%;height:114.29%;min-width:0;min-height:0;margin:0;box-sizing:border-box;transform:scale(.875);transform-origin:0 0;border:0;border-radius:0;background:transparent;color:var(--tx);padding:0 2px;font-size:16px;line-height:1.2;font-weight:500;text-overflow:ellipsis;box-shadow:none}
+html:root[data-theme] .vo .vo-p::placeholder{color:var(--mu);opacity:.7;font-weight:400}
+.vo .vo-x{width:28px;height:28px;border:0;border-radius:50%;background:transparent;color:var(--mu);font-size:18px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;opacity:.75}
+.vo .vo-x:active{background:var(--ac2)}
+.vo-ad{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.vo-a{height:28px;border-radius:999px;border:1px dashed var(--bd);background:transparent;color:var(--ac);padding:0 12px;font-weight:700;font-size:12px}
 .chip.past:not(.on){opacity:.5}.chip.past.on{opacity:.85}
 .vn-past{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:999px;border:1px solid var(--bd);font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;vertical-align:1px}
 
@@ -1929,7 +1940,7 @@ function viCard(c){const st=viGet(c),L=st.left,pl=viPlan(st),ar=!!(pl&&pl.ask&&v
  const hd=`<div class="vi-hd"><div><b>Gonbidapenak</b><span class="mu">${E(S.c[c].n)}</span></div><div class="vi-tot"><div class="vi-st"><button class="vi-b${ar?" arm":""}" data-vit="-1"${st.total<=0?" disabled":""} aria-label="${ar?"Berretsi: guztira gutxitu":"Guztira gutxitu"}">−</button><b>${st.total}</b><button class="vi-b" data-vit="1"${st.total>=99?" disabled":""} aria-label="Guztira gehitu">+</button></div><span>guztira</span></div></div>`;
  if(!st.rows.length)return `<div class="card vi">${hd}<span class="mu" style="display:block;margin-top:8px">Oraindik ez dago talderik.</span></div>`;
  const pool=`<div class="vi-pool ${L<0?"bad":L>0?"warn":"ok"}">${L>0?L+" banatzeko":L<0?(-L)+" soberan":"✓ Guztiak banatuta"}</div>`+(ar?`<div class="vi-hint vi-warn">${pl.k==="r"?`Guztira ${pl.base} baino gutxiago izanda, banaketa 0ra itzuliko da.`:`${E(pl.r.n)}: izena duen gonbidapen bat kenduko da.`} Sakatu − berriro baieztatzeko.</div>`:L===0&&st.total>0?`<div class="vi-hint">Beste bati gehitzeko, kendu bat norbaiti edo igo guztira.</div>`:"");
- const rows=st.rows.map(r=>{const emp=r.g.some(x=>!x);return `<div class="vi-m"><span class="vi-av">${avHTML(r.n,"s")}</span><b class="vi-nm">${E(r.n)}</b><div class="vi-st"><button class="vi-b" data-vim="${E(r.n)}" data-vdd="-1"${emp?"":" disabled"} aria-label="${E(r.n)}: gonbidapen bat kendu">−</button><b>${r.a}</b><button class="vi-b" data-vim="${E(r.n)}" data-vdd="1"${L>0?"":" disabled"} aria-label="${E(r.n)}: gonbidapen bat gehitu">+</button></div>${r.a?`<div class="vi-gs">${r.g.map((g,i)=>`<input class="vi-g${g?" f":""}" data-vig="${E(r.n)}" data-i="${i}" maxlength="24" autocomplete="off" autocorrect="off" autocapitalize="words" enterkeyhint="done" placeholder="Izena…" value="${E(g)}" aria-label="${E(r.n)}: ${i+1}. gonbidapena">`).join("")}</div>`:""}</div>`}).join("");
+ const rows=st.rows.map(r=>{const emp=r.g.some(x=>!x);return `<div class="vi-m"><span class="vi-av">${avHTML(r.n,"s")}</span><b class="vi-nm">${E(r.n)}</b><div class="vi-st"><button class="vi-b" data-vim="${E(r.n)}" data-vdd="-1"${emp?"":" disabled"} aria-label="${E(r.n)}: gonbidapen bat kendu">−</button><b>${r.a}</b><button class="vi-b" data-vim="${E(r.n)}" data-vdd="1"${L>0?"":" disabled"} aria-label="${E(r.n)}: gonbidapen bat gehitu">+</button></div>${r.a?`<div class="vi-gs">${r.g.map((g,i)=>`<span class="vi-gw${g?" f":""}"><input class="vi-g${g?" f":""}" data-vig="${E(r.n)}" data-i="${i}" maxlength="24" autocomplete="off" autocorrect="off" autocapitalize="words" enterkeyhint="done" placeholder="Izena…" value="${E(g)}" aria-label="${E(r.n)}: ${i+1}. gonbidapena"></span>`).join("")}</div>`:""}</div>`}).join("");
  return `<div class="card vi">${hd}${pool}<div class="vi-ms">${rows}</div><div class="vi-ft">${st.ts?`<div class="vi-lc mu">Azken aldaketa: ${E(st.by||"Norbait")} · ${vTime(st.ts)}</div>`:"<span></span>"}${st.sum>0?`<button class="ib${viCp?" ok":""}" data-vicp="1" aria-label="Zerrenda kopiatu / partekatu" title="Zerrenda kopiatu / partekatu">${viCp?'<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>':'<svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>'}</button>`:""}</div></div>`}
 /* Ordutegia: geldialdiak eta orduak (vo_<c>_<id>); denek editatu dezakete, plegatuta dago */
 const VOT=/^([01]\d|2[0-3]):[0-5]\d$/;
@@ -1946,7 +1957,7 @@ async function voCopy(c){const tx=voText(c);const ok=()=>{voCp=true;render();set
  try{const ta=document.createElement("textarea");ta.value=tx;ta.style.cssText="position:fixed;top:0;left:0;opacity:0";document.body.appendChild(ta);ta.focus();ta.select();ta.setSelectionRange(0,99999);const r=document.execCommand("copy");ta.remove();if(r)ok()}catch(e){}}
 function voCard(c){const L=voList(c),n=L.filter(x=>x.t||x.p).length,hv=L.some(x=>x.k==="v");
  const ic='<svg class="vo-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
- const rows=L.map(x=>`<div class="vo-r${x.k==="v"?" vo-v":""}">${x.k==="v"?`<div class="vo-lb">🎤 Kontzertuan izan behar dugu</div>`:""}<input class="vo-t" type="time" data-vot="${E(x.id)}" value="${E(x.t)}" aria-label="Ordua"><input class="vo-p" type="text" data-vop="${E(x.id)}" maxlength="40" autocomplete="off" autocorrect="off" autocapitalize="sentences" enterkeyhint="done" placeholder="${x.k==="v"?"Lekua…":"Herria / lekua…"}" value="${E(x.p)}" aria-label="${x.k==="v"?"Kontzertuko lekua":"Geldialdia"}"><button class="vo-x" data-vox="${E(x.id)}" aria-label="Kendu">×</button></div>`).join("");
+ const rows=L.map(x=>`<div class="vo-r${x.k==="v"?" vo-v":""}">${x.k==="v"?`<div class="vo-lb">🎤 Kontzertuan izan behar dugu</div>`:""}<span class="vo-tw${x.t?"":" e"}"><span class="vo-tv">${x.t?E(x.t):"––:––"}</span><input class="vo-t" type="time" data-vot="${E(x.id)}" value="${E(x.t)}" aria-label="Ordua"></span><span class="vo-pw"><input class="vo-p" type="text" data-vop="${E(x.id)}" maxlength="40" autocomplete="off" autocorrect="off" autocapitalize="sentences" enterkeyhint="done" placeholder="${x.k==="v"?"Lekua…":"Herria / lekua…"}" value="${E(x.p)}" aria-label="${x.k==="v"?"Kontzertuko lekua":"Geldialdia"}"></span><button class="vo-x" data-vox="${E(x.id)}" aria-label="Kendu">×</button></div>`).join("");
  const lc=L.reduce((a,x)=>x.ts>a.ts?x:a,{ts:0});
  const ft=`<div class="vi-ft">${lc.ts?`<div class="vi-lc mu">Azken aldaketa: ${E(lc.by||"Norbait")} · ${vTime(lc.ts)}</div>`:"<span></span>"}${n>0?`<button class="ib${voCp?" ok":""}" data-vocp="1" aria-label="Ordutegia kopiatu / partekatu" title="Ordutegia kopiatu / partekatu">${voCp?'<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>':'<svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>'}</button>`:""}</div>`;
  return secS("vo",ic+"Ordutegia",n?` <small class="mu">(${n})</small>`:"")+`<div class="card vo">${L.length?`<div class="vo-ls">${rows}</div>`:`<div class="mu" style="padding:2px 0 4px">Oraindik ez dago ordutegirik. Gehitu geldialdiak eta orduak: denek ikusi eta alda dezakete.</div>`}<div class="vo-ad"><button class="vo-a" data-voa="s">+ Geldialdia</button>${hv?"":`<button class="vo-a" data-voa="v">+ Kontzertuko ordua</button>`}</div>${L.length?ft:""}</div>`+secE()}
@@ -1998,7 +2009,7 @@ document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest
  else if(D.vp!==undefined)vsPick(D.vp);
  else if(D.vga){const i=document.getElementById("vgn"),n=i?i.value.trim():"";if(!n)return;VG="";if(i)i.blur();vsPick(n)}
  else if(D.vcl){const y=vSeat(VS.c,VS.s);vAssign(VS.c,VS.s,VS.w,"");if(y.sp){vsUpd(true)}else vsClose();render()}});
-document.addEventListener("change",e=>{const t=e.target;if(t&&t.classList&&t.classList.contains("vi-g")){viName(vCid(),t.dataset.vig,+t.dataset.i,t.value);t.classList.toggle("f",!!t.value.trim())}else if(t&&t.dataset&&t.dataset.vot!==undefined){if(voSet(vCid(),t.dataset.vot,{t:t.value}))VOR=true}else if(t&&t.dataset&&t.dataset.vop!==undefined){voSet(vCid(),t.dataset.vop,{p:t.value})}});
+document.addEventListener("change",e=>{const t=e.target;if(t&&t.classList&&t.classList.contains("vi-g")){viName(vCid(),t.dataset.vig,+t.dataset.i,t.value);t.classList.toggle("f",!!t.value.trim());if(t.parentNode)t.parentNode.classList.toggle("f",!!t.value.trim())}else if(t&&t.dataset&&t.dataset.vot!==undefined){if(voSet(vCid(),t.dataset.vot,{t:t.value}))VOR=true}else if(t&&t.dataset&&t.dataset.vop!==undefined){voSet(vCid(),t.dataset.vop,{p:t.value})}});
 document.addEventListener("focusout",e=>{const t=e.target;if(VOR&&t&&t.dataset&&t.dataset.vot!==undefined){VOR=false;setTimeout(()=>{if(!(document.activeElement&&document.activeElement.dataset&&document.activeElement.dataset.vot!==undefined))render()},60)}});
 document.addEventListener("input",e=>{if(e.target&&e.target.id==="vgn"){VG=e.target.value;const b=document.querySelector("#vsh [data-vga]");if(b)b.disabled=!VG.trim()}});
 (function(){const vv=window.visualViewport;if(!vv)return;
@@ -2006,6 +2017,7 @@ document.addEventListener("input",e=>{if(e.target&&e.target.id==="vgn"){VG=e.tar
  window.vnKbSync=sync;vv.addEventListener("resize",sync);vv.addEventListener("scroll",sync);
  document.addEventListener("focusin",e=>{if(e.target&&e.target.id==="vgn")[80,300,600,1000].forEach(t=>setTimeout(()=>{sync();const b=document.querySelector("#vsh .vn-bd");if(b)b.scrollTop=b.scrollHeight},t))});
  document.addEventListener("focusout",e=>{if(e.target&&e.target.id==="vgn")setTimeout(sync,300)})})();
+document.addEventListener("input",e=>{const t=e.target;if(t&&t.dataset&&t.dataset.vot!==undefined&&t.parentNode){const v=t.previousElementSibling;if(v)v.textContent=t.value||"––:––";t.parentNode.classList.toggle("e",!t.value)}});
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.classList&&(e.target.classList.contains("vi-g")||e.target.classList.contains("vo-p"))){e.preventDefault();e.target.blur();return}if(e.key==="Escape"&&VS)vsClose();if(e.key==="Enter"&&e.target&&e.target.id==="vgn"){e.preventDefault();const n=e.target.value.trim();if(n){VG="";vsPick(n)}}});
 var popQ=null;
 function popRec(t){try{const d=t.dataset;const ks=Object.keys(d);if(!ks.length||!t.parentElement)return;if(!(t.matches("button.p")||/^(sa|sd|kr|d|gu|oq)$/.test(ks[0])||t.closest(".st,.gm")))return;popQ=ks.map(k=>"[data-"+k.replace(/[A-Z]/g,m=>"-"+m.toLowerCase())+'="'+String(d[k]).replace(/(["\\])/g,"\\$1")+'"]').join("")}catch(e){popQ=null}}
@@ -2089,7 +2101,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261120b",NEWS=["Añubeta: igarotako kontzertuak apalago ageri dira (txipak eta «Pasatua» etiketa)"]; 
+var BUILD="20261120c",NEWS=["Ordutegia eta gonbidapenak: diseinu txikiagoa eta zehatzagoa, testuak zentratuta"]; 
 var updShown=false;
 function showUpd(nv){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button><div class="updv" id="updv">'+(nv?"Bertsio berria: "+E(nv):"")+'</div></div>';document.body.appendChild(o);if(!nv){fetch("index.html?v="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{const m=/var BUILD="([^"]+)"/.exec(t),u=document.getElementById("updv");if(m&&u)u.textContent="Bertsio berria: "+m[1]}).catch(()=>{})}const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd(m[1])}catch(e){}}
