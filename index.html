@@ -1048,6 +1048,8 @@ html:root[data-theme] .vo .vo-t:focus,html:root[data-theme] .vo .vo-p:focus{bord
 .vo-ad{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .vo-a{height:34px;border-radius:999px;border:1.5px dashed var(--bd);background:transparent;color:var(--ac);padding:0 14px;font-weight:700;font-size:13px}
 .vo-ls+.vo-ad{margin-top:12px}
+.chip.past:not(.on){opacity:.5}.chip.past.on{opacity:.85}
+.vn-past{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:999px;border:1px solid var(--bd);font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;vertical-align:1px}
 
 .vn-sw{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;font-weight:600;font-size:13.5px}
 .vn-tg{position:relative;flex:none;width:52px;height:32px;border-radius:999px;border:0;background:var(--bd);transition:background .25s;padding:0}
@@ -1832,6 +1834,7 @@ var VCUR=null,VS=null,VG="";
 const VSE=["a1","a2","a3","b1","b2","b3","c1","c2","c3"],VPOS=["ezkerrean","erdian","eskuinean"],VLG={b:"joan-etorria",i:"joan",v:"etorri"};
 const vLbl=s=>{const r=VSE.indexOf(s);return (Math.floor(r/3)+1)+". ilara, "+VPOS[r%3]+(s==="a1"?" (gidaria)":"")};
 function vCid(){if(VCUR&&S.c[VCUR]&&!isAr(VCUR))return VCUR;if(S.c[cur]&&!isAr(cur))return cur;return nextConc(Object.keys(S.c).filter(c=>!isAr(c)))}
+function vPast(c){const d=S.c[c]&&S.c[c].d;if(!d)return false;const n=new Date(),t=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");return d<t}
 function vOn(c){const x=(S.m||{})["va_"+c+"_cfg"];return !(x&&x.off)}
 function vSeat(c,s){const x=(S.m||{})["va_"+c+"_"+s];if(!x||x.c!==c)return{i:"",v:"",sp:false};const i=x.i||"",v=x.v||"";return x.sp?{i,v,sp:true}:{i:i||v,v:i||v,sp:false}}
 const vBy=()=>((myName()||"").trim())||"Norbait";
@@ -1950,8 +1953,8 @@ function voCard(c){const L=voList(c),n=L.filter(x=>x.t||x.p).length,hv=L.some(x=
 function vanTab(){let h=hdr("Añubeta");const act=cOrd().filter(c=>!isAr(c)),c=vCid();
  if(!act.length||!c)return h+`<div class="card"><span class="mu">Oraindik ez dago kontzerturik. Editoreek sor dezakete «Kontzertua» atalean.</span></div>`;
  const d=S.c[c],on=vOn(c);
- h+=`<div class="chips">${act.map(k=>`<button class="chip ${k===c?"on":""}" data-vc="${E(k)}">${E(S.c[k].n)}</button>`).join("")}</div>`;
- h+=`<div class="card"><div class="mh"><b>${E(d.n)}</b><span class="mu">${E(d.d||"")}${d.p?" · "+E(d.p):""}</span></div><div class="vn-sw"><span>Furgoneta erabiltzen da</span><button class="vn-tg${on?" on":""}" role="switch" aria-checked="${on}" aria-label="Furgoneta erabiltzen da" data-von="${on?0:1}"><i></i></button></div>${on?"":`<span class="mu" style="display:block;margin-top:8px;font-size:12px">Kontzertu honetarako ez da furgonetarik erabiliko.</span>`}</div>`;
+ h+=`<div class="chips">${act.map(k=>`<button class="chip ${k===c?"on":""}${vPast(k)?" past":""}" data-vc="${E(k)}">${E(S.c[k].n)}</button>`).join("")}</div>`;
+ h+=`<div class="card"><div class="mh"><b>${E(d.n)}</b><span class="mu">${E(d.d||"")}${d.p?" · "+E(d.p):""}${vPast(c)?`<span class="vn-past">Pasatua</span>`:""}</span></div><div class="vn-sw"><span>Furgoneta erabiltzen da</span><button class="vn-tg${on?" on":""}" role="switch" aria-checked="${on}" aria-label="Furgoneta erabiltzen da" data-von="${on?0:1}"><i></i></button></div>${on?"":`<span class="mu" style="display:block;margin-top:8px;font-size:12px">Kontzertu honetarako ez da furgonetarik erabiliko.</span>`}</div>`;
  if(on){const sI=new Set(),sV=new Set();VSE.forEach(s=>{const x=vSeat(c,s);if(x.i)sI.add(x.i);if(x.v)sV.add(x.v)});
   const pe=vPeople(),mi=pe.filter(n=>!sI.has(n)&&!sV.has(n));h+=vSum(c)+vVan(c);
   if(pe.length){
@@ -2086,7 +2089,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261120a",NEWS=["Añubeta: ordutegia gehitu daiteke (geldialdiak eta kontzertuko ordua); plegatuta dago eta denek alda dezakete"]; 
+var BUILD="20261120b",NEWS=["Añubeta: igarotako kontzertuak apalago ageri dira (txipak eta «Pasatua» etiketa)"]; 
 var updShown=false;
 function showUpd(nv){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button><div class="updv" id="updv">'+(nv?"Bertsio berria: "+E(nv):"")+'</div></div>';document.body.appendChild(o);if(!nv){fetch("index.html?v="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{const m=/var BUILD="([^"]+)"/.exec(t),u=document.getElementById("updv");if(m&&u)u.textContent="Bertsio berria: "+m[1]}).catch(()=>{})}const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd(m[1])}catch(e){}}
