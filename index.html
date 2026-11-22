@@ -90,7 +90,6 @@ nav button.on .nl{font-size:11.5px;margin-left:4px;max-width:100px}
 .kpb b em{font-style:normal;font-size:12px;color:var(--mu);font-weight:500}
 .btn.kadd{width:100%;background:transparent!important;color:var(--ac)!important;border:1.5px dashed var(--bd);box-shadow:none!important;margin:2px 0 12px}
 .btn.alt{background:var(--ac2)!important;color:var(--ac)!important}
-.kroute{display:flex;align-items:center;gap:8px}.kroute input{flex:1;min-width:0}.kroute span{color:var(--mu)}
 label.chk{display:flex;align-items:center;gap:8px;font-size:13px}label.chk input{width:auto}
 .kmap{position:relative;height:250px;border-radius:18px;overflow:hidden;background:var(--ac2);border:1px solid var(--bd);box-shadow:0 8px 24px rgba(0,0,0,.12);touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
 .kmap.gr{cursor:grabbing}
@@ -159,10 +158,15 @@ label.chk{display:flex;align-items:center;gap:8px;font-size:13px}label.chk input
 .kcg button{height:38px;border:0;border-radius:10px;background:none;color:var(--tx);font-size:14px}
 .kcg button.td{box-shadow:inset 0 0 0 1.5px var(--ac)}
 .kcg button.on{background:var(--hd);color:#fff;font-weight:600}
-.kroute{display:grid;grid-template-columns:1fr auto;gap:8px 8px;align-items:start}
-.kroute .kfld:nth-child(1){grid-column:1;grid-row:1}.kroute .kswap{grid-column:2;grid-row:1/3;align-self:center}.kroute .kfld:nth-child(3){grid-column:1;grid-row:2}
 .kfld input{width:100%;box-sizing:border-box}
-.ksg{margin-top:6px;border:1px solid var(--bd);border-radius:12px;background:var(--card);overflow:hidden}
+.ksg{margin-top:6px;border:1px solid var(--bd);border-radius:12px;background:var(--card);max-height:min(42vh,252px);overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.kstops{display:grid;gap:10px}
+.kst{position:relative;display:grid;grid-template-columns:28px minmax(0,1fr) 34px;gap:0 8px;align-items:start}
+.kst:not(:last-child)::before{content:"";position:absolute;left:13px;top:38px;bottom:-8px;width:2px;border-radius:2px;background:repeating-linear-gradient(var(--bd) 0 4px,transparent 4px 8px)}
+.kpn{position:relative;z-index:1;width:28px;height:28px;margin-top:9px;border-radius:50%;background:var(--gd);color:#fff;font-size:13px;font-weight:800;display:grid;place-items:center;box-shadow:0 0 0 3px var(--card)}
+.kpn.a{background:#1f8a5b}.kpn.z{background:#c9648f}
+.kx{width:34px;height:34px;margin-top:6px;border:0;border-radius:50%;background:transparent;color:var(--mu);font-size:21px;line-height:1;padding:0;display:grid;place-items:center}.kx:active{background:var(--ac2)}
+.kstb{display:flex;gap:8px;flex-wrap:wrap;padding-left:36px}
 .ksg[hidden]{display:none}
 .ksg button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;text-align:left;border:0;background:none;padding:9px 12px;color:var(--tx);font-size:14px}
 .ksg button+button{border-top:1px solid var(--bd)}
@@ -1068,8 +1072,6 @@ html:root[data-theme] .vo .vo-p::placeholder{color:var(--mu);opacity:.7;font-wei
 .vn-tg.on{background:var(--ok)}.vn-tg.on i{transform:translateX(20px)}
 .vn-un .r{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px}
 .vn-c{display:inline-flex;align-items:center;gap:5px;padding:3px 10px 3px 4px;border-radius:999px;background:var(--ac2);font-size:12px;font-weight:600}.vn-c .av.s{width:20px;height:20px}.vn-c .av.s.i{font-size:10px}
-.vn-hl{display:grid}.vn-hr{display:grid;grid-template-columns:78px 1fr;gap:8px;padding:9px 2px;border-bottom:1px solid var(--bd);font-size:13px}.vn-hr:last-child{border-bottom:0}
-.vn-ht{color:var(--mu);font-size:11.5px;font-variant-numeric:tabular-nums;padding-top:1px}.vn-hr small{display:block;color:var(--mu);font-size:11px;margin-top:1px}
 .vn-sh{position:fixed;inset:0;z-index:1100;display:flex;align-items:flex-end;justify-content:center}
 .vn-bk{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .3s ease}.vn-sh.on .vn-bk{opacity:1}
 .vn-pn{position:relative;display:flex;flex-direction:column;width:100%;max-width:520px;max-height:88%;overflow:hidden;background:var(--card);color:var(--tx);border-radius:24px 24px 0 0;padding:8px 16px 0;transform:translateY(100%);transition:transform .38s cubic-bezier(.32,.72,0,1);box-shadow:0 -12px 40px rgba(0,0,0,.35)}.vn-sh.on .vn-pn{transform:none}
@@ -1239,12 +1241,14 @@ document.addEventListener("click",async e=>{const t=e.target.closest("button");i
  else if(D.kcm){const c=(KF.calM||(KF.kk_d||kToday()).slice(0,7)).split("-").map(Number),d=new Date(c[0],c[1]-1+(+D.kcm),1);KF.calM=d.getFullYear()+"-"+kPad(d.getMonth()+1);render()}
  else if(D.kwho){KF.kk_m=D.kwho;render()}
  else if(D.krt!==undefined){KF.kk_rt=D.krt==="1";kmRt();render()}
- else if(D.kswap){const t=[KF.kk_a,KF.pa];KF.kk_a=KF.kk_z;KF.pa=KF.pz;KF.kk_z=t[0];KF.pz=t[1];KF.res=null;KF.map=null;render();kmAuto()}
+ else if(D.kswap){const ks=kmKeys(),v=ks.map(w=>[KF["kk_"+w],KF["p"+w]]).reverse();ks.forEach((w,i)=>{KF["kk_"+w]=v[i][0];KF["p"+w]=v[i][1]});KF.res=null;KF.map=null;KSG={a:[],z:[]};render();kmAuto()}
+ else if(D.ksa){const n=KF.ns||0;if(n>=6)return;KF.ns=n+1;render();const e=$("#kk_s"+n);if(e)e.focus()}
+ else if(D.ksx!==undefined){const i=+D.ksx,n=KF.ns||0;if(!(i>=0&&i<n))return;const had=(KF["kk_s"+i]||"").trim();for(let j=i;j<n-1;j++){KF["kk_s"+j]=KF["kk_s"+(j+1)];KF["ps"+j]=KF["ps"+(j+1)]}delete KF["kk_s"+(n-1)];delete KF["ps"+(n-1)];KF.ns=n-1;KSG={a:[],z:[]};if(had&&KF.res){KF.res=null;KF.map=null;KF.kk_k=""}render();if(had)kmAuto()}
  else if(D.kedit){kmEd=kmEd===D.kedit?null:D.kedit;kmArm=null;render()}
  else if(D.ksave){if(!isEd())return;const id=D.ksave,x=(S.m||{})[id],n=(($("#kn")||{}).value||"").trim();if(!x||!n)return;kmBlur();kmSet(id,{...x,n,h:((($("#kh")||{}).value)||"").trim(),ic:((($("#ki")||{}).value)||"").trim(),d:num(($("#kd")||{}).value),t:num(($("#kt")||{}).value)});kmEd=null}
  else if(D.kdel){if(!isEd())return;if(kmArm!==D.kdel){kmArm=D.kdel;render();return}const id=D.kdel;kmArm=null;if(kmData().trips.some(t=>t.m===id)){kmMsg="Kide honek bidaiak ditu; ezabatu lehenengo bidaia horiek.";render();return}kmMsg="";kmEd=null;kmDel(id)}
  else if(D.kpd){const k=D.kpd;kmPD[k]=!kmPD[k];const sb=t.nextElementSibling;if(sb)fxSec(sb,!!kmPD[k]);t.setAttribute("aria-expanded",!!kmPD[k]);const ic=t.querySelector("i");if(ic)ic.textContent=kmPD[k]?"▾":"▸"}
- else if(D.kte){const x=(S.m||{})[D.kte]||{};kmTE=kmTE===D.kte?null:D.kte;kmArm=null;KTD={d:x.d||kToday(),m:x.m,k:String(x.km||0).replace(".",","),b:String(x.t||0).replace(".",","),o:x.o||"",open:false,calM:null};render()}
+ else if(D.kte){const x=(S.m||{})[D.kte]||{};const pp=D.ktp==="1";kmTE=(kmTE===D.kte&&kmTEP===pp)?null:D.kte;kmTEP=pp;kmArm=null;KTD={d:x.d||kToday(),m:x.m,k:String(x.km||0).replace(".",","),b:String(x.t||0).replace(".",","),o:x.o||"",open:false,calM:null};render()}
  else if(D.ktdate){ktCap();KTD.open=!KTD.open;render()}
  else if(D.ktday){ktCap();KTD.d=D.ktday;KTD.open=false;render()}
  else if(D.ktcm){ktCap();const c=(KTD.calM||(KTD.d||kToday()).slice(0,7)).split("-").map(Number),d=new Date(c[0],c[1]-1+(+D.ktcm),1);KTD.calM=d.getFullYear()+"-"+kPad(d.getMonth()+1);render()}
@@ -1462,7 +1466,7 @@ const ke=x=>(Math.round(x*100)/100).toLocaleString("es-ES",{minimumFractionDigit
 const fmtv=(v,f)=>f==="eur"?eur(v):f==="km"?kmf(v):f==="ke"?ke(v):String(Math.round(v));
 const kc=(v,f)=>`<b data-count="${v}" data-fmt="${f}">${fmtv(v,f)}</b>`;
 const kmRe=/^(k(cfg|mem_|trip_|settle_)|v[ahio]_)/;
-var KTD={},kmPD={},kmTE=null,kmEd=null,kmArm=null,kmMsg="",kmAddM=false,kmAddT=false,kmPrOpen=false;
+var KTD={},kmPD={},kmTE=null,kmTEP=false,kmEd=null,kmArm=null,kmMsg="",kmAddM=false,kmAddT=false,kmPrOpen=false;
 const num=v=>{const n=parseFloat(String(v==null?"":v).replace(",","."));return isNaN(n)?0:n};
 const kmf=n=>(Math.round(n*10)/10).toLocaleString("es-ES",{minimumFractionDigits:0,maximumFractionDigits:1})+" km";
 function kmData(){const m=S.m||{},price=m.kcfg&&m.kcfg.price!=null?m.kcfg.price:0.19;
@@ -1546,19 +1550,27 @@ function whoSet(){const v=vw(),r=v?whoRow():whoRow2();return `<div class="card w
 /* zoom-a itzuli baldin bada */
 function noZoom(){}
 document.addEventListener("focusout",()=>setTimeout(noZoom,120));addEventListener("orientationchange",()=>setTimeout(noZoom,300));
-function ktCap(){const g=i=>{const e=document.getElementById(i);return e?e.value:undefined};const m=g("te_m"),k=g("te_k"),b=g("te_b"),o=g("te_o");if(m!==undefined)KTD.m=m;if(k!==undefined)KTD.k=k;if(b!==undefined)KTD.b=b;if(o!==undefined)KTD.o=o}
+function ktCap(){const rt=document.querySelector(".tef")||document,g=i=>{const e=rt.querySelector("#"+i);return e?e.value:undefined};const m=g("te_m"),k=g("te_k"),b=g("te_b"),o=g("te_o");if(m!==undefined)KTD.m=m;if(k!==undefined)KTD.k=k;if(b!==undefined)KTD.b=b;if(o!==undefined)KTD.o=o}
 function kcalHTML(T){const iso=T?(T.d||kToday()):(KF.kk_d||kToday()),cm=((T?T.calM:KF.calM)||iso.slice(0,7)).split("-").map(Number),y=cm[0],m=cm[1],off=(new Date(y,m-1,1).getDay()+6)%7,nd=new Date(y,m,0).getDate(),td=kToday();let c="";for(let i=0;i<off;i++)c+="<i></i>";
  for(let d=1;d<=nd;d++){const id=y+"-"+kPad(m)+"-"+kPad(d);c+=`<button ${T?"data-ktday":"data-kday"}="${id}" class="${id===iso?"on":""}${id===td?" td":""}">${d}</button>`}
  return `<div class="kcal"><div class="kch"><button ${T?"data-ktcm":"data-kcm"}="-1" aria-label="Aurreko hilabetea">‹</button><b>${KMON[m-1]} ${y}</b><button ${T?"data-ktcm":"data-kcm"}="1" aria-label="Hurrengo hilabetea">›</button></div><div class="kcg">${KWD.map(w=>`<span>${w}</span>`).join("")}${c}</div></div>`}
-document.addEventListener("input",e=>{const t=e.target;if(!t||!t.id||t.id.indexOf("kk_")!==0)return;KF[t.id]=t.type==="checkbox"?t.checked:t.value;if(t.id==="kk_a"||t.id==="kk_z"){const w=t.id.slice(3);KF["p"+w]=null;if(KF.res){KF.res=null;KF.map=null;KF.kk_k="";const k=$("#kk_k");if(k)k.value="";const m=$("#kk_map");if(m)m.hidden=true;kkInfo()}kmSugs(w)}});
+const KRI=/^kk_(a|z|s\d+)$/,kmKeys=()=>{const k=["a"];for(let i=0;i<(KF.ns||0);i++)k.push("s"+i);k.push("z");return k},KLT=i=>String.fromCharCode(65+i);
+document.addEventListener("input",e=>{if(e.target&&/^te_/.test(e.target.id))ktCap()});
+document.addEventListener("input",e=>{const t=e.target;if(!t||!t.id||t.id.indexOf("kk_")!==0)return;KF[t.id]=t.type==="checkbox"?t.checked:t.value;if(KRI.test(t.id)){const w=t.id.slice(3);KF["p"+w]=null;if(KF.res){KF.res=null;KF.map=null;KF.kk_k="";const k=$("#kk_k");if(k)k.value="";const m=$("#kk_map");if(m)m.hidden=true;kkInfo()}kmSugs(w)}});
 document.addEventListener("change",e=>{const t=e.target;if(t&&t.id&&t.id.indexOf("kk_")===0)KF[t.id]=t.type==="checkbox"?t.checked:t.value});
-document.addEventListener("focusin",e=>{const t=e.target;if(t&&(t.id==="kk_a"||t.id==="kk_z"))kmSugs(t.id.slice(3))});
-document.addEventListener("focusout",e=>{const t=e.target;if(t&&(t.id==="kk_a"||t.id==="kk_z"))setTimeout(()=>{const g=$("#kk_sg_"+t.id.slice(3));if(g)g.hidden=true},180)});
-document.addEventListener("keydown",e=>{const t=e.target;if(e.key!=="Enter"||!t||(t.id!=="kk_a"&&t.id!=="kk_z"))return;e.preventDefault();const w=t.id.slice(3),g=$("#kk_sg_"+w);
- if(!KF["p"+w]&&g&&!g.hidden&&KSG[w].length){kmPick(w,0);return}
- if(w==="a"){const z=$("#kk_z");if(z)z.focus()}else{t.blur();kmCalc()}});
-function kmSgHide(e){const b=e.target.closest&&e.target.closest("[data-sg]");if(!b)return;e.preventDefault();if(e.type==="pointerdown"){const q=b.dataset.sg.split("|");kmPick(q[0],+q[1])}}
-document.addEventListener("pointerdown",kmSgHide,true);document.addEventListener("mousedown",kmSgHide,true);
+document.addEventListener("focusin",e=>{const t=e.target;if(t&&KRI.test(t.id))kmSugs(t.id.slice(3))});
+/* iradokizunen zerrenda: ukitu eta arrastatzean ez da ezer aukeratzen (scroll egin daiteke); ukitu eta askatzean (click) bakarrik aukeratzen da */
+var KPD=false,KSGU=0,KSGT=0;
+document.addEventListener("pointerdown",e=>{KPD=true;if(e.target.closest&&e.target.closest(".ksg"))KSGT=Date.now()},true);
+const kpUp=()=>{KPD=false;KSGU=Date.now()};document.addEventListener("pointerup",kpUp,true);document.addEventListener("pointercancel",kpUp,true);
+function ksgHide(w){const g=$("#kk_sg_"+w);if(!g||g.hidden)return;if(KPD||Date.now()-KSGU<400){setTimeout(()=>ksgHide(w),200);return}const i=$("#kk_"+w);if(i&&document.activeElement===i)return;if(Date.now()-KSGT<8000)return;g.hidden=true}
+document.addEventListener("click",e=>{if(e.target.closest&&(e.target.closest(".kfld")||e.target.closest("[data-sg]")))return;document.querySelectorAll(".ksg:not([hidden])").forEach(g=>{g.hidden=true})},true);
+document.addEventListener("focusout",e=>{const t=e.target;if(t&&KRI.test(t.id)){const w=t.id.slice(3);setTimeout(()=>ksgHide(w),180)}});
+document.addEventListener("keydown",e=>{const t=e.target;if(e.key!=="Enter"||!t||!KRI.test(t.id))return;e.preventDefault();const w=t.id.slice(3),g=$("#kk_sg_"+w);
+ if(!KF["p"+w]&&g&&!g.hidden&&(KSG[w]||[]).length){kmPick(w,0);return}
+ const ks=kmKeys(),nx=ks[ks.indexOf(w)+1];if(nx){const z=$("#kk_"+nx);if(z)z.focus()}else{t.blur();kmCalc()}});
+document.addEventListener("mousedown",e=>{if(e.target.closest&&e.target.closest("[data-sg]"))e.preventDefault()},true);
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-sg]");if(!b)return;e.preventDefault();const q=b.dataset.sg.split("|");kmPick(q[0],+q[1])});
 var KSG={a:[],z:[]},ksgT={},ksgC={},kcSeq=0,kcT=null;
 const KRANK={city:0,town:0,village:0,hamlet:0,suburb:1,municipality:0,administrative:0,locality:1,neighbourhood:1,county:1,state:1,island:1};
 function kmCoord(t){t=String(t||"");let m=t.match(/@(-?\d{1,3}\.\d+),(-?\d{1,3}\.\d+)/)||t.match(/!3d(-?\d{1,3}\.\d+)!4d(-?\d{1,3}\.\d+)/)||t.match(/[?&](?:q|ll|query|destination)=(-?\d{1,3}\.\d+)(?:,|%2C)\s*(-?\d{1,3}\.\d+)/);
@@ -1574,31 +1586,32 @@ function kmSugs(w){const inp=$("#kk_"+w);if(!inp)return;const v=inp.value||"",lv
  const homes=kmData().mem.filter(x=>x.h&&(!lv||(x.n+" etxea").toLowerCase().includes(lv)||x.h.toLowerCase().includes(lv))).map(x=>({home:1,label:x.n+" · etxea",sub:x.h}));
  const cc=kmCoord(v);if(cc){showSg(w,[{n:cc.n,sub:"Koordenatuak",lat:cc.lat,lon:cc.lon,rk:0,coord:1}]);return}
  showSg(w,homes);if(lv.length<3)return;
- ksgT[w]=setTimeout(async()=>{try{const L=await kmSug(v);if((($("#kk_"+w)||{}).value||"")!==v)return;showSg(w,homes.concat(L))}catch(e){}},300)}
-function kmPick(w,i){const it=KSG[w][i];if(!it)return;const inp=$("#kk_"+w);const lbl=it.home?it.label:(it.sub&&!it.coord?it.n+", "+it.sub.split(", ")[0]:it.n);KF["kk_"+w]=lbl;KF["p"+w]=it.home?null:{lat:it.lat,lon:it.lon,n:it.n};if(inp)inp.value=lbl;const g=$("#kk_sg_"+w);if(g)g.hidden=true;
- if(w==="a"){const z=$("#kk_z");if(z&&!z.value)z.focus();else kmAuto()}else{if(inp)inp.blur();kmAuto()}}
+ ksgT[w]=setTimeout(async()=>{try{const L=await kmSug(v);const i2=$("#kk_"+w);if(((i2||{}).value||"")!==v||document.activeElement!==i2)return;showSg(w,homes.concat(L))}catch(e){}},300)}
+function kmPick(w,i){const it=(KSG[w]||[])[i];if(!it)return;const inp=$("#kk_"+w);const lbl=it.home?it.label:(it.sub&&!it.coord?it.n+", "+it.sub.split(", ")[0]:it.n);KF["kk_"+w]=lbl;KF["p"+w]=it.home?null:{lat:it.lat,lon:it.lon,n:it.n};if(inp)inp.value=lbl;const g=$("#kk_sg_"+w);if(g)g.hidden=true;
+ const ks=kmKeys().slice(kmKeys().indexOf(w)+1).filter(k=>!($("#kk_"+k)||{}).value);if(ks.length){const z=$("#kk_"+ks[0]);if(z)z.focus()}else{if(inp)inp.blur();kmAuto()}}
 function kmAuto(){clearTimeout(kcT);kcT=setTimeout(()=>{if((KF.kk_a||"").trim()&&(KF.kk_z||"").trim())kmCalc()},250)}
-function kkInfoHTML(){if(KF.res){const rt=KF.kk_rt!==false,tot=Math.round(KF.res.one*(rt?2:1)*10)/10;return `<div class="kres"><b>${kmf(tot)}</b><span>${rt?"joan-etorria":"joan bakarrik"}</span></div>`}
+const kmTot=()=>{const r=KF.res;if(!r)return 0;const rt=KF.kk_rt!==false;return Math.round((rt?r.one+(r.back!=null?r.back:r.one):r.one)*10)/10};
+function kkInfoHTML(){if(KF.res){const rt=KF.kk_rt!==false,tot=kmTot(),L=(KF.res.ls||[]).slice();if(L.length>2&&rt)L.push(L[0]);return `<div class="kres"><b>${kmf(tot)}</b><span>${rt?"joan-etorria":"joan bakarrik"}${L.length>2?" · "+L.join("→"):""}</span></div>`}
  return `<div class="mu kst">${E(KF.st||"Aukeratu nondik eta nora: kilometroak automatikoki kalkulatuko dira.")}</div>`}
 function kkInfo(){const e=$("#kk_info");if(e)e.innerHTML=kkInfoHTML()}
-function kmRt(){if(!KF.res)return;const rt=KF.kk_rt!==false,tot=Math.round(KF.res.one*(rt?2:1)*10)/10;KF.kk_k=String(tot).replace(".",",");const k=$("#kk_k");if(k)k.value=KF.kk_k;kkInfo()}
+function kmRt(){if(!KF.res)return;const tot=kmTot();KF.kk_k=String(tot).replace(".",",");const k=$("#kk_k");if(k)k.value=KF.kk_k;kkInfo()}
 function kmPl(t){t=(t||"").trim();const m=kmData().mem.find(x=>x.h&&t.toLowerCase()===(x.n+" · etxea").toLowerCase());return m?m.h:t}
 function kmDark(){const t=document.documentElement.getAttribute("data-theme");return t?t==="dark":matchMedia("(prefers-color-scheme: dark)").matches}
-function kmMap(el,pts,A,Z){if(!el||!pts||pts.length<2)return;
+function kmMap(el,pts,A,Z,pins){if(!el||!pts||pts.length<2)return;
  if(el._ac)el._ac.abort();const ac=el._ac=new AbortController(),sg={signal:ac.signal};
  el.hidden=false;const W=el.clientWidth||340,H=el.clientHeight||250,MN=3,MX=18,
- mx=lo=>(lo+180)/360,my=la=>{const q=Math.sin(la*Math.PI/180);return .5-Math.log((1+q)/(1-q))/(4*Math.PI)},U=pts.map(p=>[mx(p[0]),my(p[1])]);
- let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;U.forEach(p=>{x0=Math.min(x0,p[0]);x1=Math.max(x1,p[0]);y0=Math.min(y0,p[1]);y1=Math.max(y1,p[1])});
+ mx=lo=>(lo+180)/360,my=la=>{const q=Math.sin(la*Math.PI/180);return .5-Math.log((1+q)/(1-q))/(4*Math.PI)},U=pts.map(p=>[mx(p[0]),my(p[1])]),PQ=pins&&pins.length>1?pins:[pts[0],pts[pts.length-1]],PU=PQ.map(p=>[mx(p[0]),my(p[1])]);
+ let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;U.concat(PU).forEach(p=>{x0=Math.min(x0,p[0]);x1=Math.max(x1,p[0]);y0=Math.min(y0,p[1]);y1=Math.max(y1,p[1])});
  let z=16;for(;z>MN;z--){const n=256*2**z;if((x1-x0)*n<=W-90&&(y1-y0)*n<=H-110)break}
- const home={z,cx:(x0+x1)/2,cy:(y0+y1)/2+14/(256*2**z)},key=pts.length+"|"+pts[0]+"|"+A+"|"+Z,keep=KF.mvk===key&&KF.mv;
+ const home={z,cx:(x0+x1)/2,cy:(y0+y1)/2+14/(256*2**z)},key=pts.length+"|"+pts[0]+"|"+A+"|"+Z+"|"+PQ.length,keep=KF.mvk===key&&KF.mv;
  let M=keep?{...KF.mv}:{...home},cur=null,first=!keep;KF.mvk=key;
  el.classList.toggle("dk",kmDark());
  el.innerHTML=`<span class="kmb">🚗 ${kmf(KF.res?KF.res.one:0)}</span><div class="kzc"><button type="button" data-kmz="1" aria-label="Zoom +">＋</button><button type="button" data-kmz="-1" aria-label="Zoom −">－</button><button type="button" data-kmz="0" aria-label="Dena ikusi">⌖</button></div><button type="button" class="kml a" data-kmf="0"><i style="background:#1f8a5b"></i>${E(A)}</button><button type="button" class="kml z" data-kmf="1"><i style="background:#c9648f"></i>${E(Z)}</button><em class="kma">© OpenStreetMap</em>`;
  const pin=(p,c,l,f)=>`<g transform="translate(${p[0].toFixed(1)},${p[1].toFixed(1)})"><g class="${f?"pin":"pn"}"><path d="M0 0C-9-11-15-17-15-25a15 15 0 1 1 30 0C15-17 9-11 0 0z" fill="${c}" stroke="#fff" stroke-width="2.5"/><text y="-19.5" text-anchor="middle" font-size="14" font-weight="800" fill="#fff" font-family="system-ui,sans-serif">${l}</text></g></g>`;
  const mk=()=>{const n=256*2**M.z,ox=M.cx*n-W/2,oy=M.cy*n-H/2,T=2**M.z;let im="";
   for(let tx=Math.floor((ox-256)/256);tx<=Math.floor((ox+W+256)/256);tx++)for(let ty=Math.floor((oy-256)/256);ty<=Math.floor((oy+H+256)/256);ty++){if(ty<0||ty>=T)continue;const wx=((tx%T)+T)%T;im+=`<img alt="" draggable="false" src="https://${"abc"[(tx+ty+9)%3]}.tile.openstreetmap.org/${M.z}/${wx}/${ty}.png" style="left:${Math.round(tx*256-ox)}px;top:${Math.round(ty*256-oy)}px">`}
-  const XY=U.map(q=>[q[0]*n-ox,q[1]*n-oy]),P=XY.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" "),a=XY[0],b=XY[XY.length-1],d=document.createElement("div");d.className="kly";
-  d.innerHTML=im+`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="kgr${first?1:2}" gradientUnits="userSpaceOnUse" x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}"><stop offset="0" stop-color="#1f8a5b"/><stop offset="1" stop-color="#c9648f"/></linearGradient></defs><polyline points="${P}" fill="none" stroke="${kmDark()?"#0b1a22":"#fff"}" stroke-opacity=".9" stroke-width="10" stroke-linejoin="round" stroke-linecap="round"/><polyline ${first?'class="rt" pathLength="1" ':""}points="${P}" fill="none" stroke="url(#kgr${first?1:2})" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round"/>${pin(a,"#1f8a5b","A",first)}${pin(b,"#c9648f","B",first)}</svg>`;return d};
+  const XY=U.map(q=>[q[0]*n-ox,q[1]*n-oy]),PX=PU.map(q=>[q[0]*n-ox,q[1]*n-oy]),P=XY.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" "),a=XY[0],b=XY[XY.length-1],d=document.createElement("div");d.className="kly";
+  d.innerHTML=im+`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="kgr${first?1:2}" gradientUnits="userSpaceOnUse" x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}"><stop offset="0" stop-color="#1f8a5b"/><stop offset="1" stop-color="#c9648f"/></linearGradient></defs><polyline points="${P}" fill="none" stroke="${kmDark()?"#0b1a22":"#fff"}" stroke-opacity=".9" stroke-width="10" stroke-linejoin="round" stroke-linecap="round"/><polyline ${first?'class="rt" pathLength="1" ':""}points="${P}" fill="none" stroke="url(#kgr${first?1:2})" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round"/>${PX.map((q,i)=>pin(q,i===0?"#1f8a5b":i===PX.length-1?"#c9648f":"#d9a441",E(PQ[i][2]||KLT(i)),first)).join("")}</svg>`;return d};
  const sync=()=>{const u=el.querySelector('[data-kmz="1"]'),d=el.querySelector('[data-kmz="-1"]');if(u)u.disabled=M.z>=MX;if(d)d.disabled=M.z<=MN};
  const swap=fade=>{el.querySelectorAll(".kly").forEach(o=>{if(o!==cur)o.remove()});const old=cur,nl=mk();el.prepend(nl);cur=nl;first=false;KF.mv={...M};sync();
   if(old){let done=false;const fin=()=>{if(done)return;done=true;if(fade&&old.animate){const an=old.animate([{opacity:1},{opacity:0}],{duration:240});an.onfinish=()=>old.remove()}else old.remove()};
@@ -1618,15 +1631,23 @@ function kmMap(el,pts,A,Z){if(!el||!pts||pts.length<2)return;
  swap(false)}
 async function kmResolve(w){const p=KF["p"+w];if(p)return p;const t=kmPl(KF["kk_"+w]),cc=kmCoord(t);if(cc)return cc;const L=await kmSug(t);return L[0]||null}
 async function kmCalc(){const my=++kcSeq,set=t=>{KF.st=t;if(!KF.res)kkInfo()};if(!(KF.kk_a||"").trim()||!(KF.kk_z||"").trim()){set("Idatzi nondik eta nora.");return}set("⏳ Kalkulatzen…");
- try{const A=await kmResolve("a"),Z=await kmResolve("z");if(my!==kcSeq)return;if(!A){set("Ez da aurkitu: "+KF.kk_a);return}if(!Z){set("Ez da aurkitu: "+KF.kk_z);return}
-  const R=await fetch("https://router.project-osrm.org/route/v1/driving/"+A.lon+","+A.lat+";"+Z.lon+","+Z.lat+"?overview=simplified&geometries=geojson");const J=await R.json();if(my!==kcSeq)return;if(J.code!=="Ok"||!J.routes||!J.routes[0])throw new Error("route");
-  KF.res={one:Math.round(J.routes[0].distance/100)/10,a:A.n,z:Z.n};KF.map={p:(J.routes[0].geometry||{}).coordinates,a:A.n,z:Z.n};KF.mv=null;KF.mvk="";
-  kmRt();try{kmMap($("#kk_map"),KF.map.p,A.n,Z.n)}catch(e){}}catch(e){if(my===kcSeq)set("Ezin izan da kalkulatu (konexioa?). Idatzi km eskuz.")}}
+ try{const all=kmKeys(),ks=all.filter(w=>w==="a"||w==="z"||(KF["kk_"+w]||"").trim()),P=[];
+  for(const w of ks){const q=await kmResolve(w);if(my!==kcSeq)return;if(!q){set("Ez da aurkitu: "+KF["kk_"+w]);return}P.push(q)}
+  const A=P[0],Z=P[P.length-1],ll=a=>a.map(q=>q.lon+","+q.lat).join(";"),US="https://router.project-osrm.org/route/v1/driving/",
+   go=async u=>{const R=await fetch(u),J=await R.json();if(J.code!=="Ok"||!J.routes||!J.routes[0])throw new Error("route");return J.routes[0]},
+   jobs=[go(US+ll(P)+"?overview=simplified&geometries=geojson")];if(P.length>2)jobs.push(go(US+ll([Z,A])+"?overview=false"));
+  const [R1,R2]=await Promise.all(jobs);if(my!==kcSeq)return;
+  const one=Math.round(R1.distance/100)/10,ls=ks.map(w=>KLT(all.indexOf(w)));
+  KF.res={one,back:R2?Math.round(R2.distance/100)/10:one,a:A.n,z:Z.n,n:P.length,ls};KF.map={p:(R1.geometry||{}).coordinates,a:A.n,z:Z.n,pins:P.map((q,i)=>[q.lon,q.lat,ls[i]])};KF.mv=null;KF.mvk="";
+  kmRt();try{kmMap($("#kk_map"),KF.map.p,A.n,Z.n,KF.map.pins)}catch(e){}}catch(e){if(my===kcSeq)set("Ezin izan da kalkulatu (konexioa?). Idatzi km eskuz.")}}
 var AVD=window.AVD||{};
 const avKey=n=>String(n||"").toLowerCase().normalize("NFD").replace(/[^a-z]/g,"");
 const avHTML=(n,sz)=>{const k=avKey(n),u=AVD[k],c=sz?" "+sz:"";return u?`<span class="av${c}"><img alt="" src="${u}" draggable="false"></span>`:`<span class="av i${c}">${E((String(n||"?").trim()[0]||"?").toUpperCase())}</span>`};
+function kmRouteHTML(){const ns=KF.ns||0,keys=kmKeys(),last=keys.length-1;
+ return `<div class="kstops">${keys.map((w,i)=>{const A=i===0,Z=i===last,ph=A?"Nondik · herria, helbidea…":Z?"Nora · herria, helbidea…":"Gelditokia · herria, helbidea…";
+  return `<div class="kst"><span class="kpn${A?" a":Z?" z":""}">${KLT(i)}</span><div class="kfld"><input id="kk_${w}" placeholder="${ph}" autocomplete="off" enterkeyhint="${Z?"go":"next"}" value="${E(KF["kk_"+w]||"")}"><div class="ksg" id="kk_sg_${w}" hidden></div></div>${A||Z?"<span></span>":`<button class="kx" type="button" data-ksx="${w.slice(1)}" aria-label="Gelditokia kendu">×</button>`}</div>`}).join("")}</div><div class="kstb">${ns<6?`<button class="xs" type="button" data-ksa="1">＋ Gelditokia</button>`:""}<button class="xs kswap" type="button" data-kswap="1">⇅ Trukatu</button></div>`}
 function kmTab(){const D=kmData(),ed=isEd();let h=hdr("Kilometroak");
- const tcard=(t,inP)=>{const mm=D.mem.find(x=>x.id===t.m);return `<div class="card f${inP?" kin":""}"><div class="mh"><b>${inP?E(kdLbl(t.d||"")):E(mm?mm.n:"?")}</b>${inP?"":`<span class="mu">${E(t.d||"")}</span>`}</div><div class="mu">${kmf(t.km||0)}${t.t>0?` · bidesaria ${ke(t.t)}`:""}${t.o?` · ${E(t.o)}`:""} · <b>${ke((t.km||0)*D.price+(t.t||0))}</b></div>${ed?(kmTE===t.id?`<div class="f" style="margin-top:8px;padding:10px;background:var(--ac2);border-radius:10px"><label class="mu">Nork gidatu du?</label><select id="te_m">${D.mem.map(x=>`<option value="${x.id}"${x.id===(KTD.m||t.m)?" selected":""}>${E(x.n)}</option>`).join("")}</select><label class="mu">Noiz?</label><button class="kdate" data-ktdate="1"><span>📅 ${kdLbl(KTD.d)}</span><i>${KTD.open?"▴":"▾"}</i></button>${KTD.open?kcalHTML(KTD):""}<div class="kmore"><label><span class="mu">Kilometroak</span><input id="te_k" inputmode="decimal" value="${E(KTD.k!=null?KTD.k:String(t.km||0).replace(".",","))}"></label><label><span class="mu">Bidesaria (€)</span><input id="te_b" inputmode="decimal" value="${E(KTD.b!=null?KTD.b:String(t.t||0).replace(".",","))}"></label></div><input id="te_o" placeholder="Oharra (aukerakoa)" value="${E(KTD.o!=null?KTD.o:(t.o||""))}"><div style="display:flex;gap:8px"><button class="btn" style="flex:1" data-ktsave="${t.id}">Gorde</button><button class="xs" data-kte="${t.id}">Utzi</button></div></div>`:`<div style="display:flex;gap:8px"><button class="xs" data-kte="${t.id}">✎ Editatu</button><button class="xs ${kmArm===t.id?"arm":""}" data-ktdel="${t.id}">${kmArm===t.id?"Ziur? Sakatu berriro":"Ezabatu"}</button></div>`):""}</div>`};
+ const tcard=(t,inP)=>{const mm=D.mem.find(x=>x.id===t.m);return `<div class="card f${inP?" kin":""}"><div class="mh"><b>${inP?E(kdLbl(t.d||"")):E(mm?mm.n:"?")}</b>${inP?"":`<span class="mu">${E(t.d||"")}</span>`}</div><div class="mu">${kmf(t.km||0)}${t.t>0?` · bidesaria ${ke(t.t)}`:""}${t.o?` · ${E(t.o)}`:""} · <b>${ke((t.km||0)*D.price+(t.t||0))}</b></div>${ed?(kmTE===t.id&&kmTEP===!!inP?`<div class="f tef" style="margin-top:8px;padding:10px;background:var(--ac2);border-radius:10px"><label class="mu">Nork gidatu du?</label><select id="te_m">${D.mem.map(x=>`<option value="${x.id}"${x.id===(KTD.m||t.m)?" selected":""}>${E(x.n)}</option>`).join("")}</select><label class="mu">Noiz?</label><button class="kdate" data-ktdate="1"><span>📅 ${kdLbl(KTD.d)}</span><i>${KTD.open?"▴":"▾"}</i></button>${KTD.open?kcalHTML(KTD):""}<div class="kmore"><label><span class="mu">Kilometroak</span><input id="te_k" inputmode="decimal" value="${E(KTD.k!=null?KTD.k:String(t.km||0).replace(".",","))}"></label><label><span class="mu">Bidesaria (€)</span><input id="te_b" inputmode="decimal" value="${E(KTD.b!=null?KTD.b:String(t.t||0).replace(".",","))}"></label></div><input id="te_o" placeholder="Oharra (aukerakoa)" value="${E(KTD.o!=null?KTD.o:(t.o||""))}"><div style="display:flex;gap:8px"><button class="btn" style="flex:1" data-ktsave="${t.id}">Gorde</button><button class="xs" data-kte="${t.id}" data-ktp="${inP?1:0}">Utzi</button></div></div>`:`<div style="display:flex;gap:8px"><button class="xs" data-kte="${t.id}" data-ktp="${inP?1:0}">✎ Editatu</button><button class="xs ${kmArm===t.id?"arm":""}" data-ktdel="${t.id}">${kmArm===t.id?"Ziur? Sakatu berriro":"Ezabatu"}</button></div>`):""}</div>`};
  h+=`<div class="kpis"><div class="kpi big"><span>Ordaintzeko guztira</span>${kc(D.T.pay,"ke")}</div><div class="kpi"><i class="ki">🛣️</i><span>Km guztira</span>${kc(D.T.kmT,"km")}</div>${ed?`<button class="kpi kpb" data-kprc="1"><i class="ki">⛽</i><span>€ / km</span><b>${ke(D.price)} <em>✎</em></b></button>`:`<div class="kpi"><i class="ki">⛽</i><span>€ / km</span><b>${ke(D.price)}</b></div>`}</div>`;
   if(ed&&kmPrOpen)h+=`<div class="card f" style="margin-top:8px"><span class="mu">Gasolinaren prezioa km bakoitzeko. Aldatzean, kalkulu guztiak berrikusten dira.</span><input id="kp" inputmode="decimal" value="${String(D.price).replace(".",",")}" enterkeyhint="done"><span class="mu">Idatzi prezio berria eta sakatu «Eginda» (edo kanpoan sakatu).</span></div>`;else if(kmPm)h+=`<div class="ok" style="font-weight:500;margin-top:8px">${E(kmPm)}</div>`;
  if(D.rows.length){h+=`<div class="kbar"><span class="mu">⛽ ${ke(D.T.gas)} · 🛣️ ${ke(D.T.toll)}</span>${D.T.pay>0?`<button class="ib ${kmCp?"ok":""}" data-kcopy="1" aria-label="Kopiatu / partekatu" title="Kopiatu / partekatu">${kmCp?'<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>':'<svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>'}</button>`:""}</div>`}
@@ -1648,9 +1669,9 @@ function kmTab(){const D=kmData(),ed=isEd();let h=hdr("Kilometroak");
    if(ed)tb+=kmAddT?(()=>{const dI=KF.kk_d||kToday(),who=KF.kk_m||(D.mem[0]||{}).id,rt=KF.kk_rt!==false;return `<div class="card f kform"><div class="mh"><b>Bidaia berria</b><button class="xs" data-kaddt="1" aria-label="Itxi">✕</button></div>
 <span class="kl">Nork gidatu du?</span><div class="kchips">${D.mem.map(x=>`<button class="chip ${who===x.id?"on":""}" data-kwho="${x.id}">${avHTML(x.n,"s")}${E(x.n)}</button>`).join("")}</div>
 <span class="kl">Noiz?</span><button class="kdate" data-kdate="1"><span>📅 ${kdLbl(dI)}</span><i>${KF.calOpen?"▴":"▾"}</i></button>${KF.calOpen?kcalHTML():""}
-<span class="kl">Nondik → nora?</span><div class="kroute"><div class="kfld"><input id="kk_a" placeholder="Nondik · herria, helbidea…" autocomplete="off" enterkeyhint="next" value="${E(KF.kk_a||"")}"><div class="ksg" id="kk_sg_a" hidden></div></div><button class="xs kswap" data-kswap="1" aria-label="Trukatu">⇅</button><div class="kfld"><input id="kk_z" placeholder="Nora · herria, helbidea…" autocomplete="off" enterkeyhint="go" value="${E(KF.kk_z||"")}"><div class="ksg" id="kk_sg_z" hidden></div></div></div>
+<span class="kl">Ibilbidea</span>${kmRouteHTML()}
 <div class="seg" style="grid-template-columns:1fr 1fr"><button data-krt="1" class="${rt?"on":""}">Joan-etorria</button><button data-krt="0" class="${rt?"":"on"}">Joan bakarrik</button></div>
-<div id="kk_info">${kkInfoHTML()}</div><div id="kk_map" class="kmap" hidden></div>${(KF.map&&setTimeout(()=>kmMap($("#kk_map"),KF.map.p,KF.map.a,KF.map.z),0))?"":""}
+<div id="kk_info">${kkInfoHTML()}</div><div id="kk_map" class="kmap" hidden></div>${(KF.map&&setTimeout(()=>kmMap($("#kk_map"),KF.map.p,KF.map.a,KF.map.z,KF.map.pins),0))?"":""}
 <div class="kmore"><label><span class="mu">Kilometroak</span><input id="kk_k" inputmode="decimal" placeholder="0" value="${E(KF.kk_k||"")}"></label><label><span class="mu">Bidesaria (€)</span><input id="kk_b" inputmode="decimal" placeholder="0" value="${E(KF.kk_b||"")}"></label></div>
 <input id="kk_o" placeholder="Oharra (aukerakoa)" value="${E(KF.kk_o||"")}"><button class="btn" data-kadd="1">Gehitu bidaia</button></div>`})():`<button class="btn kadd" data-kaddt="1">＋ Bidaia berria</button>`;
    tb+=D.trips.length?D.trips.slice(0,60).map(t=>tcard(t,false)).join(""):`<div class="card mu">Ez dago bidaiarik. Kontzertuetako eta beste bidaietako kilometroak hemen agertuko dira.</div>`;
@@ -1842,7 +1863,7 @@ function chipFit(){chipRows().forEach((r,i)=>{if(!r.clientWidth)return;const on=
 function sxSync(){let el=document.getElementById("sxh");const n=(tab=="stk"&&code&&!vw())?Object.keys(SD).filter(k=>SD[k]).length:0;if(!n){if(el)el.remove();return}const h=`<span>${n} neurri aldatuta</span><button class="xs" data-sxc="1">Utzi</button><button class="btn" data-sxs="1">Gorde</button>`;if(!el){el=document.createElement("div");el.id="sxh";el.className="sxbar";document.body.appendChild(el)}if(el._h!==h){el.innerHTML=h;el._h=h}}
 /* ===== Añubeta: furgonetaren eserlekuak (denek editatu dezakete) ===== */
 var VCUR=null,VS=null,VG="";
-const VSE=["a1","a2","a3","b1","b2","b3","c1","c2","c3"],VPOS=["ezkerrean","erdian","eskuinean"],VLG={b:"joan-etorria",i:"joan",v:"etorri"};
+const VSE=["a1","a2","a3","b1","b2","b3","c1","c2","c3"],VPOS=["ezkerrean","erdian","eskuinean"];
 const vLbl=s=>{const r=VSE.indexOf(s);return (Math.floor(r/3)+1)+". ilara, "+VPOS[r%3]+(s==="a1"?" (gidaria)":"")};
 function vCid(){if(VCUR&&S.c[VCUR]&&!isAr(VCUR))return VCUR;if(S.c[cur]&&!isAr(cur))return cur;return nextConc(Object.keys(S.c).filter(c=>!isAr(c)))}
 function vPast(c){const d=S.c[c]&&S.c[c].d;if(!d)return false;const n=new Date(),t=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");return d<t}
@@ -1850,7 +1871,8 @@ function vOn(c){const x=(S.m||{})["va_"+c+"_cfg"];return !(x&&x.off)}
 function vSeat(c,s){const x=(S.m||{})["va_"+c+"_"+s];if(!x||x.c!==c)return{i:"",v:"",sp:false};const i=x.i||"",v=x.v||"";return x.sp?{i,v,sp:true}:{i:i||v,v:i||v,sp:false}}
 const vBy=()=>((myName()||"").trim())||"Norbait";
 function vPut(id,o){S.m=S.m||{};if(o)S.m[id]=o;else delete S.m[id];if(db){const d=db.collection("meta").doc(id);(o?d.set(o):d.delete()).catch(e=>{console.warn("van",e)})}}
-function vLog(c,o){const ts=Date.now();vPut("vh_"+c+"_"+ts.toString(36)+Math.random().toString(36).slice(2,5),{c,ts,by:vBy(),...o});const ks=Object.keys(S.m).filter(k=>k.startsWith("vh_"+c+"_")&&S.m[k].c===c).sort((a,b)=>(S.m[b].ts||0)-(S.m[a].ts||0));ks.slice(80).forEach(k=>vPut(k,null))}
+/* aldaketen historia kenduta: ez da ezer erregistratzen */
+function vLog(){}
 function vWrite(c,s,x){const id="va_"+c+"_"+s;if(!x.i&&!x.v&&!x.sp)vPut(id,null);else vPut(id,{c,s,i:x.i||"",v:x.v||"",sp:x.sp?1:0,ts:Date.now(),by:vBy()})}
 function vAssign(c,s,leg,name){name=String(name||"").replace(/\s+/g," ").trim().slice(0,24);const y0=vSeat(c,s),legs=leg=="b"?["i","v"]:[leg],prev=leg=="b"?y0.i:y0[leg];let mv=null;
  if(!name&&!prev)return;if(name&&name===prev&&legs.every(L=>y0[L]===name))return;
@@ -1872,12 +1894,6 @@ function vSeatH(c,s){const x=vSeat(c,s),L=vLbl(s),
  desc=x.sp?"joan: "+(x.i||"libre")+", etorri: "+(x.v||"libre"):(x.i||"libre"),
  blk=(leg,n)=>`<span class="vn-hp${n?"":" e"}"><i class="vn-l">${leg=="i"?"J":"E"}</i>${n?avHTML(n,"s"):'<span class="av s i vn-q">+</span>'}<b>${n?E(n):""}</b></span>`;
  return `<button class="vn-s${x.sp?" sp":""}${!x.sp&&x.i?" oc":""}${x.sp&&(x.i||x.v)?" oc":""}" data-vs="${s}" aria-label="${E(L)}: ${E(desc)}"><span class="vn-ct">${x.sp?blk("i",x.i)+blk("v",x.v):x.i?`<span class="vn-t">${avHTML(x.i,"s")}</span><span class="vn-n"><b>${E(x.i)}</b></span>`:`<span class="vn-t"><span class="vn-q0">+</span></span>`}</span></button>`}
-function vHistH(x){const l=VLG[x.l]||"",sl=x.s&&x.s!=="cfg"?vLbl(x.s):"";let t="";
- if(x.k=="a")t=`<b>${E(x.n)}</b> → ${E(sl)} (${l})${x.mv?` · lehen: ${E(vLbl(x.mv))}`:""}${x.f?` · ordez: ${E(x.f)}`:""}`;
- else if(x.k=="c")t=`<b>${E(x.f)}</b> kenduta: ${E(sl)} (${l})`;
- else if(x.k=="s")t=x.n?`${E(sl)}: banatuta (joan / etorri)`:`${E(sl)}: elkartuta (joan-etorria)`;
- else if(x.k=="o")t=x.n?"Furgoneta aktibatuta":"Furgoneta desaktibatuta";
- return `<div class="vn-hr"><span class="vn-ht">${vTime(x.ts)}</span><span>${t}<small>${E(x.by||"")}</small></span></div>`}
 var VLAST={};
 function vSum(c){const T=VSE.length,n={i:0,v:0};let sp=false;VSE.forEach(s=>{const x=vSeat(c,s);if(x.i)n.i++;if(x.v)n.v++;if(x.sp)sp=true});
  const fr=T-Math.max(n.i,n.v),key=n.i+"/"+n.v;if(VLAST[c]!==undefined&&VLAST[c].k!==key)VLAST[c]={k:key,t:Date.now()};else if(VLAST[c]===undefined)VLAST[c]={k:key,t:0};const ch=Date.now()-VLAST[c].t<700;
@@ -1891,21 +1907,7 @@ function viGet(c){const pe=vPeople(),M=S.m||{},cf=M["vi_"+c+"_cfg"],mat=!!(cf&&c
  return{rows,sum,total,left:total-sum,mat,ts,by}}
 function viMat(c){const st=viGet(c);if(st.mat)return st;const ts=Date.now(),by=vBy();vPut("vi_"+c+"_cfg",{c,s:"cfg",t:st.total,ts,by});st.rows.forEach(r=>vPut(viId(c,r.n),{c,s:r.n,a:r.a,g:r.g,ts,by}));return viGet(c)}
 function viSave(c,r,add){vPut(viId(c,r.n),{c,s:r.n,a:r.g.length,g:r.g,ts:Date.now(),by:vBy(),ta:add?Date.now():(r.ta||0)})}
-/* Gonbidapenen historia (vi_<c>_h_*): azken aldaketak, plegatuta; aldaketa berdinak segidan batzen dira */
-function viLog(c,o,mg){const ts=Date.now(),by=vBy(),pf="vi_"+c+"_h_";
- const ks=Object.keys(S.m||{}).filter(k=>k.startsWith(pf)&&S.m[k].c===c).sort((a,b)=>(S.m[b].ts||0)-(S.m[a].ts||0));
- if(mg&&ks.length){const l=S.m[ks[0]];if(l.k===o.k&&(l.m||"")===(o.m||"")&&(l.by||"")===by&&ts-(l.ts||0)<20000){const n={...l,t:o.t,ts};if(n.t===n.f)vPut(ks[0],null);else vPut(ks[0],n);return}}
- vPut(pf+ts.toString(36)+Math.random().toString(36).slice(2,5),{c,s:"h",ts,by,...o});
- ks.slice(59).forEach(k=>vPut(k,null))}
-function vHistI(x){const a=x.f!==undefined&&x.t!==undefined?`<b>${x.f} → ${x.t}</b>`:"";let t="";
- if(x.k=="t")t=`Guztira: ${a}`;
- else if(x.k=="r")t=`Guztira: ${a} · banaketa 0ra itzuli da`;
- else if(x.k=="x")t=`Guztira: ${a} · ${E(x.m)}: gonbidapen bat kendu da${x.v?` («${E(x.v)}»)`:""}`;
- else if(x.k=="m")t=`${E(x.m)}: ${a}`;
- else if(x.k=="n")t=x.v&&x.f?`${E(x.m)}: «${E(x.f)}» → «${E(x.v)}»`:x.v?`${E(x.m)}: «${E(x.v)}» gehitu da`:`${E(x.m)}: «${E(x.f)}» kendu da`;
- return `<div class="vn-hr"><span class="vn-ht">${vTime(x.ts)}</span><span>${t}<small>${E(x.by||"")}</small></span></div>`}
-function viHist(c){const hs=Object.keys(S.m||{}).filter(k=>k.startsWith("vi_"+c+"_h_")&&S.m[k].c===c).map(k=>S.m[k]).sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,30);
- return secS("vih","Gonbidapenen historia",hs.length?` <small class="mu">(${hs.length})</small>`:"")+(hs.length?`<div class="vn-hl">${hs.map(vHistI).join("")}</div>`:`<div class="mu" style="padding:6px 2px">Oraindik ez dago aldaketarik.</div>`)+secE()}
+function viLog(){}
 function viText(c){const st=viGet(c),d=S.c[c]||{};
  const L=st.rows.filter(r=>r.a>0).map(r=>{const nm=r.g.filter(Boolean),e=r.a-nm.length;return r.n+": "+(nm.length?nm.join(", ")+(e?" + "+e+" izenik gabe":""):r.a+" izenik gabe")});
  return "🎟️ AÑUBE · Gonbidapenak\n"+(d.n||"")+(d.d?" · "+d.d:"")+(d.p?" · "+d.p:"")+"\n\n"+(L.length?L.join("\n"):"Oraindik ez dago banatuta.")+"\n\nGuztira: "+st.total+(st.left>0?" · "+st.left+" banatzeko":"")}
@@ -1970,9 +1972,7 @@ function vanTab(){let h=hdr("Añubeta");const act=cOrd().filter(c=>!isAr(c)),c=v
   const pe=vPeople(),mi=pe.filter(n=>!sI.has(n)&&!sV.has(n));h+=vSum(c)+vVan(c);
   if(pe.length){
    h+=`<div class="vn-un">${mi.length?`<span class="mu">Eserlekurik gabe</span><div class="r">${mi.map(n=>`<span class="vn-c">${avHTML(n,"s")}${E(n)}</span>`).join("")}</div>`:`<div class="vn-ok">✓ Denek dute eserlekua</div>`}</div>`}h+=voCard(c)}
- h+=viCard(c);h+=viHist(c);
- const hs=Object.keys(S.m||{}).filter(k=>k.startsWith("vh_")&&S.m[k].c===c).map(k=>S.m[k]).sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,40);
- h+=secS("vhi","Aldaketen historia",hs.length?` <small class="mu">(${hs.length})</small>`:"")+(hs.length?`<div class="vn-hl">${hs.map(vHistH).join("")}</div>`:`<div class="mu" style="padding:6px 2px">Oraindik ez dago aldaketarik.</div>`)+secE();
+ h+=viCard(c);
  return h}
 function vVan(c){let h=`<div class="vn-w"><div class="vn-b" role="group" aria-label="Furgonetaren eserlekuak">`;[0,1,2].forEach(r=>{h+=`<div class="vn-rw r${r}">`;VSE.slice(r*3,r*3+3).forEach(s=>{h+=vSeatH(c,s)});h+=`</div>`});return h+`</div></div>`}
 function vsOpen(s){VS={s,w:null,c:vCid()};VG="";vsUpd(true)}
@@ -2101,7 +2101,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261120c",NEWS=["Ordutegia eta gonbidapenak: diseinu txikiagoa eta zehatzagoa, testuak zentratuta"]; 
+var BUILD="20261122a",NEWS=["Kilometroak: bidaian gelditoki gehiago gehitu daitezke (A → B → C → itzulera)","Kilometroak: iradokizunen zerrenda arrastatu daiteke, ukitzean bakarrik aukeratzen da","Kilometroak: bidaia editatzean bidesaria orain gordetzen da","Añubeta: historiak kenduta"]; 
 var updShown=false;
 function showUpd(nv){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button><div class="updv" id="updv">'+(nv?"Bertsio berria: "+E(nv):"")+'</div></div>';document.body.appendChild(o);if(!nv){fetch("index.html?v="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{const m=/var BUILD="([^"]+)"/.exec(t),u=document.getElementById("updv");if(m&&u)u.textContent="Bertsio berria: "+m[1]}).catch(()=>{})}const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd(m[1])}catch(e){}}
