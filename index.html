@@ -161,14 +161,14 @@ label.chk{display:flex;align-items:center;gap:8px;font-size:13px}label.chk input
 .kfld input{width:100%;box-sizing:border-box}
 .ksg{margin-top:6px;border:1px solid var(--bd);border-radius:12px;background:var(--card);max-height:min(42vh,252px);overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
 .kstops{display:grid;gap:10px}
-.kst{position:relative;display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:0 8px;align-items:start}
-.kst:not(:last-child)::before{content:"";position:absolute;left:13px;top:38px;bottom:-8px;width:2px;border-radius:2px;background:repeating-linear-gradient(var(--bd) 0 4px,transparent 4px 8px)}
+.krp{position:relative;display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:0 8px;align-items:start}
+.krp:not(:last-child)::before{content:"";position:absolute;left:13px;top:38px;bottom:-8px;width:2px;border-radius:2px;background:repeating-linear-gradient(var(--bd) 0 4px,transparent 4px 8px)}
 .kpn{position:relative;z-index:1;width:28px;height:28px;margin-top:9px;border-radius:50%;background:var(--gd);color:#fff;font-size:13px;font-weight:800;display:grid;place-items:center;box-shadow:0 0 0 3px var(--card)}
 .kpn.a{background:#1f8a5b}.kpn.z{background:#c9648f}
 .kx{width:34px;height:34px;margin-top:6px;border:0;border-radius:50%;background:transparent;color:var(--mu);font-size:21px;line-height:1;padding:0;display:grid;place-items:center}.kx:active{background:var(--ac2)}
 .kact{display:flex;align-items:center}
-.kg{width:30px;height:34px;margin-top:6px;border:0;background:transparent;color:var(--mu);padding:0;display:grid;place-items:center;touch-action:none;cursor:grab;-webkit-user-select:none;user-select:none;opacity:.8}
-.kst.kmv{transition:transform .16s ease}.kst.kdrag{z-index:6;background:var(--card);border-radius:14px;box-shadow:0 10px 26px rgba(0,0,0,.22);transition:none;cursor:grabbing}.kst.kdrag .kg{cursor:grabbing}
+.kgp{width:30px;height:34px;margin-top:6px;border:0;background:transparent;color:var(--mu);padding:0;display:grid;place-items:center;touch-action:none;cursor:grab;-webkit-user-select:none;user-select:none;opacity:.8}
+.krp.kmv{transition:transform .16s ease}.krp.kdrag{z-index:6;background:var(--card);border-radius:14px;box-shadow:0 10px 26px rgba(0,0,0,.22);transition:none;cursor:grabbing}.krp.kdrag .kgp{cursor:grabbing}
 .krt{margin-top:2px;font-size:12px;line-height:1.35}
 .kstb{display:flex;gap:8px;flex-wrap:wrap;padding-left:36px}
 .ksg[hidden]{display:none}
@@ -1590,7 +1590,7 @@ document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest
 /* ibilbide-puntuak ordenatu: heldulekua (⠿) ukitu eta arrastatu */
 var KDG=null;
 document.addEventListener("pointerdown",e=>{const h=e.target.closest&&e.target.closest("[data-kg]");if(!h||e.button>0)return;e.preventDefault();kmBlur();document.querySelectorAll(".ksg").forEach(g=>{g.hidden=true});
- const rows=[...document.querySelectorAll(".kstops .kst")],i=+h.dataset.kg;if(!rows[i])return;const r0=rows.map(r=>r.getBoundingClientRect());
+ const rows=[...document.querySelectorAll(".kstops .krp")],i=+h.dataset.kg;if(!rows[i])return;const r0=rows.map(r=>r.getBoundingClientRect());
  KDG={i,ni:i,y0:e.clientY,id:e.pointerId,rows,r0,h:r0[i].height+10,row:rows[i],hd:h};dragging=true;try{h.setPointerCapture(e.pointerId)}catch(_){}
  rows[i].classList.add("kdrag");rows.forEach((r,j)=>{if(j!==i)r.classList.add("kmv")})},true);
 document.addEventListener("pointermove",e=>{const d=KDG;if(!d||e.pointerId!==d.id)return;e.preventDefault();const dy=e.clientY-d.y0;d.row.style.transform="translateY("+dy+"px)";
@@ -1674,7 +1674,7 @@ const avHTML=(n,sz)=>{const k=avKey(n),u=AVD[k],c=sz?" "+sz:"";return u?`<span c
 const KGI='<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/><circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/><circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></svg>';
 function kmRouteHTML(){const keys=kmKeys(),n=keys.length,last=n-1;
  return `<div class="kstops">${keys.map((w,i)=>{const A=i===0,Z=i===last,ph=A?"Nondik · herria, helbidea…":Z?"Nora · herria, helbidea…":"Gelditokia · herria, helbidea…";
-  return `<div class="kst"><span class="kpn${A?" a":Z?" z":""}">${KLT(i)}</span><div class="kfld"><input id="kk_${w}" placeholder="${ph}" autocomplete="off" enterkeyhint="${Z?"go":"next"}" value="${E(KF["kk_"+w]||"")}"><div class="ksg" id="kk_sg_${w}" hidden></div></div>${n>2?`<div class="kact"><button class="kg" type="button" data-kg="${i}" aria-label="Mugitu: ${KLT(i)}">${KGI}</button><button class="kx" type="button" data-ksx="${i}" aria-label="Kendu: ${KLT(i)}">×</button></div>`:"<span></span>"}</div>`}).join("")}</div><div class="kstb">${n<8?`<button class="xs" type="button" data-ksa="1">＋ Gelditokia</button>`:""}<button class="xs kswap" type="button" data-kswap="1">⇅ Trukatu</button></div>`}
+  return `<div class="krp"><span class="kpn${A?" a":Z?" z":""}">${KLT(i)}</span><div class="kfld"><input id="kk_${w}" placeholder="${ph}" autocomplete="off" enterkeyhint="${Z?"go":"next"}" value="${E(KF["kk_"+w]||"")}"><div class="ksg" id="kk_sg_${w}" hidden></div></div>${n>2?`<div class="kact"><button class="kgp" type="button" data-kg="${i}" aria-label="Mugitu: ${KLT(i)}">${KGI}</button><button class="kx" type="button" data-ksx="${i}" aria-label="Kendu: ${KLT(i)}">×</button></div>`:"<span></span>"}</div>`}).join("")}</div><div class="kstb">${n<8?`<button class="xs" type="button" data-ksa="1">＋ Gelditokia</button>`:""}<button class="xs kswap" type="button" data-kswap="1">⇅ Trukatu</button></div>`}
 function kmRouteBlock(ed){const rt=KF.kk_rt!==false;return `${ed?`<label class="mu">Ibilbidea (aukerakoa)</label>`:`<span class="kl">Ibilbidea</span>`}${kmRouteHTML()}
 <div class="seg" style="grid-template-columns:1fr 1fr"><button data-krt="1" class="${rt?"on":""}">Joan-etorria</button><button data-krt="0" class="${rt?"":"on"}">Joan bakarrik</button></div>
 <div id="kk_info">${kkInfoHTML()}</div><div id="kk_map" class="kmap" hidden></div>${(KF.map&&setTimeout(()=>kmMap($("#kk_map"),KF.map.p,KF.map.a,KF.map.z,KF.map.pins),0))?"":""}`}
@@ -2132,7 +2132,7 @@ function remember(code){try{localStorage.setItem("anube.code",code)}catch(e){}tr
  if(code==="txupitohans1")code="anubemertxan"; /* kode zaharra -> berria (datuak lekualdatuta) */
  if(code)remember(code);
  start()})();
-var BUILD="20261122b",NEWS=["Kilometroak: gelditoki berria beti azkenean gehitzen da","Kilometroak: gelditokiak arrastatuz ordena daitezke","Kilometroak: bidaia editatzean ibilbidea ageri da eta gordeta geratzen da"]; 
+var BUILD="20261123a",NEWS=["Konponketa: «Oparituak» txartela berriro ondo ageri da","Kilometroak: ibilbidearen laguntza-testua ere zuzenduta"]; 
 var updShown=false;
 function showUpd(nv){if(updShown)return;updShown=true;const o=document.createElement("div");o.className="upd";o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="updc"><div class="updi">🔄</div><h3>Eguneraketa berria</h3><p>Aplikazioaren bertsio berri bat dago. Sakatu eguneratzeko eta jarraitzeko.</p><button class="btn" id="updgo">Eguneratu</button><div class="updv" id="updv">'+(nv?"Bertsio berria: "+E(nv):"")+'</div></div>';document.body.appendChild(o);if(!nv){fetch("index.html?v="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{const m=/var BUILD="([^"]+)"/.exec(t),u=document.getElementById("updv");if(m&&u)u.textContent="Bertsio berria: "+m[1]}).catch(()=>{})}const b=o.querySelector("#updgo");b.onclick=async()=>{b.disabled=true;b.textContent="Eguneratzen…";const t=setTimeout(()=>location.reload(),4000);try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.unregister()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}clearTimeout(t);location.reload()};try{b.focus()}catch(e){}}
 async function chkUpd(){if(updShown||!navigator.onLine)return;try{const r=await fetch("index.html?chk="+Date.now(),{cache:"no-store"});if(!r.ok)return;const m=/var BUILD="([^"]+)"/.exec(await r.text());if(m&&m[1]!==BUILD)showUpd(m[1])}catch(e){}}
